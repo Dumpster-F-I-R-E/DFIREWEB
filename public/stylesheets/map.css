@@ -1,66 +1,15 @@
+@import "nav.css";
+@import "layout.css";
+
  /* Always set the map height explicitly to define the size of the div
         * element that contains the map. */
         #map {
             height: 100%;
         }
 
-        body {
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        }
-  
-       .wrapper{
-           display:grid;
-           grid-template-columns: 120px auto;
-       }
+       
 
-       .nav {
-           background-color: white;
-           padding: 10px;
-           border: 1px solid black;
-           height: 600px;
-       }
-
-       .content {
-           padding: 10px;
-           border: 1px solid black;
-       }
-
-       .header .title {
-           text-align: center;
-           font-size: 20px;
-           font-weight: 400;
-       }
-
-       img.profile {
-           width:100%;
-           border-radius: 50%;
-           border: 2px solid white;
-       }
-
-       img.profile:hover{
-           border: 2px solid black;
-       }
-
-       .nav .nav-items{
-           list-style: none;
-       }
-
-       .nav-items li {
-           padding: 10px;
-           margin-top: 10px;
-           border-bottom: 1px solid black;
-       }
-
-       .nav-items li:hover {
-           color: white;
-           background-color: gray;
-       }
-
-       .nav-items a{
-           text-decoration: none;
-           color: black;
-       }
-
+      
 
        @media only screen and (max-width: 400px) {
 

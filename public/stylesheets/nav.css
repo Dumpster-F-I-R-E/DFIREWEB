@@ -1,0 +1,36 @@
+.nav {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid gray;
+    height: 90vh;
+}
+
+.profile-img {
+    width:100%;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.profile-img:hover{
+    border: 2px solid black;
+}
+
+.nav .nav-items{
+    list-style: none;
+}
+
+.nav-items li {
+    padding: 10px;
+    margin-top: 10px;
+    border-bottom: 1px solid gray;
+}
+
+.nav-items li:hover {
+    color: white;
+    background-color: gray;
+}
+
+.nav-items a{
+    text-decoration: none;
+    color: black;
+}
