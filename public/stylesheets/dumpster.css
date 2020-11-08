@@ -1,0 +1,70 @@
+@import "nav.css";
+@import "layout.css";
+
+
+.content {
+    padding: 20px;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: 250px auto ;
+    grid-column-gap: 20px;
+}
+
+.btn {
+    padding: 10px;
+    border: none;
+    color: #2b5aa6;
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.btn:hover {
+    border: 1px solid black;
+    background-color:#2b5aa6;
+    color: white;
+  
+}
+
+.upload-btn {
+    
+    color: #5c83c2;
+    margin: 0 auto;
+   
+}
+
+.container label {
+    margin: 12px 0;
+    display: block;
+}
+.container input {
+    margin: 10px 0;
+    display: block;
+}
+
+.container #address{
+    padding: 5px;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 0px;
+    max-width: 300px;
+}
+
+.btn-container{
+    padding: 20px;
+}
+
+@media only screen and (max-width: 750px) {
+
+    .container{
+        display: block;
+    }
+   
+
+   
+
+}
