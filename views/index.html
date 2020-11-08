@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMJFGX_d0iXmJWq1CSqzPMIGISyWLZFRE&callback=initMap&libraries=&v=weekly"
+            defer></script>
+    <style>   
+     /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+        #map {
+             height: 100%;
+         }
+
+         body {
+             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+         }
+   
+        .wrapper{
+            display:grid;
+            grid-template-columns: 120px auto;
+        }
+
+        .nav {
+            background-color: white;
+            padding: 10px;
+            border: 1px solid black;
+            height: 600px;
+        }
+
+        .content {
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        .header .title {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        img.profile {
+            width:100%;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        img.profile:hover{
+            border: 2px solid black;
+        }
+
+        .nav .nav-items{
+            list-style: none;
+        }
+
+        .nav-items li {
+            padding: 10px;
+            margin-top: 10px;
+            border-bottom: 1px solid black;
+        }
+
+        .nav-items li:hover {
+            color: white;
+            background-color: gray;
+        }
+
+    </style>
+    <script>
+        let map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 51.05011, lng: -114.08529 },
+                zoom: 12,
+            });
+            const marker = new google.maps.Marker({
+                position: { lat: 51.05011, lng: -114.08529 },
+                map: map,
+            });
+            map.addListener('idle', function () {
+                window.external.onLoad();
+            });
+
+        }
+
+        function addMarker(lat1, lng1) {
+            // The marker, positioned at Uluru
+            const marker = new google.maps.Marker({
+                position: { lat: lat1, lng: lng1 },
+                map: map,
+            });
+        }
+       
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title"> Dumpster FIRE </h1>
+    </div>
+    <div class="wrapper"> 
+      <div class="nav">
+        <img src="profile.png" alt="" class="profile">
+        <div class="nav-items">
+            <li> Dumpster Map</li>
+            <li>User Management</li>
+            <li>Routes</li>
+            <li>Logout</li>
+        </div>
+      </div>
+      <div class="content">
+        <div id="map"></div>
+      </div>
+    </div>
+</body>
+</html>
