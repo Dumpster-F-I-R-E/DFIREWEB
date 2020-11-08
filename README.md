@@ -1,5 +1,7 @@
 # DFIREWEB
 
+![Node.js CI](https://github.com/Dumpster-F-I-R-E/DFIREWEB/workflows/Node.js%20CI/badge.svg?branch=master&event=push)
+
 ## Node JS 
   https://nodejs.org/en/ - Version 15.1.0 Current
   
