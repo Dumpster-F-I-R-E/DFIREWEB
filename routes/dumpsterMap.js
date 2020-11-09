@@ -4,7 +4,7 @@ const auth = require("../controllers/authController");
 
 /* GET map. */
 router.get('/', auth.requireAuth, function(req, res, next) {
-  res.render('map');
+  res.render('dumpsterMap');
 });
 
 module.exports = router;

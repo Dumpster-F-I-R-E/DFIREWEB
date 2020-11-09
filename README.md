@@ -23,7 +23,7 @@
      
      To see console output:
 
-     SET DEBUG=express-locallibrary-tutorial:* & npm start
+     SET DEBUG=express-locallibrary-tutorial:* & npm run devstart
 
      open http://localhost:3000/
 

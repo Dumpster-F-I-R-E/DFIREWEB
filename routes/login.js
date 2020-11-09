@@ -12,7 +12,7 @@ router.get('/login', function(req, res){
     console.log("valid", valid);
     if(valid){
       res.cookie('AuthToken', authToken);  
-      res.redirect('/map');
+      res.redirect('/mainMenu');
     }else{
       res.render('login', {message: "Please enter both id and password"});
     }

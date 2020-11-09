@@ -2,8 +2,8 @@ var crypto = require('crypto');
 
 var Users = [
     {
-        username: "1234",
-        password: "password"
+        username: "root",
+        password: "root"
     }
 ];
 

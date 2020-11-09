@@ -5,11 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var mapRouter = require('./routes/map');
+var dumpsterMapRouter = require('./routes/dumpsterMap');
 var loginRouter = require('./routes/login');
 var profileRouter = require('./routes/profile');
-var usersRouter = require('./routes/users');
+var userlistRouter = require('./routes/userList');
 var dumpsterRouter = require('./routes/dumpster');
+var mainMenuRouter = require('./routes/mainMenu');
+var addUserRouter = require('./routes/addUser');
 
 var app = express();
 
@@ -24,12 +26,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/map', mapRouter);
+app.use('/dumpsterMap', dumpsterMapRouter);
 app.use('/', loginRouter);
 app.use('/profile', profileRouter);
-app.use('/users', usersRouter);
+app.use('/userlist', userlistRouter);
 app.use('/dumpster', dumpsterRouter);
-
+app.use('/mainMenu', mainMenuRouter);
+app.use('/addUser', addUserRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
