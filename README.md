@@ -20,4 +20,10 @@
   
 ## Run server
      npm start
-  open http://localhost:3000/
+     
+     To see console output:
+
+     SET DEBUG=express-locallibrary-tutorial:* & npm start
+
+     open http://localhost:3000/
+
