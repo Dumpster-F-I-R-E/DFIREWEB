@@ -3,8 +3,8 @@ const auth = require('../controllers/authController');
 
 test('authentication with valid credentials', () => {
     var user = {
-            username: "root",
-            password: "root"
+            username: "u234",
+            password: "12324sd"
         }
     
     auth.Users.push(user);
@@ -14,7 +14,11 @@ test('authentication with valid credentials', () => {
 });
 
 test('authentication with invalid credentials', () => {
-
+    var user = {
+            username: "u234",
+            password: "12324sd"
+        }
+    
     var user2 = {
         username: "dsfs",
         password: "dsfs"
