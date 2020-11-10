@@ -20,6 +20,7 @@ jobs:
           MYSQL_USER: dfireweb
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: dfireweb_test
+          MYSQL_ROOT_PASSWORD: password
           DB_HOST: 127.0.0.1
         ports:
           - 3306:3306
