@@ -17,7 +17,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_USER: dfireweb
+          MYSQL_PASSWORD: password
           MYSQL_DATABASE: dfireweb_test
           DB_HOST: 127.0.0.1
         ports:
@@ -34,6 +35,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
+      env:
+          MYSQL_DATABASE: dfireweb_test
+          DB_USERNAME: dfireweb
+          DB_PASSWORD: password
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
