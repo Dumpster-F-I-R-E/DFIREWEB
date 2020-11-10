@@ -1,4 +1,5 @@
-var crypto = require('crypto');
+const crypto = require('crypto');
+const db = require('../database/db');
 
 var Users = [
     {
@@ -17,26 +18,28 @@ const generateAuthToken = () => {
     return crypto.randomBytes(30).toString('hex');
 }
 
-exports.authenticate = (username, password) => {
+exports.authenticate = (username, password, callback) => {
 
-    let result = {valid:false, authToken:null};
-    Users.filter(function(user){
-       
-        if(user.username === username && user.password === password){
-          const authToken = generateAuthToken();
-
-          // Store authentication token
-          authTokens[authToken] = user;
-
-          result = {
-              valid: true,
-              authToken: authToken
-          };        
-         
+    var result = {valid:false, authToken:null};
+    var user = db.getUserByUsername(username, function(user){
+        if(user){            
+            if(user.Password === password){
+                const authToken = generateAuthToken();
+    
+                      // Store authentication token
+                      authTokens[authToken] = user;
+            
+                      callback({
+                          valid: true,
+                          authToken: authToken
+                      });
+                      return;        
+                     
+            }
         }
-     });
-
-     return result;
+        callback({valid:false, authToken:null});
+    });    
+    
 }
 
 exports.logout = (authToken) => {    
