@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - 14
+
+services:
+  - mysql
+before_install:
+  - mysql -u root --password="" < database/sql/travis.sql
+
+install:
+  - npm install
+
+script:
+  - npm test
+
+cache:
+  directories:
+    - "node_modules"
