@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS dfireweb_test;
+USE dfireweb_test;
+
 CREATE TABLE IF NOT EXISTS `Users` (
 	`UserID` INT NOT NULL,
 	`Username` TEXT NOT NULL,
@@ -54,4 +57,3 @@ CREATE TABLE IF NOT EXISTS `SensorReports` (
 	PRIMARY KEY (`ReportID`),
     FOREIGN KEY (`SensorID`) REFERENCES Sensors(`SensorID`)
 );
-

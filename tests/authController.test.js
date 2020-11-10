@@ -1,31 +1,87 @@
 
 const auth = require('../controllers/authController');
+const db = require('../database/db');
 
-test('authentication with valid credentials', () => {
-    var user = {
-            username: "u234",
-            password: "12324sd"
-        }
+const initializeDatabase = async () => {
+
+   
+    let company = {
+        CompanyID : 1,
+        Name: 'General',
+        Address: 'Calgary,AB',
+        Phone: '345-343-3432'
+    };
+    await db.dropTables();
+    await db.createTables();
+    await db.addCompany(company);
+};
+
+const clearDatabase = async () => {
+    await db.dropTables();
+};
+
+beforeAll( () => {
+    var settings = {
+        "host": "localhost",
+        "user": "dfireweb",
+        "password": "password",
+        "database": "dfireweb_test",
+        "multipleStatements" : true,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    };
     
-    auth.Users.push(user);
-    const {valid, token} = auth.authenticate(user.username, user.password);
+    db.changeDatabase(settings);
+});
+
+afterAll(() => {
+    db.close_pool();
+});
+
+beforeEach(async () => {
+    await initializeDatabase();
+});
+  
+afterEach(async () =>{
+    await clearDatabase();
+});
+ 
+
+test('authentication with valid credentials', async () => {
+    var user = {
+            UserID: "234",
+            Username: "u234",
+            Password: "12324sd",
+            Role: 'Admin',
+            CompanyID: 1
+        };
+    await db.addUser(user);
+    const {valid, token} = await auth.authenticate(user.Username, user.Password);
     expect(valid).toBe(true);
 
 });
 
-test('authentication with invalid credentials', () => {
+test('authentication with invalid credentials', async () => {
     var user = {
-            username: "u234",
-            password: "12324sd"
-        }
-    
+        UserID : "234",
+        Username: "u234",
+        Password: "12324sd",
+        Role: 'Admin',
+        CompanyID: 1
+    };
+    await db.addUser(user);
+
     var user2 = {
-        username: "dsfs",
-        password: "dsfs"
-    }
+        UserID : "2234",
+        Username: "2u234",
+        Password: "88787",
+        Role: 'Admin',
+        CompanyID: 1
+    };
 
     auth.Users.push(user);
-    const {valid, token} = auth.authenticate(user2.username, user2.password);
+    const {valid, token} = await auth.authenticate(user2.Username, user2.Password);
     expect(valid).toBe(false);
     expect(token).toBe(undefined);
 

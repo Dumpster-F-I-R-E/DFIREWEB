@@ -18,41 +18,40 @@ const generateAuthToken = () => {
     return crypto.randomBytes(30).toString('hex');
 }
 
-exports.authenticate = (username, password, callback) => {
+exports.authenticate = async (username, password) => {
 
-    var result = {valid:false, authToken:null};
-    var user = db.getUserByUsername(username, function(user){
-        if(user){            
-            if(user.Password === password){
-                const authToken = generateAuthToken();
-    
-                      // Store authentication token
-                      authTokens[authToken] = user;
-            
-                      callback({
-                          valid: true,
-                          authToken: authToken
-                      });
-                      return;        
-                     
-            }
+    let result = { valid: false, authToken: null };
+    var user = await db.getUserByUsername(username);
+    if (user) {
+
+        if (user.Password === password) {
+            const authToken = generateAuthToken();
+
+            // Store authentication token
+            authTokens[authToken] = user;
+
+            result = {
+                valid: true,
+                authToken: authToken
+            };
+
         }
-        callback({valid:false, authToken:null});
-    });    
-    
+    }
+
+    return result;
 }
 
-exports.logout = (authToken) => {    
+exports.logout = (authToken) => {
     authTokens[authToken] = null;
 }
 
 
-  
+
 exports.requireAuth = (req, res, next) => {
-      // Get auth token from the cookies
+    // Get auth token from the cookies
     const authToken = req.cookies['AuthToken'];
     req.user = authTokens[authToken];
-  
+
     if (req.user) {
         next();
     } else {
@@ -61,4 +60,4 @@ exports.requireAuth = (req, res, next) => {
             messageClass: 'alert-danger'
         });
     }
-  };
+};

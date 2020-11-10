@@ -6,19 +6,17 @@ router.get('/login', function(req, res){
     res.render('login', { message: '' });
  });
  
- router.post('/login', function(req, res){
+ router.post('/login', async function(req, res){
     console.log(req.body);
-    auth.authenticate(req.body.username, req.body.password, function (result){
-      const {valid, authToken} = result;
-      console.log("valid", valid);
-      if(valid){
-        res.cookie('AuthToken', authToken);  
-        res.redirect('/mainMenu');
-      }else{
-        res.render('login', {message: "Please enter both id and password"});
-    }  
-    });
-    
+    const {valid, authToken} = await auth.authenticate(req.body.username, req.body.password);
+    console.log("valid", valid);
+    if(valid){
+      res.cookie('AuthToken', authToken);  
+      res.redirect('/mainMenu');
+    }else{
+      res.render('login', {message: "Please enter both id and password"});
+    }
+  
  });
 
  router.get('/logout', function(req, res){
