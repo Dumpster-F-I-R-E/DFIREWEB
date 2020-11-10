@@ -44,7 +44,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < database/sql/travis.sql
-    - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < databases/sql/create_test_tables.sql
+    - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < database/sql/create_test_tables.sql
     - run: npm ci
     - run: npm run build --if-present
     - run: npm run test
