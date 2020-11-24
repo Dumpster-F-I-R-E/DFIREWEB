@@ -1,57 +1,62 @@
 let map;
 
 function initMap() {
+
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 51.05011, lng: -114.08529 },
         zoom: 12,
     });
-    const marker = new google.maps.Marker({
-        position: { lat: 51.05011, lng: -114.08529 },
-        map: map,
-    });
+ 
 
-    const marker2 = new google.maps.Marker({
-        position: { lat: 51.10011, lng: -114.08529 },
+  google.maps.event.addListener(map, "idle", showDumpsters);
+}
+
+function addMarker(dumpster, map) {
+    // The marker, positioned at Uluru
+    let lat = dumpster.lat;
+    let lng = dumpster.lng;
+    const marker = new google.maps.Marker({
+        position: { lat:lat, lng:lng },
         map: map,
     });
-    // map.addListener('idle', function () {
-       
-    // });
 
     const contentString =  
     '<div id="body">' +
-    '<p>Fullness: 50%<br>'+
-    'Battery: 80%<br>' +
-    'Location: Cityhall</p>'+
+     '<p>Fullness: '+dumpster.fullness + '%<br>'+
+      'Battery: ' + dumpster.battery + '%<br></p>' +
     "</div>";
 
-  const infowindow = new google.maps.InfoWindow({
-    content: contentString,
-  });
-
-  
-  marker.addListener("click", () => {
-    window.location = '/dumpster/1';
-  });
-
-
-  marker.addListener("mouseover", () => {
-    infowindow.open(map, marker);
-  });
-
-  marker.addListener("mouseout", () => {
-    infowindow.close();
-  });
-
-
-}
-
-function addMarker(lat1, lng1) {
-    // The marker, positioned at Uluru
-    const marker = new google.maps.Marker({
-        position: { lat: lat1, lng: lng1 },
-        map: map,
+    const infowindow = new google.maps.InfoWindow({
+          content: contentString,
     });
 
-    
+
+    marker.addListener("click", () => {
+      window.location = '/dumpster/' + dumpster.id;
+    });
+  
+  
+    marker.addListener("mouseover", () => {
+      infowindow.open(map, marker);
+    });
+  
+    marker.addListener("mouseout", () => {
+      infowindow.close();
+    });
+  
+  
+}
+
+
+function showDumpsters(){
+  fetch('/api/dumpsters', {
+    method : 'get'
+  }).then((res) => {
+    return res.json();
+  }).then( (data) => {
+    console.log(data);
+    data.forEach(dumpster => {
+    addMarker(dumpster, map);
+  });
+}).catch((err) => console.log(err));
 }
