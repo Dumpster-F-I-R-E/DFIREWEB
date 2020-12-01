@@ -55,3 +55,10 @@ CREATE TABLE IF NOT EXISTS `SensorReports` (
     FOREIGN KEY (`SensorID`) REFERENCES Sensors(`SensorID`)
 );
 
+CREATE TABLE IF NOT EXISTS `Sessions` (
+	`SessionID` INT NOT NULL AUTO_INCREMENT,
+	`UserID` INT NOT NULL,
+	`Token` VARCHAR(120) NOT NULL,
+	`ExpireDate` DATE NOT NULL,
+	PRIMARY KEY (`SessionID`)
+);
