@@ -1,5 +1,9 @@
 # Style Guide
 
+## Plugins
+- ESLint - linter
+- Prettier - formatter
+
 ## Editor Intergration
 - Install VS Code ESLint plugin.
 
