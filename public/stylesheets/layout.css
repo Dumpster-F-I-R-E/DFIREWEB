@@ -10,7 +10,7 @@ body {
 .wrapper {
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 150px auto;
+    grid-template-columns: 200px auto;
     height: 95%;
     width: 100%;
 }

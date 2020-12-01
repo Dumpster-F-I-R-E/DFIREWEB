@@ -1,6 +1,8 @@
 .nav {
     background-color: #1b2430;
     padding-top: 50px;
+    padding-left: 15px;
+    text-align: left;
     /* border: 1px solid gray; */
     /* height: 100%;  */
 }
