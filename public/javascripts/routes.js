@@ -51,30 +51,27 @@ function addMarker(dumpster, map) {
 var coords = [];
 const polygons = [];
 
-function similar(latLng1, latLng2){
-    const variation = 0.005 * 2**(12-map.zoom);
-    if(Math.abs(latLng1.lat -latLng2.lat) < variation && Math.abs(latLng1.lng -latLng2.lng) < variation){
+function similar(latLng1, latLng2) {
+    const variation = 0.005 * 2 ** (12 - map.zoom);
+    if (
+        Math.abs(latLng1.lat - latLng2.lat) < variation &&
+        Math.abs(latLng1.lng - latLng2.lng) < variation
+    ) {
         return true;
     }
     return false;
 }
 
-const colors = [
-    '#2980B9',
-    '#D35400',
-    '#16A085',
-    '#34495E',
-    '#8E44AD'
-];
+const colors = ['#2980B9', '#D35400', '#16A085', '#34495E', '#8E44AD'];
 var counter = 0;
 var color = colors[counter];
 
-function clickOnMap(latLng){
+function clickOnMap(latLng) {
     console.log(latLng);
-     // Construct the polygon.  
-     if(coords.length > 1 && similar(latLng,coords[0])){
+    // Construct the polygon.
+    if (coords.length > 1 && similar(latLng, coords[0])) {
         console.log('Draw Polygon');
-        
+
         let polygon = new google.maps.Polygon({
             paths: coords,
             strokeColor: color,
@@ -88,7 +85,7 @@ function clickOnMap(latLng){
         color = colors[counter];
         polygons.push(polygon);
         coords = [];
-    }else{
+    } else {
         coords.push(latLng);
     }
 
@@ -103,14 +100,13 @@ function clickOnMap(latLng){
 }
 
 function drawOnMap() {
-
     // Configure the click listener.
     map.addListener('click', (mapsMouseEvent) => {
-        latLng = mapsMouseEvent.latLng.toJSON();       
-        
-        let radius = 200 * 2**(12-map.zoom);
+        latLng = mapsMouseEvent.latLng.toJSON();
+
+        let radius = 200 * 2 ** (12 - map.zoom);
         let strokeColor = color;
-        if (coords.length == 0 ){
+        if (coords.length == 0) {
             strokeColor = '#FFFFFF';
         }
         const circle = new google.maps.Circle({
@@ -127,13 +123,7 @@ function drawOnMap() {
             clickOnMap(circle.center.toJSON());
         });
         clickOnMap(latLng);
-       
-        
     });
-
-
-
-
 
     fetch('/api/dumpsters', {
         method: 'get',
