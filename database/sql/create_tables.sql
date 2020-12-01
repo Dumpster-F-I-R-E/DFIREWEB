@@ -1,4 +1,3 @@
-USE dfireweb;
 CREATE TABLE IF NOT EXISTS `Users` (
 	`UserID` INT NOT NULL,
 	`Username` TEXT NOT NULL,

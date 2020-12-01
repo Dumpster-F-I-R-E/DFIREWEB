@@ -1,10 +1,9 @@
-@import "nav.css";
-@import "layout.css";
-@import "button.css";
-
+@import 'nav.css';
+@import 'layout.css';
+@import 'button.css';
 
 .my-profile-img {
-    width:200px;
+    width: 200px;
     border-radius: 50%;
     border: 2px solid white;
 }
@@ -13,9 +12,9 @@
     padding: 20px;
 }
 
-.container{
+.container {
     display: grid;
-    grid-template-columns: 250px auto auto ;
+    grid-template-columns: 250px auto auto;
     grid-column-gap: 20px;
 }
 
@@ -29,7 +28,7 @@
     width: 100%;
 }
 
-.container #address{
+.container #address {
     padding: 5px;
     width: 100%;
 }
@@ -41,17 +40,12 @@
     max-width: 300px;
 }
 
-.btn-container{
+.btn-container {
     padding: 20px;
 }
 
 @media only screen and (max-width: 750px) {
-
-    .container{
+    .container {
         display: block;
     }
-   
-
-   
-
 }

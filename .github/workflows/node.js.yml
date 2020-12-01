@@ -4,47 +4,46 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
+        services:
+            mysql:
+                image: mysql:8.0
+                env:
+                    MYSQL_USER: dfireweb
+                    MYSQL_PASSWORD: password
+                    MYSQL_DATABASE: dfireweb_test
+                    MYSQL_ROOT_PASSWORD: root
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping" 
+                    --health-interval=10s 
+                    --health-timeout=5s 
+                    --health-retries=3
+        strategy:
+            matrix:
+                node-version: [10.x, 12.x, 14.x]
 
-    runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_USER: dfireweb
-          MYSQL_PASSWORD: password
-          MYSQL_DATABASE: dfireweb_test
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=3
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      env:
-          MYSQL_DATABASE: dfireweb_test
-          DB_USERNAME: dfireweb
-          DB_PASSWORD: password
-          DB_PORT: ${{ job.services.mysql.ports[3306] }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < database/sql/travis.sql
-    - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < database/sql/create_test_tables.sql
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run test
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js ${{ matrix.node-version }}
+              env:
+                  MYSQL_DATABASE: dfireweb_test
+                  DB_USERNAME: dfireweb
+                  DB_PASSWORD: password
+                  DB_PORT: ${{ job.services.mysql.ports[3306] }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < database/sql/travis.sql
+            - run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot < database/sql/create_test_tables.sql
+            - run: npm ci
+            - run: npm run build --if-present
+            - run: npm run test

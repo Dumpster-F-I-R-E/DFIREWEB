@@ -1,35 +1,29 @@
-@import "nav.css";
-@import "layout.css";
+@import 'nav.css';
+@import 'layout.css';
 
- /* Always set the map height explicitly to define the size of the div
+/* Always set the map height explicitly to define the size of the div
         * element that contains the map. */
-        #map {
-            height: 100%;
-        }
+#map {
+    height: 100%;
+}
 
-       
+@media only screen and (max-width: 400px) {
+    .wrapper {
+        display: block;
+    }
 
-      
+    .nav {
+        display: none;
+    }
 
-       @media only screen and (max-width: 400px) {
+    #map {
+        /* position:absolute !important; */
+        /* top: 40px; */
+        height: 100vh;
+    }
 
-        .wrapper{
-            display: block;
-        }
-
-        .nav{
-            display: none;
-        }
-
-        #map{
-            /* position:absolute !important; */
-            /* top: 40px; */
-            height: 100vh;
-        }
-
-        .content {
-            padding: 0;
-            border: none;
-        }
-
-       }
+    .content {
+        padding: 0;
+        border: none;
+    }
+}

@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router();
-const dumpster = require("../controllers/dumpsterController");
-const auth = require("../controllers/authController");
+const dumpster = require('../controllers/dumpsterController');
+const auth = require('../controllers/authController');
 
 /* GET dumpseter infor. */
-router.get('/dumpster/:dumpsterId', auth.requireAuth, function(req, res, next) {
-  
-});
+// router.get('/dumpster/:dumpsterId', auth.requireAuth, function(req, res, next) {
 
-router.get('/dumpsters', auth.requireAuth, function(req, res, next) {
-  res.json(dumpster.getDumpstersInfo());
+// });
+
+router.get('/dumpsters', auth.requireAuth, function (req, res) {
+    res.json(dumpster.getDumpstersInfo());
 });
 
 module.exports = router;

@@ -3,7 +3,7 @@
     "user": "dfireweb",
     "password": "password",
     "database": "dfireweb",
-    "multipleStatements" : true,
+    "multipleStatements": true,
     "waitForConnections": true,
     "connectionLimit": 10,
     "queueLimit": 0
