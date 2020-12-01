@@ -71,31 +71,22 @@ exports.addUser = async (user) => {
         .catch(printErrors);
 };
 
-exports.storeAuthToken = async (userId,token, expires) => {
-    let sql = 'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
- 
-    await pool.execute(sql, [
-        userId,
-        token,
-        expires         
-    ]).catch(printErrors);
+exports.storeAuthToken = async (userId, token, expires) => {
+    let sql =
+        'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
+
+    await pool.execute(sql, [userId, token, expires]).catch(printErrors);
 };
 
 exports.getAuthToken = async (token) => {
-    let sql = mysql.format('SELECT * FROM Sessions WHERE Token = ?', [
-        token,
-    ]);
+    let sql = mysql.format('SELECT * FROM Sessions WHERE Token = ?', [token]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
-
 };
 
 exports.deleteAuthToken = async (token) => {
-    let sql = mysql.format('DELETE FROM Sessions WHERE Token = ?', [
-        token,
-    ]);
+    let sql = mysql.format('DELETE FROM Sessions WHERE Token = ?', [token]);
     await pool.query(sql).catch(printErrors);
-    
 };

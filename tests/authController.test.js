@@ -55,12 +55,14 @@ test('authentication with valid credentials', async () => {
         CompanyID: 1,
     };
     await db.addUser(user);
-    const { valid, authToken } = await auth.authenticate(
+    const { valid, authToken, expires } = await auth.authenticate(
         user.Username,
         user.Password
     );
     expect(valid).toBe(true);
     expect(authToken).toBeTruthy();
+    let current = new Date();
+    expect(current < expires).toBe(true);
 });
 
 test('authentication with invalid credentials', async () => {
@@ -89,51 +91,67 @@ test('authentication with invalid credentials', async () => {
     expect(token).toBe(undefined);
 });
 
-test('logout', () => {
-    var token = '213342';
-    auth.authTokens[token] = 'user1';
+test('logout', async () => {
+    let userId = 21322;
+    var token = auth.generateAuthToken();
+    let current = new Date();
+    let expireDate = new Date(current.setDate(current.getDate() + 10));
+    db.storeAuthToken(userId, token, expireDate);
     auth.logout(token);
-    expect(auth.authTokens[token]).toBe(null);
+    let session = await db.getAuthToken(token);
+    expect(session).toBe(undefined);
 });
 
-test('requireAuth with valid login', () => {
+test('requireAuth with valid login', async () => {
     var token = '213342';
-    auth.authTokens[token] = 'user1';
-    var flag = false;
+    let userID = 23434;
+    let current = new Date();
+    let expireDate = new Date(current.setDate(current.getDate() + 10));
+    db.storeAuthToken(userID, token, expireDate);
     req = {};
     req.cookies = {};
     req.cookies['AuthToken'] = token;
-    const mockNext = jest.fn(() => {
-        flag = true;
-    });
+    const mockNext = jest.fn();
     const res = {
-        render: (page, message) => {
-            console.log(message);
-            flag = false;
-        },
+        render: jest.fn(),
     };
-    auth.requireAuth(req, res, mockNext);
+    await auth.requireAuth(req, res, mockNext);
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(flag).toBe(true);
+    expect(res.render.mock.calls.length).toBe(0);
 });
 
-test('requireAuth without valid login', () => {
-    var token = '213342';
-    auth.authTokens[token] = null;
-    var flag = false;
+test('requireAuth without valid login', async () => {
+    var token = '213342saddfs';
+    db.deleteAuthToken(token);
     req = {};
     req.cookies = {};
     req.cookies['AuthToken'] = token;
-    const mockNext = jest.fn(() => {
-        flag = true;
-    });
+    const mockNext = jest.fn();
     const res = {
-        render: (page, message) => {
-            console.log(message);
-            flag = true;
-        },
+        render: jest.fn(),
     };
-    auth.requireAuth(req, res, mockNext);
+    await auth.requireAuth(req, res, mockNext);
     expect(mockNext.mock.calls.length).toBe(0);
-    expect(flag).toBe(true);
+    expect(res.render.mock.calls.length).toBe(1);
+});
+
+test('session token with valid credentials', async () => {
+    var user = {
+        UserID: 234,
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    await db.addUser(user);
+    const { valid, authToken } = await auth.authenticate(
+        user.Username,
+        user.Password
+    );
+    expect(valid).toBe(true);
+    let session = await db.getAuthToken(authToken);
+    expect(session.UserID).toBe(user.UserID);
+    expect(authToken).toBeTruthy();
+    let current = new Date();
+    expect(current < session.ExpireDate).toBe(true);
 });

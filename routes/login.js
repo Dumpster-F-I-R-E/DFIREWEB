@@ -2,7 +2,14 @@ var express = require('express');
 var router = express.Router();
 var auth = require('../controllers/authController');
 
-router.get('/login', function (req, res) {
+router.get('/login', async function (req, res) {
+    const authToken = req.cookies['AuthToken'];
+    let valid = await auth.isValidSession(authToken);
+    if (valid) {
+        res.redirect('/mainMenu');
+    } else {
+        res.render('login', { message: '' });
+    }
     res.render('login', { message: '' });
 });
 
@@ -21,9 +28,9 @@ router.post('/login', async function (req, res) {
     }
 });
 
-router.get('/logout', function (req, res) {
+router.get('/logout', async function (req, res) {
     const authToken = req.cookies['AuthToken'];
-    auth.logout(authToken);
+    await auth.logout(authToken);
     res.redirect('/login');
 });
 
