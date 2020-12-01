@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE</title>
+    <link rel='stylesheet' href='/stylesheets/map.css' />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="/javascripts/routes.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXl5WzhM1ZWUSQYcQcz1_sFkX1EvHJrNc&callback=initMap&libraries=&v=weekly"
+            defer></script>   
+</head>
+<body>
+    <div class="header">
+        <h1 class="title"> Dumpster FIRE </h1>
+    </div>
+    <div class="wrapper"> 
+      <%- include('nav.ejs') %>
+      <div class="content">
+        <div id="map"></div>
+      </div>
+    </div>
+</body>
+</html>

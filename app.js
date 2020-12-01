@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var dumpsterMapRouter = require('./routes/dumpsterMap');
+var dumpsterRoutesRouter = require('./routes/dumpsterRoutes');
 var loginRouter = require('./routes/login');
 var profileRouter = require('./routes/profile');
 var userlistRouter = require('./routes/userList');
@@ -35,6 +36,7 @@ app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
 app.use('/addUser', addUserRouter);
 app.use('/api', apiRouter);
+app.use('/routes', dumpsterRoutesRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
