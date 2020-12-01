@@ -1,42 +1,50 @@
+@import "button.css";
+
 body{
     background-color: #ffe3 ;
+    background-image: url("/images/login.jpg");
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    
 }
 .wrapper{
-    margin: 200px auto;
+    margin: 250px auto;
     border: 2px solid #8080804f;
-    width: 275px;
+    border-radius: 20px;
+    width: 400px;
     background-color: white;
 }
 
-.wrapper form{
-    padding: 20px;
-    margin: 0 auto;
-    width: 80%;
+.title{
+    font-size: 34px; 
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
+.wrapper form{
+    padding-bottom:20px;
+    margin: 0 auto;
+    font-size: 16px;
+    width: 80%
 }
 
 .wrapper form input{
+    box-sizing: border-box;
     margin: 10px;
-    width: 100px;
+    width: 90%;
+    padding: 10px;
+    border: 1px solid gray;    
 }
 
-.wrapper .title{
-    font-size: 20px;
-    text-align: center;
-   
+.wrapper .btn {
+    padding: 10px;
+    margin-top:5px;
+    margin-bottom:5px;
 }
 
 .wrapper .message{
     color: red;
-    font-size: 12px;;
-    display:block;
+    font-size: 14px;;
     text-align: center;
 }
 
-.wrapper .button{
-    background-color: #004480ba;
-    color: white;
-    border: none;
-    padding: 5px;
-}

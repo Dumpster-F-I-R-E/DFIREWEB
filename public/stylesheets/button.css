@@ -1,0 +1,28 @@
+.btn {
+    padding: 10px;
+    border: none;
+    background-color: rgb(43, 90, 166);
+    color: white;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 10px 5px;
+}
+
+.btn:hover {
+    border: 1px solid black;
+    background-color: rgb(28, 59, 109);       
+}
+
+.secondary-btn {
+    padding: 10px;
+    border: none;
+    background-color:rgb(30, 136, 220);
+    color: white;
+    border: 1px solid gray;
+    margin: 10px 5px;
+}
+
+.secondary-btn:hover {
+    border: 1px solid black;
+    background-color: rgb(23, 105, 170);       
+}

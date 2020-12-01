@@ -1,0 +1,8 @@
+@import "nav.css";
+@import "layout.css";
+
+.content{
+    padding: 100px;
+    margin: 0 auto;
+    width: 100%;
+}
