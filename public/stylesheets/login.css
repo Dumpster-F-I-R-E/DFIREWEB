@@ -3,6 +3,7 @@
 body {
     background-color: #ffe3;
     background-image: url('/images/login.jpg');
+    background-size: cover;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
         'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
