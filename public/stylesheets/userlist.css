@@ -5,11 +5,17 @@
 .content{
     display: grid;
     grid-template-columns: 30% auto;
+    grid-column-gap: 20px;
+    /* background-color: rgb(247, 249, 252); */
+    background-color:rgb(180, 200, 216);
 }
 
 .col-1, .col-2{
-    border: 1px solid gray;
+    /* border: 1px solid gray; */
+    background-color: white;
     padding: 20px;
+    border-radius: 10px;
+    margin: 10px;
 }
 
 .col-2 {
@@ -19,6 +25,14 @@
     text-align: left;
 
 }
+
+th{
+    border-bottom: 1px solid gray;  
+    background-color: rgba(17, 52, 150, 0.671);
+    color:white;
+    padding: 2px;
+}
+
 
 tr:hover{
     background-color: rgba(17, 52, 150, 0.671);
