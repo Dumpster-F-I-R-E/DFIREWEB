@@ -10,6 +10,7 @@ function initMap() {
 
     // google.maps.event.addListener(map, 'idle', showDumpsters);
     drawOnMap();
+   
 }
 
 function addMarker(dumpster, map) {
@@ -139,3 +140,4 @@ function drawOnMap() {
         })
         .catch((err) => console.log(err));
 }
+
