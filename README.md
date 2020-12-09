@@ -21,6 +21,8 @@ https://nodejs.org/en/ - Version 15.1.0 Current
 
 ## Create Database
 
+     - Use Mysql Benchmark or Mysql CMD to run the following SQL Commands.
+  
      CREATE USER 'dfireweb'@'localhost' IDENTIFIED BY 'password';
      CREATE DATABASE IF NOT EXISTS dfireweb;
      GRANT ALL PRIVILEGES ON dfireweb. * TO 'dfireweb'@'localhost';
