@@ -19,6 +19,18 @@ https://nodejs.org/en/ - Version 15.1.0 Current
 
      npm install --only=dev
 
+## Create Database
+
+     CREATE USER 'dfireweb'@'localhost' IDENTIFIED BY 'password';
+     CREATE DATABASE IF NOT EXISTS dfireweb;
+     GRANT ALL PRIVILEGES ON dfireweb. * TO 'dfireweb'@'localhost';
+     CREATE DATABASE IF NOT EXISTS dfireweb_test;
+     GRANT ALL PRIVILEGES ON dfireweb_test. * TO 'dfireweb'@'localhost';
+
+### Create Tables
+     npm run db-init
+
+
 ## Run tests
 
      npm run test

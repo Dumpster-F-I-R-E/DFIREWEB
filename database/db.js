@@ -18,6 +18,17 @@ function printErrors(error) {
     throw error;
 }
 
+exports.checkConnection = async () => {
+    let connection = null;
+    try{
+        connection = await pool.getConnection();
+    }catch(err){
+        // console.log(err);
+    }
+    
+    return connection != null;
+};
+
 exports.closePool = async () => {
     await pool.end().catch(printErrors);
 };

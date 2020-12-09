@@ -8,7 +8,8 @@
         "devstart": "nodemon ./bin/www",
         "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart",
         "lint": "eslint --ignore-path .gitignore .",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "db-init": "database/init.js"
     },
     "dependencies": {
         "cookie-parser": "~1.4.4",
