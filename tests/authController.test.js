@@ -107,7 +107,7 @@ test('requireAuth with valid login', async () => {
     let userID = 23434;
     let current = new Date();
     let expireDate = new Date(current.setDate(current.getDate() + 10));
-    db.storeAuthToken(userID, token, expireDate);
+    await db.storeAuthToken(userID, token, expireDate);
     req = {};
     req.cookies = {};
     req.cookies['AuthToken'] = token;
