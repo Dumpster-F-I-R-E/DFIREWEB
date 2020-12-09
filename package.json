@@ -9,7 +9,8 @@
         "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart",
         "lint": "eslint --ignore-path .gitignore .",
         "format": "prettier --write .",
-        "db-init": "database/init.js"
+        "db-init": "database/init.js",
+        "check": "eslint --ignore-path .gitignore . && prettier --write . && jest"
     },
     "dependencies": {
         "cookie-parser": "~1.4.4",

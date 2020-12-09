@@ -9,26 +9,26 @@ var init = async () => {
     let connected = await db.checkConnection();
     if (!connected) {
         console.log('Run SQL command to grant user permissions');
-        let sql = 'CREATE USER \'dfireweb\'@\'localhost\' IDENTIFIED BY \'password\';\n'
-            + 'CREATE DATABASE IF NOT EXISTS dfireweb;\n'
-            + 'GRANT ALL PRIVILEGES ON dfireweb. * TO \'dfireweb\'@\'localhost\'; \n';
-        +'CREATE DATABASE IF NOT EXISTS dfireweb_test;\n'
-            + 'GRANT ALL PRIVILEGES ON dfireweb_test. * TO \'dfireweb\'@\'localhost\';';
+        let sql =
+            "CREATE USER 'dfireweb'@'localhost' IDENTIFIED BY 'password';\n" +
+            'CREATE DATABASE IF NOT EXISTS dfireweb;\n' +
+            "GRANT ALL PRIVILEGES ON dfireweb. * TO 'dfireweb'@'localhost'; \n";
+        +'CREATE DATABASE IF NOT EXISTS dfireweb_test;\n' +
+            "GRANT ALL PRIVILEGES ON dfireweb_test. * TO 'dfireweb'@'localhost';";
         console.log(sql);
         console.log('Error Initilizing database');
     } else {
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
-        let sql = 'INSERT INTO Companies VALUES(1, \'General\', \'Calgary,AB\', \'403-454-3324\');\n'
-            + 'INSERT INTO Users VALUES (\'1\', \'root\', \'root\', \'Admin\', \'1\');';
+        let sql =
+            "INSERT INTO Companies VALUES(1, 'General', 'Calgary,AB', '403-454-3324');\n" +
+            "INSERT INTO Users VALUES ('1', 'root', 'root', 'Admin', '1');";
 
-        db.runQuery(sql);
+        await db.runQuery(sql);
         console.log('Closing connection');
         await db.closePool();
     }
-
 };
 
 init();
-

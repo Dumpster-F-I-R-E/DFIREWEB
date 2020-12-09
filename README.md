@@ -22,7 +22,7 @@ https://nodejs.org/en/ - Version 15.1.0 Current
 ## Create Database
 
      - Use Mysql Benchmark or Mysql CMD to run the following SQL Commands.
-  
+
      CREATE USER 'dfireweb'@'localhost' IDENTIFIED BY 'password';
      CREATE DATABASE IF NOT EXISTS dfireweb;
      GRANT ALL PRIVILEGES ON dfireweb. * TO 'dfireweb'@'localhost';
@@ -30,8 +30,8 @@ https://nodejs.org/en/ - Version 15.1.0 Current
      GRANT ALL PRIVILEGES ON dfireweb_test. * TO 'dfireweb'@'localhost';
 
 ### Create Tables
-     npm run db-init
 
+     npm run db-init
 
 ## Run tests
 
@@ -46,3 +46,9 @@ https://nodejs.org/en/ - Version 15.1.0 Current
      SET DEBUG=express-locallibrary-tutorial:* & npm run devstart
 
      open http://localhost:3000/
+
+## Commiting
+
+Run `npm run check` before commmiting to git.
+
+Check STYLEGUIDE.md for more information.

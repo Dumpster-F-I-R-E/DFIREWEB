@@ -20,12 +20,12 @@ function printErrors(error) {
 
 exports.checkConnection = async () => {
     let connection = null;
-    try{
+    try {
         connection = await pool.getConnection();
-    }catch(err){
+    } catch (err) {
         // console.log(err);
     }
-    
+
     return connection != null;
 };
 
@@ -101,7 +101,6 @@ exports.deleteAuthToken = async (token) => {
     let sql = mysql.format('DELETE FROM Sessions WHERE Token = ?', [token]);
     await pool.query(sql).catch(printErrors);
 };
-
 
 exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
