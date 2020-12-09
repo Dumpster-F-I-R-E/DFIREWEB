@@ -97,7 +97,7 @@ test('logout', async () => {
     let current = new Date();
     let expireDate = new Date(current.setDate(current.getDate() + 10));
     db.storeAuthToken(userId, token, expireDate);
-    auth.logout(token);
+    await auth.logout(token);
     let session = await db.getAuthToken(token);
     expect(session).toBe(undefined);
 });
