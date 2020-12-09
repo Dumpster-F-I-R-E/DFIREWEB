@@ -101,3 +101,8 @@ exports.deleteAuthToken = async (token) => {
     let sql = mysql.format('DELETE FROM Sessions WHERE Token = ?', [token]);
     await pool.query(sql).catch(printErrors);
 };
+
+
+exports.runQuery = async (sql) => {
+    await pool.query(sql).catch(printErrors);
+};

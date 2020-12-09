@@ -19,6 +19,11 @@ var init = async () => {
     } else {
         console.log('Initializing Tables..');
         await db.createTables();
+        console.log('Creating user account root password=root');
+        let sql = 'INSERT INTO Companies VALUES(1, \'General\', \'Calgary,AB\', \'403-454-3324\');\n'
+            + 'INSERT INTO Users VALUES (\'1\', \'root\', \'root\', \'Admin\', \'1\');';
+
+        db.runQuery(sql);
         console.log('Closing connection');
         await db.closePool();
     }
