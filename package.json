@@ -9,7 +9,7 @@
         "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart",
         "lint": "eslint --ignore-path .gitignore .",
         "format": "prettier --write .",
-        "db-init": "database/init.js",
+        "db-init": "node database/init.js",
         "check": "eslint --ignore-path .gitignore . && prettier --write . && jest"
     },
     "dependencies": {
