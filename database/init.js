@@ -18,14 +18,33 @@ var init = async () => {
         console.log(sql);
         console.log('Error Initilizing database');
     } else {
+        await db.dropTables();
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
-        let sql =
-            "INSERT INTO Companies VALUES(1, 'General', 'Calgary,AB', '403-454-3324');\n" +
-            "INSERT INTO Users VALUES ('1', 'root', 'root', 'Admin', '1');";
+        let company = {
+            CompanyID: 1,
+            Name: 'General',
+            Address: 'Calgary,AB',
+            Phone: '345-343-3432',
+        };
+        await db.addCompany(company);
+        var user = {
+            UserID: '1',
+            Username: 'root',
+            Password: 'root',
+            Role: 'Admin',
+            CompanyID: 1,
+        };
+        await db.addUser(user);
+        var depot = {
+            DepotID: '1',
+            Name: 'SW Dumpster',
+            Address: 'Calgary, AB',
+            CompanyID: 1,
+        };
+        await db.addDepot(depot);
 
-        await db.runQuery(sql);
         console.log('Closing connection');
         await db.closePool();
     }

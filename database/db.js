@@ -105,3 +105,16 @@ exports.deleteAuthToken = async (token) => {
 exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
 };
+
+exports.addDepot = async (depot) => {
+    let sql = 'INSERT INTO Depots VALUES(?, ?, ?, ?)';
+
+    await pool
+        .execute(sql, [
+            depot.DepotID,
+            depot.Name,
+            depot.Address,
+            depot.CompanyID,
+        ])
+        .catch(printErrors);
+};
