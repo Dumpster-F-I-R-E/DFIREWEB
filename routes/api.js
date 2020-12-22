@@ -8,8 +8,9 @@ const auth = require('../controllers/authController');
 
 // });
 
-router.get('/dumpsters', auth.requireAuth, function (req, res) {
-    res.json(dumpster.getDumpstersInfo());
+router.get('/dumpsters', auth.requireAuth, async function (req, res) {
+    let data = await dumpster.getDumpstersInfo();
+    res.json(data);
 });
 
 module.exports = router;

@@ -95,6 +95,63 @@ exports.addDepot = async (depot) => {
         .catch(printErrors);
 };
 
+exports.addSensor = async (sensor) => {
+    let sql = 'INSERT INTO Sensors VALUES(?, ?)';
+
+    await pool
+        .execute(sql, [
+            sensor.SensorID,
+            sensor.CompanyID
+        ])
+        .catch(printErrors);
+};
+
+exports.storeSensorReport = async (report) => {
+    let sql = 'INSERT INTO SensorReports VALUES(?, ?, ?, ?, ?, ?,?)';
+
+    await pool
+        .execute(sql, [
+            report.ReportID,
+            report.SensorID,
+            report.Longitude,
+            report.Latitude,
+            report.BatteryLevel,
+            report.FullnessLevel,
+            report.ErrorCode
+        ])
+        .catch(printErrors);
+};
+
+exports.getSensorData = async () => {
+    let sql = 'SELECT  * '
+    + 'FROM SensorReports,'
+    + '(SELECT SensorID, max(ReportID) as ReportID '
+    + 'FROM SensorReports '
+    + 'GROUP BY SensorID) latest '
+    + 'WHERE SensorReports.ReportID=latest.ReportID ;'
+
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        
+        return results[0];
+    }
+
+};
+
+exports.getSensorById = async (id) => {
+    let sql = 'SELECT * '
+        + ' FROM SensorReports'
+        + ' WHERE SensorID=? '
+        + ' ORDER BY ReportID DESC;' ;
+
+    var results = await pool.query(sql , id).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        
+        return results[0];
+    }
+
+};
+
 exports.storeAuthToken = async (userId, token, expires) => {
     let sql =
         'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';

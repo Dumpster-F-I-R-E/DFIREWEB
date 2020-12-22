@@ -4,10 +4,10 @@ const auth = require('../controllers/authController');
 const dumpster = require('../controllers/dumpsterController');
 
 /* GET dumpseter . */
-router.get('/:dumpsterId', auth.requireAuth, function (req, res) {
-    var d = dumpster.getDumpsterInfo(req.params.dumpsterId);
+router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
+    var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
     res.render('dumpster', {
-        dumpster: d,
+        dumpster: d[0],
     });
 });
 
