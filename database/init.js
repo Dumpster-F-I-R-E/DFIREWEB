@@ -22,21 +22,42 @@ var init = async () => {
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
-        let company = {
+        
+		let company = {
             CompanyID: 1,
             Name: 'General',
             Address: 'Calgary,AB',
             Phone: '345-343-3432',
         };
         await db.addCompany(company);
-        var user = {
+        
+		var admin = {
             UserID: '1',
             Username: 'root',
             Password: 'root',
             Role: 'Admin',
             CompanyID: 1,
         };
-        await db.addUser(user);
+		var manager = {
+            UserID: '2',
+            Username: 'manager',
+            Password: 'manager',
+            Role: 'Manager',
+            CompanyID: 1,
+        };
+		var driver = {
+            UserID: '3',
+            Username: 'driver',
+            Password: 'driver',
+            Role: 'Driver',
+            CompanyID: 1,
+        };
+        await db.addUser(admin);
+		await db.addUser(manager);
+		await db.addUser(driver);
+		
+		
+		
         var depot = {
             DepotID: '1',
             Name: 'SW Dumpster',
@@ -44,7 +65,7 @@ var init = async () => {
             CompanyID: 1,
         };
         await db.addDepot(depot);
-
+		
         console.log('Closing connection');
         await db.closePool();
     }

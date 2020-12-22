@@ -82,6 +82,19 @@ exports.addUser = async (user) => {
         .catch(printErrors);
 };
 
+exports.addDepot = async (depot) => {
+    let sql = 'INSERT INTO Depots VALUES(?, ?, ?, ?)';
+
+    await pool
+        .execute(sql, [
+            depot.DepotID,
+            depot.Name,
+            depot.Address,
+            depot.CompanyID,
+        ])
+        .catch(printErrors);
+};
+
 exports.storeAuthToken = async (userId, token, expires) => {
     let sql =
         'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
@@ -106,15 +119,4 @@ exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
 };
 
-exports.addDepot = async (depot) => {
-    let sql = 'INSERT INTO Depots VALUES(?, ?, ?, ?)';
 
-    await pool
-        .execute(sql, [
-            depot.DepotID,
-            depot.Name,
-            depot.Address,
-            depot.CompanyID,
-        ])
-        .catch(printErrors);
-};
