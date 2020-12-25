@@ -2,7 +2,7 @@ const db = require('../database/db');
 
 exports.getUsers = async (name, role) => {
     let list = await db.getUsersSearch(name, role);
-    if(!list){
+    if (!list) {
         list = [];
     }
     return list;

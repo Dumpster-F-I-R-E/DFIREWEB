@@ -8,9 +8,9 @@ router.get('/', auth.requireAuth, async function (req, res) {
     let name = req.query.name;
     let list = await users.getUsers(name, role);
     res.render('userList', {
-        users:list,
-        role:role,
-        name:name
+        users: list,
+        role: role,
+        name: name,
     });
 });
 

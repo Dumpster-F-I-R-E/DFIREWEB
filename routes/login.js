@@ -10,7 +10,6 @@ router.get('/login', async function (req, res) {
     } else {
         res.render('login', { message: '' });
     }
-    
 });
 
 router.post('/login', async function (req, res) {
