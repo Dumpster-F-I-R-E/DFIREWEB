@@ -176,4 +176,32 @@ exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
 };
 
+exports.getUsers = async () => {
+    let sql = 'SELECT FirstName, LastName, Email, Role'
+    + ' FROM Users JOIN Profile'
+    + ' WHERE Users.UserID = Profile.UserID;';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+}
+
+exports.getUsersSearch = async (name, role) => {
+    let sql = 'SELECT Users.UserID, FirstName, LastName, Email, Role'
+    + ' FROM Users JOIN Profile'
+    + ' WHERE Users.UserID = Profile.UserID';
+    if(name && name != '*'){
+        sql += ' AND (FirstName LIKE ? OR LastName LIKE ?)'
+        sql = mysql.format(sql, [name, name]);
+    }
+
+    if (role && role != '*'){
+        sql += ' AND Role Like ?';
+        sql = mysql.format(sql, [role]);
+    }
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+}
 
