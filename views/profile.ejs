@@ -6,8 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumpster FIRE - Profile</title>
     <link rel='stylesheet' href='/stylesheets/profile.css' />
-
+    <script src="/javascripts/jquery-3.x-git.min.js"></script>
 </head>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("button.apply").click(function(){
+       
+            let profile = {};
+            profile.StaffID = $("#staffid").text();
+            profile.FirstName = $("#firstname").val();
+            profile.LastName = $("#lastname").val();
+            profile.Phone = $("#phone").val();
+            profile.Email = $("#email").val();
+            profile.Address = $("#address").val();
+            $.post( "/profile", profile );
+
+        });
+
+        $("button.cancel").click(function(){
+            location.href='/profile';
+        });
+
+        $("button.upload").click(function(){
+            console.log("upload");
+            $('input#dialog').trigger('click');
+        });
+
+    });
+
+</script>
 
 <body>
     <div class="header">
@@ -15,47 +43,53 @@
     </div>
     <div class="wrapper">
         <%- include('nav.ejs') %>
-        <div class="content">
-            <h1 class="title">My Profile </h1>
-            <div class="container">
-                <div class="col-1">
-                    <img src="/images/profile.jpg" alt="" class="my-profile-img">
-                    <button class="btn secondary-btn">Upload photo</button>
-                </div>
-
-                <div class="form">
-                    <div class="col-2">
-                        <label for="">Staff ID: </label>
-                        <label for="username">Username: </label>
-                        <label for="">Password: </label>
-                        <label for="">Phone: </label>
-                        <label for="">Email: </label>
-                        <label for="">Address: </label>
+            <div class="content">
+                <h1 class="title">My Profile </h1>
+                <div class="container">
+                    <div class="col-1">
+                        <img src="/images/profile.jpg" alt="" class="my-profile-img">
+                        <button class="btn secondary-btn upload">Upload photo</button>
                     </div>
 
-                    <div class="col-3">
-                        <label for="">sdfsf </label>
-                        <input type="text" name="username" id="username">
-                        <input type="password" name="" id="password">
+                    <div class="form">
+                        <div class="col-2">
+                            <label for="">Staff ID: </label>
+                            <label for="">First Name: </label>
+                            <label for="">Last Name: </label>
+                            <label for="">Phone: </label>
+                            <label for="">Email: </label>
+                            <label for="">Address: </label>
+                        </div>
 
-                        <input type="text" name="phone" id="phone">
-                        <input type="text" name="email" id="email">
-                        <textarea name="address" id="address" rows="5">
-                    2342,&#13;&#10;12 th Street,&#13;&#10;Calgary, AB
+                        <div class="col-3">
+
+                            <label id="staffid" for="">
+                                <%= profile.StaffID %>
+                            </label>
+                            <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
+                            <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
+
+                            <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
+                            <input type="text" name="email" id="email" value="<%= profile.Email %>">
+                            <textarea name="address" id="address" rows="5">
+                            <%= profile.Address %>
                 </textarea>
+                        </div>
+                    </div>
+                    <div class="col-4">
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="btn-container">
+                    <input id="dialog" type="file" style="display: none" accept="image/*" />
+                    <button class="btn apply">Apply</button>
+                    <button class="btn cancel">Cancel</button>
                 </div>
-            </div>
-            <div class="btn-container">
-                <button class="btn apply">Apply</button>
-                <button class="btn cancel">Cancel</button>
-            </div>
-            
 
-        </div>
+
+            </div>
     </div>
 </body>
+
+
 
 </html>

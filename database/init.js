@@ -103,6 +103,7 @@ var init = async () => {
             Role: 'Admin',
             CompanyID: 1,
         };
+
 		var manager = {
             UserID: '2',
             Username: 'manager',
@@ -121,8 +122,18 @@ var init = async () => {
 		await db.addUser(manager);
 		await db.addUser(driver);
 		
-		
-		
+        var admin_profile = {
+            UserID: '1',
+            FirstName: 'John',
+            LastName: 'Doe',
+            Address: '24 Ave Calgary, AB',
+            Email: 'admin@abc.com',
+            Phone: '403-343-3434',
+            StaffID: '001'
+        };
+        
+        await db.updateProfile(admin_profile);
+        
         var depot = {
             DepotID: '1',
             Name: 'SW Dumpster',
