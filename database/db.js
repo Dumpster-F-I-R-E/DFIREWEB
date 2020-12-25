@@ -215,8 +215,8 @@ exports.getUsers = async () => {
 
 exports.getUsersSearch = async (name, role) => {
     let sql = 'SELECT Users.UserID, FirstName, LastName, Email, Role'
-    + ' FROM Users JOIN Profile'
-    + ' WHERE Users.UserID = Profile.UserID';
+    + ' FROM Users LEFT JOIN Profile'
+    + ' ON Users.UserID = Profile.UserID';
     if(name && name != '*'){
         sql += ' AND (FirstName LIKE ? OR LastName LIKE ?)'
         sql = mysql.format(sql, [name, name]);

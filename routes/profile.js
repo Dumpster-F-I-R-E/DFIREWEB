@@ -33,4 +33,24 @@ router.post('/', auth.requireAuth, async function (req, res) {
 
 });
 
+router.get('/id/:id', auth.requireAuth, async function (req, res) {
+    let id = req.params.id;
+    let p = await profile.getProfileById(id);
+    if(!p){
+        p = {
+            UserID: 'UserID',
+            FirstName: 'Fist Name',
+            LastName: 'Last Name',
+            Address: '24 Ave Calgary, AB',
+            Email: 'admin@abc.com',
+            Phone: '403-343-3434',
+            StaffID: 'Staff ID'
+        };
+    }
+    
+    res.render('profile', {
+        profile: p
+    });
+});
+
 module.exports = router;

@@ -8,6 +8,13 @@ exports.getProfileInfo = async (authToken) => {
     return data;
 };
 
+
+exports.getProfileById = async (userId) => {
+    let data = await db.getProfile(userId);
+    
+    return data;
+};
+
 exports.updateProfile = async (authToken, profile) => {
     let session = await db.getAuthToken(authToken);
     profile.UserID = session.UserID;
