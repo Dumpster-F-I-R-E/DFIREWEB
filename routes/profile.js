@@ -18,7 +18,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
             StaffID: 'Staff ID',
         };
     }
-
+    console.log('Staff ID', p.StaffID);
     res.render('profile', {
         profile: p,
     });
@@ -49,6 +49,12 @@ router.get('/id/:id', auth.requireAuth, async function (req, res) {
     res.render('profile', {
         profile: p,
     });
+});
+
+router.post('/change-password', auth.requireAuth, async function (req, res) {
+    const data = req.body;
+    await profile.changePassword(data.UserID, data.Password);
+    res.redirect('/profile');
 });
 
 module.exports = router;

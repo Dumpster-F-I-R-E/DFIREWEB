@@ -72,6 +72,15 @@ exports.updateProfile = async (profile) => {
         .catch(printErrors);
 };
 
+exports.changePassword = async (userid, password) => {
+    console.log('Change Passowrd', userid, password);
+    let sql = mysql.format('UPDATE Users SET Password=? WHERE UserID=?', [
+        password,
+        userid,
+    ]);
+    await pool.execute(sql).catch(printErrors);
+};
+
 exports.getProfile = async (id) => {
     let sql = mysql.format('SELECT * FROM Profile WHERE UserID = ?', [id]);
     var results = await pool.query(sql).catch(printErrors);

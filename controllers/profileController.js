@@ -19,3 +19,7 @@ exports.updateProfile = async (authToken, profile) => {
     profile.UserID = session.UserID;
     await db.updateProfile(profile);
 };
+
+exports.changePassword = async (userid, password) => {
+    await db.changePassword(userid, password);
+};
