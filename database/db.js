@@ -55,6 +55,33 @@ exports.getUserByUsername = async (username) => {
     }
 };
 
+exports.updateProfile = async (profile) => {
+    let sql = 'REPLACE INTO Profile VALUES(?, ?, ?, ?, ?, ?, ?);';
+    // let sql2 = mysql.format("INSERT INTO users VALUES('?', '?', '?', '?', '?')" , [1, user.Username, user.Password, user.Role, user.CompanyID] );
+    // console.log(sql2);
+    await pool
+        .execute(sql, [
+            profile.UserID,
+            profile.FirstName,
+            profile.LastName,
+            profile.Address,
+            profile.Email,
+            profile.Phone,
+            profile.StaffID,
+        ])
+        .catch(printErrors);
+};
+
+exports.getProfile = async (id) => {
+    let sql = mysql.format('SELECT * FROM Profile WHERE UserID = ?', [
+        id,
+    ]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
+
 exports.addCompany = async (company) => {
     let sql = 'INSERT INTO Companies values(?, ?, ?, ?)';
     await pool
@@ -82,6 +109,76 @@ exports.addUser = async (user) => {
         .catch(printErrors);
 };
 
+exports.addDepot = async (depot) => {
+    let sql = 'INSERT INTO Depots VALUES(?, ?, ?, ?)';
+
+    await pool
+        .execute(sql, [
+            depot.DepotID,
+            depot.Name,
+            depot.Address,
+            depot.CompanyID,
+        ])
+        .catch(printErrors);
+};
+
+exports.addSensor = async (sensor) => {
+    let sql = 'INSERT INTO Sensors VALUES(?, ?)';
+
+    await pool
+        .execute(sql, [
+            sensor.SensorID,
+            sensor.CompanyID
+        ])
+        .catch(printErrors);
+};
+
+exports.storeSensorReport = async (report) => {
+    let sql = 'INSERT INTO SensorReports VALUES(?, ?, ?, ?, ?, ?,?)';
+
+    await pool
+        .execute(sql, [
+            report.ReportID,
+            report.SensorID,
+            report.Longitude,
+            report.Latitude,
+            report.BatteryLevel,
+            report.FullnessLevel,
+            report.ErrorCode
+        ])
+        .catch(printErrors);
+};
+
+exports.getSensorData = async () => {
+    let sql = 'SELECT  * '
+        + 'FROM SensorReports,'
+        + '(SELECT SensorID, max(ReportID) as ReportID '
+        + 'FROM SensorReports '
+        + 'GROUP BY SensorID) latest '
+        + 'WHERE SensorReports.ReportID=latest.ReportID ;'
+
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+
+        return results[0];
+    }
+
+};
+
+exports.getSensorById = async (id) => {
+    let sql = 'SELECT * '
+        + ' FROM SensorReports'
+        + ' WHERE SensorID=? '
+        + ' ORDER BY ReportID DESC;';
+
+    var results = await pool.query(sql, id).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+
+        return results[0];
+    }
+
+};
+
 exports.storeAuthToken = async (userId, token, expires) => {
     let sql =
         'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
@@ -106,6 +203,7 @@ exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
 };
 
+
 exports.getImage = async (userid) => {
     let sql = mysql.format('SELECT UserID,Image FROM Profile WHERE UserID = ?', [userid]);
     var results = await pool.query(sql).catch(printErrors);
@@ -113,3 +211,4 @@ exports.getImage = async (userid) => {
         return results[0][0];
     }
 };
+

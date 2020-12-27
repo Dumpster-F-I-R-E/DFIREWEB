@@ -13,8 +13,8 @@ function initMap() {
 
 function addMarker(dumpster, map) {
     // The marker, positioned at Uluru
-    let lat = dumpster.lat;
-    let lng = dumpster.lng;
+    let lat = dumpster.Latitude;
+    let lng = dumpster.Longitude;
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,
@@ -23,10 +23,10 @@ function addMarker(dumpster, map) {
     const contentString =
         '<div id="body">' +
         '<p>Fullness: ' +
-        dumpster.fullness +
+        dumpster.FullnessLevel +
         '%<br>' +
         'Battery: ' +
-        dumpster.battery +
+        dumpster.BatteryLevel +
         '%<br></p>' +
         '</div>';
 
@@ -35,7 +35,7 @@ function addMarker(dumpster, map) {
     });
 
     marker.addListener('click', () => {
-        window.location = '/dumpster/' + dumpster.id;
+        window.location = '/dumpster/' + dumpster.SensorID;
     });
 
     marker.addListener('mouseover', () => {
