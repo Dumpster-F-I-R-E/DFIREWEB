@@ -72,10 +72,17 @@ exports.updateProfile = async (profile) => {
         .catch(printErrors);
 };
 
-exports.getProfile = async (id) => {
-    let sql = mysql.format('SELECT * FROM Profile WHERE UserID = ?', [
-        id,
+exports.changePassword = async (userid, password) => {
+    console.log('Change Passowrd', userid, password);
+    let sql = mysql.format('UPDATE Users SET Password=? WHERE UserID=?', [
+        password,
+        userid,
     ]);
+    await pool.execute(sql).catch(printErrors);
+};
+
+exports.getProfile = async (id) => {
+    let sql = mysql.format('SELECT * FROM Profile WHERE UserID = ?', [id]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
@@ -126,10 +133,7 @@ exports.addSensor = async (sensor) => {
     let sql = 'INSERT INTO Sensors VALUES(?, ?)';
 
     await pool
-        .execute(sql, [
-            sensor.SensorID,
-            sensor.CompanyID
-        ])
+        .execute(sql, [sensor.SensorID, sensor.CompanyID])
         .catch(printErrors);
 };
 
@@ -144,39 +148,37 @@ exports.storeSensorReport = async (report) => {
             report.Latitude,
             report.BatteryLevel,
             report.FullnessLevel,
-            report.ErrorCode
+            report.ErrorCode,
         ])
         .catch(printErrors);
 };
 
 exports.getSensorData = async () => {
-    let sql = 'SELECT  * '
-        + 'FROM SensorReports,'
-        + '(SELECT SensorID, max(ReportID) as ReportID '
-        + 'FROM SensorReports '
-        + 'GROUP BY SensorID) latest '
-        + 'WHERE SensorReports.ReportID=latest.ReportID ;'
+    let sql =
+        'SELECT  * ' +
+        'FROM SensorReports,' +
+        '(SELECT SensorID, max(ReportID) as ReportID ' +
+        'FROM SensorReports ' +
+        'GROUP BY SensorID) latest ' +
+        'WHERE SensorReports.ReportID=latest.ReportID ;';
 
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
-
         return results[0];
     }
-
 };
 
 exports.getSensorById = async (id) => {
-    let sql = 'SELECT * '
-        + ' FROM SensorReports'
-        + ' WHERE SensorID=? '
-        + ' ORDER BY ReportID DESC;';
+    let sql =
+        'SELECT * ' +
+        ' FROM SensorReports' +
+        ' WHERE SensorID=? ' +
+        ' ORDER BY ReportID DESC;';
 
     var results = await pool.query(sql, id).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
-
         return results[0];
     }
-
 };
 
 exports.storeAuthToken = async (userId, token, expires) => {
@@ -203,6 +205,36 @@ exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
 };
 
+exports.getUsers = async () => {
+    let sql =
+        'SELECT FirstName, LastName, Email, Role' +
+        ' FROM Users JOIN Profile' +
+        ' WHERE Users.UserID = Profile.UserID;';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getUsersSearch = async (name, role) => {
+    let sql =
+        'SELECT Users.UserID, FirstName, LastName, Email, Role' +
+        ' FROM Users LEFT JOIN Profile' +
+        ' ON Users.UserID = Profile.UserID';
+    if (name && name != '*') {
+        sql += ' AND (FirstName LIKE ? OR LastName LIKE ?)';
+        sql = mysql.format(sql, [name, name]);
+    }
+
+    if (role && role != '*') {
+        sql += ' AND Role Like ?';
+        sql = mysql.format(sql, [role]);
+    }
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
 
 exports.getImage = async (userid) => {
     let sql = mysql.format('SELECT UserID,Image FROM Profile WHERE UserID = ?', [userid]);
@@ -211,4 +243,3 @@ exports.getImage = async (userid) => {
         return results[0][0];
     }
 };
-

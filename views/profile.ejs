@@ -5,8 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumpster FIRE - Profile</title>
-    <link rel='stylesheet' href='/stylesheets/profile.css' />
+   
     <script src="/javascripts/jquery-3.x-git.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel='stylesheet' href='/stylesheets/profile.css' />
+    <script src="/bootstrap/js/bootstrap.js"></script>
 </head>
 
 <script type="text/javascript">
@@ -14,7 +21,7 @@
         $("button.apply").click(function(){
        
             let profile = {};
-            profile.StaffID = $("#staffid").text();
+            profile.StaffID = $("#staffid").val();
             profile.FirstName = $("#firstname").val();
             profile.LastName = $("#lastname").val();
             profile.Phone = $("#phone").val();
@@ -33,61 +40,109 @@
             $('input#dialog').trigger('click');
         });
 
+        $("button#change-password").click(function(){
+            $(".password").css("visibility", "initial");
+            let v = $("#password").val();
+            let v2 = $("#confirm-password").val();
+            if(v != v2){
+                $(".error-message").text("Password doesn't match");
+            }else{
+                console.log("password ", v, v2);
+                $(".error-message").text("");
+                let userid = $("#userid").val();
+                let req = {
+                    UserID: userid,
+                    Password: v
+                };
+
+                if(v != ""){
+                    $.post("/profile/change-password", req);
+                    $('.modal').modal('toggle');
+                }
+                    
+            }
+        });
+
     });
 
 </script>
 
 <body>
+
+
     <div class="header">
         <h1 class="title"> Dumpster FIRE </h1>
     </div>
     <div class="wrapper">
         <%- include('nav.ejs') %>
             <div class="content">
-                <h1 class="title">My Profile </h1>
+                <h1 class="title">Profile </h1>
                 <div class="container">
                     <div class="col-1">
                         <img src="/profile/image/1" alt="" class="my-profile-img">
                         <button class="btn secondary-btn upload">Upload photo</button>
+                        
+                        <div class="btn-container">
+                    
+                            <input id="dialog" type="file" style="display: none" accept="image/*" />
+                            <button class="btn apply">Apply</button>
+                            <button class="btn cancel">Cancel</button>
+                        </div>
+
+                            <button id="change-password" class="btn secondary-btn">Change Password</button>
+
                     </div>
 
                     <div class="form">
-                        <div class="col-2">
-                            <label for="">Staff ID: </label>
-                            <label for="">First Name: </label>
-                            <label for="">Last Name: </label>
-                            <label for="">Phone: </label>
-                            <label for="">Email: </label>
-                            <label for="">Address: </label>
-                        </div>
-
-                        <div class="col-3">
-
-                            <label id="staffid" for="">
-                                <%= profile.StaffID %>
-                            </label>
+                            <label for="userid">User ID </label>
+                            <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
+                      
+                            <label for="staffid">Staff ID </label>
+                            <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
+                      
+                            <label for="">First Name </label>
                             <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
+                            <label for="">Last Name </label>
                             <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
-
+                            <label for="">Phone </label>
                             <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
+                            <label for="">Email </label>
                             <input type="text" name="email" id="email" value="<%= profile.Email %>">
-                            <textarea name="address" id="address" rows="5">
-                            <%= profile.Address %>
-                </textarea>
+                            <label for="">Address </label>
+                            <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
+                            <label for="" class="password" id="password-label">Password</label>
+                            <input type="password" id="password" class="password"  value="">
+                            <label for="" class="password">Confirm Password</label>
+                            <input type="password" id="confirm-password" class="password"  value="">
+                            <label for="" class="password error-message"></label>
                         </div>
                     </div>
                     <div class="col-4">
                     </div>
                 </div>
-                <div class="btn-container">
-                    <input id="dialog" type="file" style="display: none" accept="image/*" />
-                    <button class="btn apply">Apply</button>
-                    <button class="btn cancel">Cancel</button>
-                </div>
-
-
             </div>
     </div>
+
+    
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Password</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Password is changed.</p>
+            </div>
+            <div class="modal-footer">
+              
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 </body>
 
 
