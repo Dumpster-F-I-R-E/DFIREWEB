@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `Profile` (
 	`Email` TEXT NOT NULL,
 	`Phone` TEXT NOT NULL,
 	`StaffID` TEXT,
+	`Image` BLOB,
 	PRIMARY KEY (`UserID`),
     FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
 );

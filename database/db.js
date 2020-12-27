@@ -105,3 +105,11 @@ exports.deleteAuthToken = async (token) => {
 exports.runQuery = async (sql) => {
     await pool.query(sql).catch(printErrors);
 };
+
+exports.getImage = async (userid) => {
+    let sql = mysql.format('SELECT UserID,Image FROM Profile WHERE UserID = ?', [userid]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};

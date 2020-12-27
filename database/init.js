@@ -18,6 +18,7 @@ var init = async () => {
         console.log(sql);
         console.log('Error Initilizing database');
     } else {
+        await db.dropTables();
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
