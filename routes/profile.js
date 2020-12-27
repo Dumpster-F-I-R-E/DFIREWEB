@@ -36,7 +36,7 @@ router.get('/id/:id', auth.requireAuth, async function (req, res) {
     let p = await profile.getProfileById(id);
     if (!p) {
         p = {
-            UserID: 'UserID',
+            UserID: id,
             FirstName: 'Fist Name',
             LastName: 'Last Name',
             Address: '24 Ave Calgary, AB',
@@ -60,9 +60,18 @@ router.post('/change-password', auth.requireAuth, async function (req, res) {
 router.get('/image/:id', auth.requireAuth, async function (req, res) {
     let userid = req.params.id;
     let data = await profile.getImage(userid);
+    // console.log(data);
     res.setHeader('Content-Length', data.length);
     res.write(data, 'binary');
     res.end();
+});
+
+router.post('/upload-photo', auth.requireAuth, async function (req, res) {
+    const data = req.body;
+    console.log("Uploading Photo...", req.body.UserID);
+    await profile.changeImage(data.UserID, data.Image);
+   
+    res.json({success:true});
 });
 
 module.exports = router;

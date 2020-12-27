@@ -28,12 +28,13 @@ const readFile = util.promisify(fs.readFile);
 
 exports.getImage = async (userid) => {
     let data = await db.getImage(userid);
-    console.log("Data", data);
-    if(!data){
+    // console.log("Data", data);
+    if(!data || !data.Image){
         data = await readFile('public/images/profile.png');
       
     }else{
-        data = data.Image;
+        data = data.Image.toString('utf-8');
+
     }
    
     return data;
@@ -41,4 +42,10 @@ exports.getImage = async (userid) => {
 
 exports.changePassword = async (userid, password) => {
     await db.changePassword(userid, password);
+};
+
+exports.changeImage = async (userid, image) => {
+    // image = await readFile('public/images/profile.png');
+    console.log("Profile Controller");
+    await db.changeImage(userid, image);
 };

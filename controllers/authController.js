@@ -55,6 +55,9 @@ exports.requireAuth = async (req, res, next) => {
         let current = new Date();
         if (session.ExpireDate > current) {
             // Session is still valid
+            res.locals = {
+                UserID: session.UserID
+            };
             next();
         } else {
             // Session has expired

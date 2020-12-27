@@ -56,7 +56,16 @@ exports.getUserByUsername = async (username) => {
 };
 
 exports.updateProfile = async (profile) => {
-    let sql = 'REPLACE INTO Profile VALUES(?, ?, ?, ?, ?, ?, ?);';
+    let sql = 'INSERT INTO Profile(UserID, FirstName, LastName, Address, Email, Phone, StaffID) VALUES(?, ?, ?, ?, ?, ?, ?)'
+                + ' ON DUPLICATE KEY UPDATE'
+                + ' UserID = Values(UserID), '
+                + ' FirstName = Values(FirstName), '
+                + ' LastName = Values(LastName), '
+                + ' Address = Values(Address), '
+                + ' Email = Values(Email), '
+                + ' Phone = Values(Phone),'
+                + ' StaffID = Values(StaffID) '
+                + ';';
     // let sql2 = mysql.format("INSERT INTO users VALUES('?', '?', '?', '?', '?')" , [1, user.Username, user.Password, user.Role, user.CompanyID] );
     // console.log(sql2);
     await pool
@@ -242,4 +251,11 @@ exports.getImage = async (userid) => {
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
+};
+
+exports.changeImage = async (userId, image) => {
+    let sql =
+        'UPDATE Profile SET Image=? WHERE UserID=?';
+    console.log("ChangeImage DB", userId);
+    await pool.execute(sql, [image, userId]).catch(printErrors);
 };

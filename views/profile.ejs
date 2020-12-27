@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumpster FIRE - Profile</title>
-   
+
     <script src="/javascripts/jquery-3.x-git.min.js"></script>
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
     <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
@@ -14,12 +14,15 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel='stylesheet' href='/stylesheets/profile.css' />
     <script src="/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@1.0.13/dist/browser-image-compression.js"></script>
 </head>
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        $("button.apply").click(function(){
-       
+    var imageUploaded = false;
+    var image = null;
+    $(document).ready(function () {
+        $("button.apply").click(function () {
+            let userid = $("#userid").val();
             let profile = {};
             profile.StaffID = $("#staffid").val();
             profile.FirstName = $("#firstname").val();
@@ -27,26 +30,62 @@
             profile.Phone = $("#phone").val();
             profile.Email = $("#email").val();
             profile.Address = $("#address").val();
-            $.post( "/profile", profile );
+
+            if(imageUploaded && image != null){
+                profile.Image = image;
+            }
+
+            $.post("/profile", profile);
+
+            if(imageUploaded && image != null){
+                let req = {
+                    UserID:userid,
+                    Image: image
+                }
+                $.post("/profile/upload-photo", req, function(){
+                    location.href = '/profile';  
+                });
+                
+            }
 
         });
 
-        $("button.cancel").click(function(){
-            location.href='/profile';
+        $("button.cancel").click(function () {
+            location.href = '/profile';
         });
 
-        $("button.upload").click(function(){
+        $("button.upload").click(function () {
             console.log("upload");
-            $('input#dialog').trigger('click');
+            let fileInput = $('input#dialog');
+            fileInput.change(function () {
+                var file = fileInput.get()[0].files[0];
+                console.log("Filename", file);
+                var reader = new FileReader();
+
+                reader.onload = function () {
+                    // console.log(reader.result);
+                    var img = $('.my-profile-img').get()[0];
+                    var url = window.URL || window.webkitURL;
+                    img.src = url.createObjectURL(file);
+                    image = reader.result;
+                    imageUploaded= true;
+
+                };
+
+                reader.readAsBinaryString(file);
+
+            });
+            fileInput.trigger('click');
+
         });
 
-        $("button#change-password").click(function(){
+        $("button#change-password").click(function () {
             $(".password").css("visibility", "initial");
             let v = $("#password").val();
             let v2 = $("#confirm-password").val();
-            if(v != v2){
+            if (v != v2) {
                 $(".error-message").text("Password doesn't match");
-            }else{
+            } else {
                 console.log("password ", v, v2);
                 $(".error-message").text("");
                 let userid = $("#userid").val();
@@ -55,11 +94,11 @@
                     Password: v
                 };
 
-                if(v != ""){
+                if (v != "") {
                     $.post("/profile/change-password", req);
                     $('.modal').modal('toggle');
                 }
-                    
+
             }
         });
 
@@ -79,70 +118,70 @@
                 <h1 class="title">Profile </h1>
                 <div class="container">
                     <div class="col-1">
-                        <img src="/profile/image/1" alt="" class="my-profile-img">
+                        <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
                         <button class="btn secondary-btn upload">Upload photo</button>
-                        
+
                         <div class="btn-container">
-                    
+
                             <input id="dialog" type="file" style="display: none" accept="image/*" />
                             <button class="btn apply">Apply</button>
                             <button class="btn cancel">Cancel</button>
                         </div>
 
-                            <button id="change-password" class="btn secondary-btn">Change Password</button>
+                        <button id="change-password" class="btn secondary-btn">Change Password</button>
 
                     </div>
 
                     <div class="form">
-                            <label for="userid">User ID </label>
-                            <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
-                      
-                            <label for="staffid">Staff ID </label>
-                            <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
-                      
-                            <label for="">First Name </label>
-                            <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
-                            <label for="">Last Name </label>
-                            <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
-                            <label for="">Phone </label>
-                            <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
-                            <label for="">Email </label>
-                            <input type="text" name="email" id="email" value="<%= profile.Email %>">
-                            <label for="">Address </label>
-                            <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
-                            <label for="" class="password" id="password-label">Password</label>
-                            <input type="password" id="password" class="password"  value="">
-                            <label for="" class="password">Confirm Password</label>
-                            <input type="password" id="confirm-password" class="password"  value="">
-                            <label for="" class="password error-message"></label>
-                        </div>
+                        <label for="userid">User ID </label>
+                        <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
+
+                        <label for="staffid">Staff ID </label>
+                        <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
+
+                        <label for="">First Name </label>
+                        <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
+                        <label for="">Last Name </label>
+                        <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
+                        <label for="">Phone </label>
+                        <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
+                        <label for="">Email </label>
+                        <input type="text" name="email" id="email" value="<%= profile.Email %>">
+                        <label for="">Address </label>
+                        <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
+                        <label for="" class="password" id="password-label">Password</label>
+                        <input type="password" id="password" class="password" value="">
+                        <label for="" class="password">Confirm Password</label>
+                        <input type="password" id="confirm-password" class="password" value="">
+                        <label for="" class="password error-message"></label>
                     </div>
-                    <div class="col-4">
-                    </div>
+                </div>
+                <div class="col-4">
                 </div>
             </div>
     </div>
+    </div>
 
-    
+
     <div class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Password</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Password is changed.</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <p>Password is changed.</p>
-            </div>
-            <div class="modal-footer">
-              
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 </body>
 
 
