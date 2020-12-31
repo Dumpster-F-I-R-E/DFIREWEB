@@ -1,3 +1,4 @@
+const db = require('../database/db');
 let data = [
     {
         id: 1,
@@ -23,9 +24,9 @@ let data = [
 ];
 
 exports.getDumpstersInfo = () => {
-    return data;
+    return db.getSensorData();
 };
 
 exports.getDumpsterInfo = (id) => {
-    return data[id];
+    return db.getSensorById(id);
 };
