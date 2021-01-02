@@ -55,8 +55,12 @@ exports.requireAuth = async (req, res, next) => {
         let current = new Date();
         if (session.ExpireDate > current) {
             // Session is still valid
+            let user = await db.getUserByUserID(session.UserID);
             res.locals = {
-                UserID: session.UserID
+                User: {
+                    UserID : user.UserID,
+                    Role : user.Role
+                }
             };
             next();
         } else {
@@ -73,5 +77,13 @@ exports.requireAuth = async (req, res, next) => {
             message: 'Please login to continue',
             messageClass: 'alert-danger',
         });
+    }
+};
+
+exports.requireAdmin = (req, res, next) => {
+    if(res.locals.User.Role === 'Admin'){
+        next();
+    }else{
+        res.render('mainMenu');
     }
 };

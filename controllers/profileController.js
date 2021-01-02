@@ -14,10 +14,12 @@ exports.getProfileById = async (userId) => {
     return data;
 };
 
-exports.updateProfile = async (authToken, profile) => {
-    let session = await db.getAuthToken(authToken);
-    profile.UserID = session.UserID;
-    await db.updateProfile(profile);
+exports.updateProfile = async (user, profile) => {
+    if(user.UserID == profile.UserID || user.Role == 'Admin'){
+        await db.updateProfile(profile);
+        await db.changeRole(profile.UserID, profile.Role);
+    }
+
 };
 
 const fs = require('fs');
@@ -48,4 +50,17 @@ exports.changeImage = async (userid, image) => {
     // image = await readFile('public/images/profile.png');
     console.log("Profile Controller");
     await db.changeImage(userid, image);
+};
+
+
+exports.getUser = async (userid) => {
+    let u = await db.getUserByUserID(userid);
+    return u;
+};
+
+
+exports.getRole = async (userid) => {
+    let role =  await db.getRole(userid);
+    console.log("Role", role);
+    return role.Role;
 };

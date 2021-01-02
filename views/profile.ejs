@@ -14,38 +14,59 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel='stylesheet' href='/stylesheets/profile.css' />
     <script src="/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@1.0.13/dist/browser-image-compression.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/browser-image-compression@1.0.13/dist/browser-image-compression.js"></script>
 </head>
 
+<% var Role = User.Role %>
 <script type="text/javascript">
     var imageUploaded = false;
     var image = null;
+    let role = "<%= Role %>";
+    var permission = {
+        Admin : [],
+        Manager: ['staffid'],
+        Driver: ['staffid', 'role']
+    }
+    $(document).ready(function () {
+        let perm = permission[role];
+        console.log(perm);
+        if(perm){
+            perm.forEach(function(item){
+                $('#'+item).prop('disabled',true);
+            });
+        }
+    });
+
+
     $(document).ready(function () {
         $("button.apply").click(function () {
             let userid = $("#userid").val();
             let profile = {};
+            profile.UserID = userid;
             profile.StaffID = $("#staffid").val();
             profile.FirstName = $("#firstname").val();
             profile.LastName = $("#lastname").val();
             profile.Phone = $("#phone").val();
             profile.Email = $("#email").val();
             profile.Address = $("#address").val();
+            profile.Role = $("#role").val();
 
-            if(imageUploaded && image != null){
+            if (imageUploaded && image != null) {
                 profile.Image = image;
             }
 
             $.post("/profile", profile);
 
-            if(imageUploaded && image != null){
+            if (imageUploaded && image != null) {
                 let req = {
-                    UserID:userid,
+                    UserID: userid,
                     Image: image
                 }
-                $.post("/profile/upload-photo", req, function(){
-                    location.href = '/profile';  
+                $.post("/profile/upload-photo", req, function () {
+                    location.href = '/profile';
                 });
-                
+
             }
 
         });
@@ -68,7 +89,7 @@
                     var url = window.URL || window.webkitURL;
                     img.src = url.createObjectURL(file);
                     image = reader.result;
-                    imageUploaded= true;
+                    imageUploaded = true;
 
                 };
 
@@ -118,7 +139,9 @@
                 <h1 class="title">Profile </h1>
                 <div class="container">
                     <div class="col-1">
-                        <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
+                        <div class="profile-img">
+                            <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
+                        </div>
                         <button class="btn secondary-btn upload">Upload photo</button>
 
                         <div class="btn-container">
@@ -138,7 +161,8 @@
 
                         <label for="staffid">Staff ID </label>
                         <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
-
+                        <label for="role">Role</label>
+                        <input type="text" name="role" id="role" value="<%= role %>">
                         <label for="">First Name </label>
                         <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
                         <label for="">Last Name </label>

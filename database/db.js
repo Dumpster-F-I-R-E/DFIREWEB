@@ -55,6 +55,16 @@ exports.getUserByUsername = async (username) => {
     }
 };
 
+exports.getUserByUserID = async (userid) => {
+    let sql = mysql.format('SELECT * FROM Users WHERE UserID = ?', [
+        userid,
+    ]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
+
 exports.updateProfile = async (profile) => {
     let sql = 'INSERT INTO Profile(UserID, FirstName, LastName, Address, Email, Phone, StaffID) VALUES(?, ?, ?, ?, ?, ?, ?)'
                 + ' ON DUPLICATE KEY UPDATE'
@@ -90,8 +100,25 @@ exports.changePassword = async (userid, password) => {
     await pool.execute(sql).catch(printErrors);
 };
 
+exports.changeRole = async (userid, role) => {
+
+    let sql = mysql.format('UPDATE Users SET Role=? WHERE UserID=?', [
+        role,
+        userid,
+    ]);
+    await pool.execute(sql).catch(printErrors);
+};
+
 exports.getProfile = async (id) => {
     let sql = mysql.format('SELECT * FROM Profile WHERE UserID = ?', [id]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
+
+exports.getRole = async (id) => {
+    let sql = mysql.format('SELECT Role FROM Users WHERE UserID = ?', [id]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];

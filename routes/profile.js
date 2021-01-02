@@ -10,6 +10,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
     if (!p) {
         p = {
             UserID: 'UserID',
+            Role: res.locals.User.Role,
             FirstName: 'Fist Name',
             LastName: 'Last Name',
             Address: '24 Ave Calgary, AB',
@@ -21,22 +22,24 @@ router.get('/', auth.requireAuth, async function (req, res) {
     console.log('Staff ID', p.StaffID);
     res.render('profile', {
         profile: p,
+        role: res.locals.User.Role
     });
 });
 
 router.post('/', auth.requireAuth, async function (req, res) {
-    const authToken = req.cookies['AuthToken'];
     const data = req.body;
-    await profile.updateProfile(authToken, data);
+    await profile.updateProfile(res.locals.User, data);
     res.redirect('/profile');
 });
 
-router.get('/id/:id', auth.requireAuth, async function (req, res) {
+router.get('/id/:id', auth.requireAuth, auth.requireAdmin, async function (req, res) {
     let id = req.params.id;
     let p = await profile.getProfileById(id);
+    let role = await profile.getRole(id);
     if (!p) {
         p = {
             UserID: id,
+            Role: role,
             FirstName: 'Fist Name',
             LastName: 'Last Name',
             Address: '24 Ave Calgary, AB',
@@ -45,9 +48,10 @@ router.get('/id/:id', auth.requireAuth, async function (req, res) {
             StaffID: 'Staff ID',
         };
     }
-
+    
     res.render('profile', {
         profile: p,
+        role: role
     });
 });
 
