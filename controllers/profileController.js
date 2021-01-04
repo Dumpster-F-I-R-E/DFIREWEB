@@ -15,11 +15,33 @@ exports.getProfileById = async (userId) => {
 };
 
 exports.updateProfile = async (user, profile) => {
-    if(user.UserID == profile.UserID || user.Role == 'Admin'){
-        await db.updateProfile(profile);
-        await db.changeRole(profile.UserID, profile.Role);
+  
+    if(user.Role == 'Admin'){
+        let p = await db.getProfile(profile.UserID);
+        if(p){
+            await db.updateProfile(profile);
+            await db.changeRole(profile.UserID, profile.Role);
+        }
+     
+    } else if(user.UserID == profile.UserID){
+        user.FirstName = profile.FirstName;
+        user.LastName = profile.LastName;
+        user.Address = profile.Address;
+        user.Phone = profile.Phone;
+        user.Email = profile.Email;
+        await db.updateProfile(user);
+    } else if(user.Role == 'Manager'){
+        let p = await db.getProfile(profile.UserID);
+        if (!p) {
+            return;
+        }
+        p.FirstName = profile.FirstName;
+        p.LastName = profile.LastName;
+        p.Address = profile.Address;
+        p.Phone = profile.Phone;
+        p.Email = profile.Email;
+        await db.updateProfile(p);
     }
-
 };
 
 const fs = require('fs');
@@ -42,14 +64,20 @@ exports.getImage = async (userid) => {
     return data;
 };
 
-exports.changePassword = async (userid, password) => {
-    await db.changePassword(userid, password);
+exports.changePassword = async (user, userid, password) => {
+    if(user.Role == 'Admin' || user.UserID == userid){
+        await db.changePassword(userid, password);
+    }
+    
 };
 
-exports.changeImage = async (userid, image) => {
+exports.changeImage = async (user,userid, image) => {
     // image = await readFile('public/images/profile.png');
-    console.log("Profile Controller");
-    await db.changeImage(userid, image);
+    console.log('Profile Controller');
+   
+    if(user.Role == 'Admin' || user.UserID == userid){
+        await db.changeImage(userid, image);
+    }
 };
 
 
@@ -61,6 +89,6 @@ exports.getUser = async (userid) => {
 
 exports.getRole = async (userid) => {
     let role =  await db.getRole(userid);
-    console.log("Role", role);
+    console.log('Role', role);
     return role.Role;
 };

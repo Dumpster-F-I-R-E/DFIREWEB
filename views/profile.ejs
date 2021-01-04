@@ -64,7 +64,7 @@
                     Image: image
                 }
                 $.post("/profile/upload-photo", req, function () {
-                    location.href = '/profile';
+                    location.reload(true);
                 });
 
             }
@@ -102,6 +102,10 @@
 
         $("button#change-password").click(function () {
             $(".password").css("visibility", "initial");
+            
+        });
+
+        $("button#update-password").click(function(){
             let v = $("#password").val();
             let v2 = $("#confirm-password").val();
             if (v != v2) {
@@ -121,7 +125,7 @@
                 }
 
             }
-        });
+        } );
 
     });
 
@@ -162,7 +166,7 @@
                         <label for="staffid">Staff ID </label>
                         <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
                         <label for="role">Role</label>
-                        <input type="text" name="role" id="role" value="<%= role %>">
+                        <input type="text" name="role" id="role" value="<%= profile.Role %>">
                         <label for="">First Name </label>
                         <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
                         <label for="">Last Name </label>
@@ -178,6 +182,7 @@
                         <label for="" class="password">Confirm Password</label>
                         <input type="password" id="confirm-password" class="password" value="">
                         <label for="" class="password error-message"></label>
+                        <button id="update-password" class="btn secondary-btn password">Update Password</button>
                     </div>
                 </div>
                 <div class="col-4">

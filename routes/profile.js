@@ -50,14 +50,13 @@ router.get('/id/:id', auth.requireAuth, auth.requireAdmin, async function (req, 
     }
     
     res.render('profile', {
-        profile: p,
-        role: role
+        profile: p
     });
 });
 
 router.post('/change-password', auth.requireAuth, async function (req, res) {
     const data = req.body;
-    await profile.changePassword(data.UserID, data.Password);
+    await profile.changePassword(res.locals.User,data.UserID, data.Password);
     res.redirect('/profile');
 });
 
@@ -73,7 +72,7 @@ router.get('/image/:id', auth.requireAuth, async function (req, res) {
 router.post('/upload-photo', auth.requireAuth, async function (req, res) {
     const data = req.body;
     console.log("Uploading Photo...", req.body.UserID);
-    await profile.changeImage(data.UserID, data.Image);
+    await profile.changeImage(res.locals.User, data.UserID, data.Image);
    
     res.json({success:true});
 });
