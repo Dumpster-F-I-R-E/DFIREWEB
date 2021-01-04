@@ -137,10 +137,26 @@ exports.addCompany = async (company) => {
         .catch(printErrors);
 };
 
+exports.createUser = async (profile) => {
+    let sql = "SELECT MAX(UserID) AS 'MaxID' FROM Users";
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        console.log(results[0][0].MaxID);
+        let val = results[0][0].MaxID;   
+        let userid = val + 1;
+        profile.UserID = userid;
+        profile.CompanyID = 1;
+        console.log(profile);
+        await exports.addUser(profile);
+        return profile;
+    }
+};
+
 exports.addUser = async (user) => {
     let sql = 'INSERT INTO Users (UserID, Username, Password, Role, CompanyID, FirstName, LastName, Address, Email, Phone, StaffID)'
     + ' VALUES(?, ?, ?, ?, ?,?,?,?,?,?,?)';
-   
+    console.log("Add User", user);
+    
     // let sql2 = mysql.format(sql,  [
     //     user.UserID,
     //     user.Username,

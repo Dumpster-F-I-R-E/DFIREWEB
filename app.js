@@ -36,7 +36,7 @@ app.use('/profile', profileRouter);
 app.use('/userlist', userlistRouter);
 app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
-app.use('/addUser', addUserRouter);
+app.use('/user', addUserRouter);
 app.use('/api', apiRouter);
 app.use('/routes', dumpsterRoutesRouter);
 // catch 404 and forward to error handler

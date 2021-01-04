@@ -19,7 +19,7 @@ const clearDatabase = async () => {
     await db.dropTables();
 };
 
-beforeAll(() => {
+beforeAll(async () => {
     var settings = {
         host: 'localhost',
         user: 'dfireweb',
@@ -31,14 +31,17 @@ beforeAll(() => {
         queueLimit: 0,
     };
 
-    db.changeDatabase(settings);
+    await db.changeDatabase(settings);
+    let conn = await db.checkConnection();
+    console.log('DB Connection',conn);
 });
 
-afterAll(() => {
-    db.closePool();
+afterAll(async () => {
+    await db.closePool();
 });
 
 beforeEach(async () => {
+    console.log('Before Each');
     await initializeDatabase();
 });
 

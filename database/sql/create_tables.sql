@@ -4,11 +4,11 @@ CREATE TABLE IF NOT EXISTS `Users` (
 	`Password` TEXT NOT NULL,
 	`Role` TEXT NOT NULL,
 	`CompanyID` INT NOT NULL,
-	`FirstName` TEXT NOT NULL,
-	`LastName` TEXT NOT NULL,
-	`Address` TEXT NOT NULL,
-	`Email` TEXT NOT NULL,
-	`Phone` TEXT NOT NULL,
+	`FirstName` TEXT ,
+	`LastName` TEXT,
+	`Address` TEXT,
+	`Email` TEXT,
+	`Phone` TEXT,
 	`StaffID` TEXT,
 	PRIMARY KEY (`UserID`)
 );
