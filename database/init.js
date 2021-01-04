@@ -100,6 +100,12 @@ var init = async () => {
             Password: 'root',
             Role: 'Admin',
             CompanyID: 1,
+            FirstName:'John',
+            LastName: 'Doe',
+            Address: 'Calgary,AB',
+            Email: 'admin@abc.com',
+            Phone: '403-233-3333',
+            StaffID: '1'
         };
 
         var manager = {
@@ -108,6 +114,12 @@ var init = async () => {
             Password: 'manager',
             Role: 'Manager',
             CompanyID: 1,
+            FirstName:'John',
+            LastName: 'Doe',
+            Address: 'Calgary,AB',
+            Email: 'admin@abc.com',
+            Phone: '403-233-3333',
+            StaffID: '1'
         };
         var driver = {
             UserID: '3',
@@ -115,6 +127,12 @@ var init = async () => {
             Password: 'driver',
             Role: 'Driver',
             CompanyID: 1,
+            FirstName:'John',
+            LastName: 'Doe',
+            Address: 'Calgary,AB',
+            Email: 'admin@abc.com',
+            Phone: '403-233-3333',
+            StaffID: '1'
         };
         await db.addUser(admin);
         await db.addUser(manager);
