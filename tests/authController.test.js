@@ -32,8 +32,6 @@ beforeAll(async () => {
     };
 
     await db.changeDatabase(settings);
-    let conn = await db.checkConnection();
-    console.log('DB Connection',conn);
 });
 
 afterAll(async () => {
@@ -41,13 +39,27 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    console.log('Before Each');
     await initializeDatabase();
 });
 
 afterEach(async () => {
     await clearDatabase();
 });
+
+function initUser(user){
+    user.FirstName ='John';
+    user.LastName = 'Doe';
+    user.Address= 'Calgary,AB';
+    user.Email= 'admin@abc.com';
+    user.Phone= '403-233-3333';
+    user.StaffID= '1';
+    return user;
+}
+
+async function addUser(user){
+    let u = initUser(user);
+    await db.addUser(u);
+}
 
 test('authentication with valid credentials', async () => {
     var user = {
@@ -57,7 +69,7 @@ test('authentication with valid credentials', async () => {
         Role: 'Admin',
         CompanyID: 1,
     };
-    await db.addUser(user);
+    await addUser(user);
     const { valid, authToken, expires } = await auth.authenticate(
         user.Username,
         user.Password
@@ -76,7 +88,7 @@ test('authentication with invalid credentials', async () => {
         Role: 'Admin',
         CompanyID: 1,
     };
-    await db.addUser(user);
+    await addUser(user);
 
     var user2 = {
         UserID: '2234',
@@ -108,6 +120,14 @@ test('logout', async () => {
 test('requireAuth with valid login', async () => {
     var token = '213342';
     let userID = 23434;
+    var user = {
+        UserID: userID,
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    await addUser(user);
     let current = new Date();
     let expireDate = new Date(current.setDate(current.getDate() + 10));
     await db.storeAuthToken(userID, token, expireDate);
@@ -146,7 +166,7 @@ test('session token with valid credentials', async () => {
         Role: 'Admin',
         CompanyID: 1,
     };
-    await db.addUser(user);
+    await addUser(user);
     const { valid, authToken } = await auth.authenticate(
         user.Username,
         user.Password

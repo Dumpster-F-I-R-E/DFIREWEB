@@ -155,7 +155,7 @@ exports.createUser = async (profile) => {
 exports.addUser = async (user) => {
     let sql = 'INSERT INTO Users (UserID, Username, Password, Role, CompanyID, FirstName, LastName, Address, Email, Phone, StaffID)'
     + ' VALUES(?, ?, ?, ?, ?,?,?,?,?,?,?)';
-    console.log("Add User", user);
+    // console.log("Add User", user);
     
     // let sql2 = mysql.format(sql,  [
     //     user.UserID,
