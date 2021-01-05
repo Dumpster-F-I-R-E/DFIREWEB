@@ -53,3 +53,11 @@ tr:hover {
     margin: 10px;
     width: 80%;
 }
+
+a {
+    text-decoration: none;
+}
+
+a.btn {
+    display: inline-block;
+}

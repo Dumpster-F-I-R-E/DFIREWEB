@@ -19,4 +19,15 @@ router.post('/add', auth.requireAuth, async function (req, res) {
     });
 });
 
+router.post('/delete', auth.requireAuth, async function (req, res) {
+    const data = req.body;
+    await user.deleteUser(res.locals.User, data.UserID);
+    let msg = '';
+    res.json({
+        success:true,
+        error:msg
+    });
+});
+
+
 module.exports = router;

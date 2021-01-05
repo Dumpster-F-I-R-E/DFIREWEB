@@ -137,6 +137,11 @@ exports.addCompany = async (company) => {
         .catch(printErrors);
 };
 
+exports.deleteUser = async (userid) => {
+    let sql = 'DELETE FROM Users WHERE UserID=?';
+    await pool.query(sql,[userid]).catch(printErrors);
+};
+
 exports.createUser = async (profile) => {
     let sql = "SELECT MAX(UserID) AS 'MaxID' FROM Users";
     var results = await pool.query(sql).catch(printErrors);
@@ -320,6 +325,6 @@ exports.changeImage = async (userId, image) => {
         'INSERT INTO ProfileImages(UserID, Image)'
         + ' VALUES(?,?) ON DUPLICATE KEY'
         +' UPDATE Image=Values(Image)';
-    console.log("ChangeImage DB", userId);
+    console.log('ChangeImage DB', userId);
     await pool.execute(sql, [userId, image]).catch(printErrors);
 };
