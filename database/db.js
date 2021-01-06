@@ -298,14 +298,18 @@ exports.getUsersSearch = async (name, role) => {
         'SELECT Users.UserID, FirstName, LastName, Email, Role' +
         ' FROM Users';
     if (name && name != '*') {
-        sql += ' AND (FirstName LIKE ? OR LastName LIKE ?)';
+        sql += ' WHERE (FirstName LIKE ? OR LastName LIKE ?)';
         sql = mysql.format(sql, [name, name]);
     }
 
     if (role && role != '*') {
-        sql += ' AND Role Like ?';
+        if(name  && name != '*'){
+            sql += ' AND Role Like ?';
+        }
+        sql += ' WHERE Role Like ?';
         sql = mysql.format(sql, [role]);
     }
+    console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
