@@ -32,6 +32,21 @@
 
 
     $(document).ready(function () {
+
+        var o = new Option("Driver", "Driver");
+        /// jquerify the DOM object 'o' so we can use the html method
+        $(o).html("Driver");
+        $("#role").append(o)
+        if(role == 'Admin'){
+            var o2 = new Option("Admin", "Admin");
+            $(o2).html("Admin");
+            $("#role").append(o2)
+
+            var o3 = new Option("Manager", "Manager");
+            $(o3).html("Manager");
+            $("#role").append(o3)
+        }
+
         $("button.apply").click(function () {
             let profile = {};
             profile.Username = $("#username").val();
@@ -150,7 +165,9 @@
                         <label for="staffid">Staff ID </label>
                         <input type="text" name="staffid" id="staffid" >
                         <label for="role">Role</label>
-                        <input type="text" name="role" id="role" >
+                        <select name="role" id="role" >
+                            
+                        </select>
                         <label for="">First Name </label>
                         <input type="text" name="firstname" id="firstname">
                         <label for="">Last Name </label>
