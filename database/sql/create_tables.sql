@@ -60,13 +60,14 @@ CREATE TABLE IF NOT EXISTS `Sensors` (
 );
 
 CREATE TABLE IF NOT EXISTS `SensorReports` (
-	`ReportID` INT NOT NULL,
+	`ReportID` INT AUTO_INCREMENT NOT NULL,
 	`SensorID` INT NOT NULL,
 	`Longitude` DOUBLE NOT NULL,
 	`Latitude` DOUBLE NOT NULL,
 	`BatteryLevel` DOUBLE NOT NULL,
 	`FullnessLevel` DOUBLE NOT NULL,
 	`ErrorCode` INT NOT NULL,
+	`Time` DATETIME NOT NULL,
 	PRIMARY KEY (`ReportID`),
     FOREIGN KEY (`SensorID`) REFERENCES Sensors(`SensorID`)
 );
@@ -75,6 +76,6 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
 	`SessionID` INT NOT NULL AUTO_INCREMENT,
 	`UserID` INT NOT NULL,
 	`Token` VARCHAR(120) NOT NULL,
-	`ExpireDate` DATE NOT NULL,
+	`ExpireDate` DATETIME NOT NULL,
 	PRIMARY KEY (`SessionID`)
 );

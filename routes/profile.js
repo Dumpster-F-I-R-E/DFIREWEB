@@ -71,7 +71,7 @@ router.get('/image/:id', auth.requireAuth, async function (req, res) {
 
 router.post('/upload-photo', auth.requireAuth, async function (req, res) {
     const data = req.body;
-    console.log("Uploading Photo...", req.body.UserID);
+    console.log('Uploading Photo...', req.body.UserID);
     await profile.changeImage(res.locals.User, data.UserID, data.Image);
    
     res.json({success:true});

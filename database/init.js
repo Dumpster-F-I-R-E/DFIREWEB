@@ -20,48 +20,52 @@ var seedSensors = async () => {
     await db.addSensor(sensor3);
 
     let report1 = {
-        ReportID: 1,
         SensorID: 1,
         Longitude: -114.08529,
         Latitude: 51.05011,
         BatteryLevel: 50,
         FullnessLevel: 60,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 05:00:00'),
     };
 
     let report2 = {
-        ReportID: 2,
         SensorID: 2,
         Longitude: -114.18529,
         Latitude: 51.05011,
         BatteryLevel: 50,
         FullnessLevel: 60,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 05:00:00'),
     };
 
     let report3 = {
-        ReportID: 3,
         SensorID: 3,
         Longitude: -114.08529,
         Latitude: 51.15011,
         BatteryLevel: 50,
         FullnessLevel: 60,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 05:00:00'),
     };
 
     let report4 = {
-        ReportID: 4,
         SensorID: 3,
         Longitude: -114.08529,
         Latitude: 51.15011,
         BatteryLevel: 50,
-        FullnessLevel: 60,
+        FullnessLevel: 70,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 06:00:00'),
     };
+
 
     await db.storeSensorReport(report1);
     await db.storeSensorReport(report2);
     await db.storeSensorReport(report3);
+    await db.storeSensorReport(report4);
+    report4.FullnessLevel = 10;
+    report4.Time = new Date('2020-12-20 08:00:00');
     await db.storeSensorReport(report4);
 };
 

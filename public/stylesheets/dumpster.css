@@ -54,8 +54,16 @@
     padding: 20px;
 }
 
+#myChart {
+    width:600px !important;
+    height: 400px !important;
+}
+
+
 @media only screen and (max-width: 750px) {
     .container {
         display: block;
     }
 }
+
+
