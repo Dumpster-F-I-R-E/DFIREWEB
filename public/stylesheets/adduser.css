@@ -1,0 +1,5 @@
+@import 'profile.css';
+
+.form .password {
+    visibility: initial;
+}

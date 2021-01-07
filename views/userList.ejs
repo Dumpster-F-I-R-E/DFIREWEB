@@ -2,93 +2,103 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dumpster FIRE - User Management</title>
-    <link rel='stylesheet' href='/stylesheets/userlist.css' />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dumpster FIRE - User Management</title>
+  <link rel='stylesheet' href='/stylesheets/userlist.css' />
+  <script src="/javascripts/jquery-3.x-git.min.js"></script>
+    
 </head>
 
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('a.delete-user').click(function(){
+      console.log("Click delete");
+      $('.checks').each(function(index){
+        if(this.checked){
+          let k = $(this).parent().parent();
+          let userid = k.children('.userid').first().html().trim();
+          let req = {
+            UserID: userid
+          };
+          $.post('/user/delete', req, function(data){
+            location.reload();
+          });
+        }
+        
+      });
+    });
+    
+  });
+</script>
 <body>
-    <div class="header">
-        <h1 class="title"> Dumpster FIRE </h1>
-    </div>
-    <div class="wrapper">
-        <%- include('nav.ejs') %>
-        <div class="content">
-            <div class="col-1">
-                <h2 class="title">Search</h2>
-                <div class="form">
-                    <div class="labels">
-                        <label for="username">Username: </label>
-                        <label for="role">Role</label>
-                     </div>
+  <div class="header">
+    <h1 class="title"> Dumpster FIRE </h1>
+  </div>
+  <div class="wrapper">
+    <%- include('nav.ejs') %>
+      <div class="content">
+        <div class="col-1">
+          <h2 class="title">Search</h2>
 
-                    <div class="fields">   
-                        <input type="text" name="username" id="username" placeholder="*">
-                        <input type="text" name="role" id="role" placeholder="*">
-                   </div>
-                </div>
-                <div class="btn-container">
-                    <button class="btn search">Search</button>
-                    <button class="btn reset">Reset</button> 
-                </div>
+          <div class="form">
+            <div class="labels">
+              <label for="name">Name: </label>
+              <label for="role">Role</label>
             </div>
-            <div class="col-2">
-                <h2 class="title">User List</h2>
-                <table style="width:100%">
-                    <tr>
-                      <th>Firstname</th>
-                      <th>Lastname</th>
-                      <th>EMail</th>
-                      <th>Role</th>
-                    </tr>
-                    <tr>
-                      <td>Jill</td>
-                      <td>Smith</td>
-                      <td>abc@gmail.com</td>
-                      <td>Driver</td>
-                    </tr>
-                    <tr>
-                      <td>Eve</td>
-                      <td>Jackson</td>
-                      <td>abc@gmail.com</td>
-                      <td>Driver</td>
-                    </tr>
-                    <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>abc@gmail.com</td>
-                        <td>Driver</td>
-                      </tr>
-                      <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>abc@gmail.com</td>
-                        <td>Driver</td>
-                      </tr>
-                      <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>abc@gmail.com</td>
-                        <td>Driver</td>
-                      </tr>
-                      <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>abc@gmail.com</td>
-                        <td>Driver</td>
-                      </tr>
-                      <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>abc@gmail.com</td>
-                        <td>Driver</td>
-                      </tr>
-                  </table> 
+
+            <div class="fields">
+              <form action="/userList" id="search_form">
+                <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
+                <input type="text" name="role" id="role" placeholder="*" value="<%=role%>">
+              </form>
             </div>
+          </div>
+          <div class="btn-container">
+            <button class="btn search" form="search_form" value="Submit">Search</button>
+            <button class="btn reset">Reset</button>
+          </div>
+
         </div>
-    </div>
+        <div class="col-2">
+          <h2 class="title">User List</h2>
+          <a href="/user/add" class="btn add-user">Add User </a>
+          <a class="btn delete-user">Delete User </a>
+          <table style="width:100%">
+            <tr>
+              <th></th>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>EMail</th>
+              <th>Role</th>
+            </tr>
+            <% users.forEach(function(user) { %>
+              <tr >
+                <td>
+                  <input class="checks" type="checkbox">
+                </td>
+                <td class='userid' onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <%= user.UserID %>
+                </td>
+                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <%= user.FirstName %>
+                </td>
+                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <%= user.LastName %>
+                </td>
+                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <%= user.Email %>
+                </td>
+                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <%= user.Role %>
+                </td>
+              </tr>
+              <%}); %>
+          </table>
+        </div>
+      </div>
+  </div>
 </body>
 
 </html>

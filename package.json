@@ -7,10 +7,10 @@
         "test": "jest",
         "devstart": "nodemon ./bin/www",
         "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart",
-        "lint": "eslint --ignore-path .gitignore .",
+        "lint": "eslint .",
         "format": "prettier --write .",
         "db-init": "node database/init.js",
-        "check": "eslint --ignore-path .gitignore . && prettier --write . && jest"
+        "check": "eslint && prettier --write . && jest"
     },
     "dependencies": {
         "bufferutil": "^4.0.1",

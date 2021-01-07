@@ -5,57 +5,238 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumpster FIRE - Profile</title>
-    <link rel='stylesheet' href='/stylesheets/profile.css' />
 
+    <script src="/javascripts/jquery-3.x-git.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel='stylesheet' href='/stylesheets/profile.css' />
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/browser-image-compression@1.0.13/dist/browser-image-compression.js"></script>
 </head>
 
+<% var Role = User.Role %>
+<% var Profile_Role = profile.Role %>
+<script type="text/javascript">
+    var imageUploaded = false;
+    var image = null;
+    let role = "<%= Role %>";
+    let profile_role = "<%= Profile_Role %>"
+    var permission = {
+        Admin : [],
+        Manager: ['staffid'],
+        Driver: ['staffid', 'role']
+    }
+    $(document).ready(function () {
+        let perm = permission[role];
+        console.log(perm);
+        if(perm){
+            perm.forEach(function(item){
+                $('#'+item).prop('disabled',true);
+            });
+        }
+
+        var o = new Option("Driver", "Driver");
+        /// jquerify the DOM object 'o' so we can use the html method
+        $(o).html("Driver");
+        $("#role").append(o)
+        if(role == 'Admin'){
+            var o2 = new Option("Admin", "Admin");
+            $(o2).html("Admin");
+            $("#role").append(o2)
+
+            var o3 = new Option("Manager", "Manager");
+            $(o3).html("Manager");
+            $("#role").append(o3)
+        }
+        if (role == 'Manager'){
+            var o3 = new Option("Manager", "Manager");
+            $(o3).html("Manager");
+            $("#role").append(o3)
+        }
+        $('#role option[value='+profile_role+']').attr('selected','selected');
+        // $("#role select").val('Admin');
+    });
+
+
+    $(document).ready(function () {
+        $("button.apply").click(function () {
+            let userid = $("#userid").val();
+            let profile = {};
+            profile.UserID = userid;
+            profile.StaffID = $("#staffid").val();
+            profile.FirstName = $("#firstname").val();
+            profile.LastName = $("#lastname").val();
+            profile.Phone = $("#phone").val();
+            profile.Email = $("#email").val();
+            profile.Address = $("#address").val();
+            profile.Role = $("#role").val();
+
+            if (imageUploaded && image != null) {
+                profile.Image = image;
+            }
+
+            $.post("/profile", profile);
+
+            if (imageUploaded && image != null) {
+                let req = {
+                    UserID: userid,
+                    Image: image
+                }
+                $.post("/profile/upload-photo", req, function () {
+                    location.reload(true);
+                });
+
+            }
+
+        });
+
+        $("button.cancel").click(function () {
+            location.href = '/profile';
+        });
+
+        $("button.upload").click(function () {
+            console.log("upload");
+            let fileInput = $('input#dialog');
+            fileInput.change(function () {
+                var file = fileInput.get()[0].files[0];
+                console.log("Filename", file);
+                var reader = new FileReader();
+
+                reader.onload = function () {
+                    // console.log(reader.result);
+                    var img = $('.my-profile-img').get()[0];
+                    var url = window.URL || window.webkitURL;
+                    img.src = url.createObjectURL(file);
+                    image = reader.result;
+                    imageUploaded = true;
+
+                };
+
+                reader.readAsBinaryString(file);
+
+            });
+            fileInput.trigger('click');
+
+        });
+
+        $("button#change-password").click(function () {
+            $(".password").css("visibility", "initial");
+            
+        });
+
+        $("button#update-password").click(function(){
+            let v = $("#password").val();
+            let v2 = $("#confirm-password").val();
+            if (v != v2) {
+                $(".error-message").text("Password doesn't match");
+            } else {
+                console.log("password ", v, v2);
+                $(".error-message").text("");
+                let userid = $("#userid").val();
+                let req = {
+                    UserID: userid,
+                    Password: v
+                };
+
+                if (v != "") {
+                    $.post("/profile/change-password", req);
+                    $('.modal').modal('toggle');
+                }
+
+            }
+        } );
+
+    });
+
+</script>
+
 <body>
+
+
     <div class="header">
         <h1 class="title"> Dumpster FIRE </h1>
     </div>
     <div class="wrapper">
         <%- include('nav.ejs') %>
-        <div class="content">
-            <h1 class="title">My Profile </h1>
-            <div class="container">
-                <div class="col-1">
-                    <img src="/images/profile.jpg" alt="" class="my-profile-img">
-                    <button class="btn secondary-btn">Upload photo</button>
-                </div>
+            <div class="content">
+                <h1 class="title">Profile </h1>
+                <div class="container">
+                    <div class="col-1">
+                        <div class="profile-img">
+                            <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
+                        </div>
+                        <button class="btn secondary-btn upload">Upload photo</button>
 
-                <div class="form">
-                    <div class="col-2">
-                        <label for="">Staff ID: </label>
-                        <label for="username">Username: </label>
-                        <label for="">Password: </label>
-                        <label for="">Phone: </label>
-                        <label for="">Email: </label>
-                        <label for="">Address: </label>
+                        <div class="btn-container">
+
+                            <input id="dialog" type="file" style="display: none" accept="image/*" />
+                            <button class="btn apply">Apply</button>
+                            <button class="btn cancel">Cancel</button>
+                        </div>
+
+                        <button id="change-password" class="btn secondary-btn">Change Password</button>
+
                     </div>
 
-                    <div class="col-3">
-                        <label for="">sdfsf </label>
-                        <input type="text" name="username" id="username">
-                        <input type="password" name="" id="password">
+                    <div class="form">
+                        <label for="userid">User ID </label>
+                        <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
 
-                        <input type="text" name="phone" id="phone">
-                        <input type="text" name="email" id="email">
-                        <textarea name="address" id="address" rows="5">
-                    2342,&#13;&#10;12 th Street,&#13;&#10;Calgary, AB
-                </textarea>
+                        <label for="staffid">Staff ID </label>
+                        <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
+                        <label for="role">Role</label>
+                        <select name="role" id="role">
+                        </select>
+                        <label for="">First Name </label>
+                        <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
+                        <label for="">Last Name </label>
+                        <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
+                        <label for="">Phone </label>
+                        <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
+                        <label for="">Email </label>
+                        <input type="text" name="email" id="email" value="<%= profile.Email %>">
+                        <label for="">Address </label>
+                        <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
+                        <label for="" class="password" id="password-label">Password</label>
+                        <input type="password" id="password" class="password" value="">
+                        <label for="" class="password">Confirm Password</label>
+                        <input type="password" id="confirm-password" class="password" value="">
+                        <label for="" class="password error-message"></label>
+                        <button id="update-password" class="btn secondary-btn password">Update Password</button>
                     </div>
                 </div>
                 <div class="col-4">
                 </div>
             </div>
-            <div class="btn-container">
-                <button class="btn apply">Apply</button>
-                <button class="btn cancel">Cancel</button>
-            </div>
-            
+    </div>
+    </div>
 
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Password is changed.</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
+
+
 
 </html>

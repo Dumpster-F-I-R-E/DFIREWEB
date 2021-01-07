@@ -5,16 +5,35 @@
     text-align: left;
     /* border: 1px solid gray; */
     /* height: 100%;  */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.profile-img {
+.thumbnail {
+    position: relative;
     width: 140px;
     height: 140px;
+    overflow: hidden;
     border-radius: 50%;
     border: 4px solid black;
+    background-color: white;
+}
+.thumbnail img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 100%;
+    width: auto;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.thumbnail img.portrait {
+    width: 100%;
+    height: auto;
 }
 
-.profile-img:hover {
+.thumbnail:hover {
     border: 4px solid white;
 }
 
