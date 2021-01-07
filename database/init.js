@@ -2,6 +2,7 @@
 
 const db = require('./db');
 
+
 var seedSensors = async () => {
     let sensor1 = {
         CompanyID: 1,
@@ -85,7 +86,7 @@ var init = async () => {
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
-
+      
         let company = {
             CompanyID: 1,
             Name: 'General',
@@ -93,7 +94,7 @@ var init = async () => {
             Phone: '345-343-3432',
         };
         await db.addCompany(company);
-
+      
         var admin = {
             UserID: '1',
             Username: 'root',
