@@ -119,9 +119,8 @@ test('logout', async () => {
 
 test('requireAuth with valid login', async () => {
     var token = '213342';
-    let userID = 23434;
+    //let userID = 23434;
     var user = {
-        UserID: userID,
         Username: 'u234',
         Password: '12324sd',
         Role: 'Admin',
@@ -130,7 +129,7 @@ test('requireAuth with valid login', async () => {
     await addUser(user);
     let current = new Date();
     let expireDate = new Date(current.setDate(current.getDate() + 10));
-    await db.storeAuthToken(userID, token, expireDate);
+    await db.storeAuthToken(1, token, expireDate);
     req = {};
     req.cookies = {};
     req.cookies['AuthToken'] = token;
@@ -160,7 +159,6 @@ test('requireAuth without valid login', async () => {
 
 test('session token with valid credentials', async () => {
     var user = {
-        UserID: 234,
         Username: 'u234',
         Password: '12324sd',
         Role: 'Admin',
