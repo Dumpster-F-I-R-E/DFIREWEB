@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS `SensorReports` (
 	`BatteryLevel` DOUBLE NOT NULL,
 	`FullnessLevel` DOUBLE NOT NULL,
 	`ErrorCode` INT NOT NULL,
+	`InsertionTime` DATETIME NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (`ReportID`),
     FOREIGN KEY (`SensorID`) REFERENCES Sensors(`SensorID`)
 );
