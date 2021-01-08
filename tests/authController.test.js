@@ -171,7 +171,7 @@ test('session token with valid credentials', async () => {
     );
     expect(valid).toBe(true);
     let session = await db.getAuthToken(authToken);
-    expect(session.UserID).toBe(user.UserID);
+    expect(session.UserID).toBe(1);
     expect(authToken).toBeTruthy();
     let current = new Date();
     expect(current < session.ExpireDate).toBe(true);
