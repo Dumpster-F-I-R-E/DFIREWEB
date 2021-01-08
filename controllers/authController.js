@@ -58,9 +58,9 @@ exports.requireAuth = async (req, res, next) => {
             let user = await db.getUserByUserID(session.UserID);
             res.locals = {
                 User: {
-                    UserID : user.UserID,
-                    Role : user.Role
-                }
+                    UserID: user.UserID,
+                    Role: user.Role,
+                },
             };
             next();
         } else {
@@ -81,9 +81,9 @@ exports.requireAuth = async (req, res, next) => {
 };
 
 exports.requireAdmin = (req, res, next) => {
-    if(res.locals.User.Role === 'Admin'){
+    if (res.locals.User.Role === 'Admin') {
         next();
-    }else{
+    } else {
         res.render('mainMenu');
     }
 };

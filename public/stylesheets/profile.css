@@ -83,7 +83,8 @@ label {
 }
 
 input,
-button, select {
+button,
+select {
     grid-column: 2 / 3;
 }
 
@@ -91,7 +92,8 @@ button, select {
     width: 100%;
 }
 
-.form input, select {
+.form input,
+select {
     margin: 10px 0;
     display: block;
     width: 100%;

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `Users` (
-	`UserID` INT NOT NULL,
+	`UserID` INT NOT NULL AUTO_INCREMENT,
 	`Username` TEXT NOT NULL,
 	`Password` TEXT NOT NULL,
 	`Role` TEXT NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ProfileImages` (
 
 
 CREATE TABLE IF NOT EXISTS `Companies` (
-	`CompanyID` INT NOT NULL,
+	`CompanyID` INT NOT NULL AUTO_INCREMENT,
 	`Name` TEXT NOT NULL,
 	`Address` TEXT NOT NULL,
 	`Phone` TEXT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `Companies` (
 );
 
 CREATE TABLE IF NOT EXISTS `Depots` (
-	`DepotID` INT NOT NULL,
+	`DepotID` INT NOT NULL AUTO_INCREMENT,
 	`Name` TEXT NOT NULL,
 	`Address` TEXT NOT NULL,
 	`CompanyID` INT NOT NULL,
@@ -53,14 +53,15 @@ CREATE TABLE IF NOT EXISTS `Depots` (
 );
 
 CREATE TABLE IF NOT EXISTS `Sensors` (
-	`SensorID` INT NOT NULL,
+	`SensorID` INT NOT NULL AUTO_INCREMENT,
+	`SensorSerialNumber` INT NOT NULL,
 	`CompanyID` INT NOT NULL,
 	PRIMARY KEY (`SensorID`),
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
 );
 
 CREATE TABLE IF NOT EXISTS `SensorReports` (
-	`ReportID` INT NOT NULL,
+	`ReportID` INT NOT NULL AUTO_INCREMENT,
 	`SensorID` INT NOT NULL,
 	`Longitude` DOUBLE NOT NULL,
 	`Latitude` DOUBLE NOT NULL,

@@ -46,17 +46,17 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-function initUser(user){
-    user.FirstName ='John';
+function initUser(user) {
+    user.FirstName = 'John';
     user.LastName = 'Doe';
-    user.Address= 'Calgary,AB';
-    user.Email= 'admin@abc.com';
-    user.Phone= '403-233-3333';
-    user.StaffID= '1';
+    user.Address = 'Calgary,AB';
+    user.Email = 'admin@abc.com';
+    user.Phone = '403-233-3333';
+    user.StaffID = '1';
     return user;
 }
 
-async function addUser(user){
+async function addUser(user) {
     let u = initUser(user);
     await db.addUser(u);
 }
@@ -119,9 +119,8 @@ test('logout', async () => {
 
 test('requireAuth with valid login', async () => {
     var token = '213342';
-    let userID = 23434;
+    //let userID = 23434;
     var user = {
-        UserID: userID,
         Username: 'u234',
         Password: '12324sd',
         Role: 'Admin',
@@ -130,7 +129,7 @@ test('requireAuth with valid login', async () => {
     await addUser(user);
     let current = new Date();
     let expireDate = new Date(current.setDate(current.getDate() + 10));
-    await db.storeAuthToken(userID, token, expireDate);
+    await db.storeAuthToken(1, token, expireDate);
     req = {};
     req.cookies = {};
     req.cookies['AuthToken'] = token;
@@ -160,7 +159,6 @@ test('requireAuth without valid login', async () => {
 
 test('session token with valid credentials', async () => {
     var user = {
-        UserID: 234,
         Username: 'u234',
         Password: '12324sd',
         Role: 'Admin',
@@ -173,7 +171,7 @@ test('session token with valid credentials', async () => {
     );
     expect(valid).toBe(true);
     let session = await db.getAuthToken(authToken);
-    expect(session.UserID).toBe(user.UserID);
+    expect(session.UserID).toBe(1);
     expect(authToken).toBeTruthy();
     let current = new Date();
     expect(current < session.ExpireDate).toBe(true);

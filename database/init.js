@@ -2,26 +2,92 @@
 
 const db = require('./db');
 
+var seedDepots = async () => {
+    console.log('seedDepots');
+    var depot1 = {
+        Name: 'SW Dumpster',
+        Address: 'Calgary, AB',
+        CompanyID: 1,
+    };
+    await db.addDepot(depot1);
+};
+
+var seedUsers = async () => {
+    console.log('seedUsers');
+    var admin = {
+        Username: 'root',
+        Password: 'root',
+        Role: 'Admin',
+        CompanyID: 1,
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+    };
+
+    var manager = {
+        Username: 'manager',
+        Password: 'manager',
+        Role: 'Manager',
+        CompanyID: 1,
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+    };
+    var driver = {
+        Username: 'driver',
+        Password: 'driver',
+        Role: 'Driver',
+        CompanyID: 1,
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+    };
+    await db.addUser(admin);
+    await db.addUser(manager);
+    await db.addUser(driver);
+};
+
+var seedCompanies = async () => {
+    console.log('seedCompanies');
+    let company = {
+        Name: 'General',
+        Address: 'Calgary,AB',
+        Phone: '345-343-3432',
+    };
+    await db.addCompany(company);
+};
 
 var seedSensors = async () => {
+    console.log('seedSensors');
     let sensor1 = {
+        SensorSerialNumber: 1,
         CompanyID: 1,
-        SensorID: 1,
     };
     let sensor2 = {
+        SensorSerialNumber: 2,
         CompanyID: 1,
-        SensorID: 2,
     };
     let sensor3 = {
+        SensorSerialNumber: 3,
         CompanyID: 1,
-        SensorID: 3,
     };
     await db.addSensor(sensor1);
     await db.addSensor(sensor2);
     await db.addSensor(sensor3);
+};
 
+var seedSensorReports = async () => {
+    console.log('seedSensorReports');
     let report1 = {
-        ReportID: 1,
         SensorID: 1,
         Longitude: -114.08529,
         Latitude: 51.05011,
@@ -31,7 +97,6 @@ var seedSensors = async () => {
     };
 
     let report2 = {
-        ReportID: 2,
         SensorID: 2,
         Longitude: -114.18529,
         Latitude: 51.05011,
@@ -41,7 +106,6 @@ var seedSensors = async () => {
     };
 
     let report3 = {
-        ReportID: 3,
         SensorID: 3,
         Longitude: -114.08529,
         Latitude: 51.15011,
@@ -51,7 +115,6 @@ var seedSensors = async () => {
     };
 
     let report4 = {
-        ReportID: 4,
         SensorID: 3,
         Longitude: -114.08529,
         Latitude: 51.15011,
@@ -86,79 +149,27 @@ var init = async () => {
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
-      
-        let company = {
-            CompanyID: 1,
-            Name: 'General',
-            Address: 'Calgary,AB',
-            Phone: '345-343-3432',
-        };
-        await db.addCompany(company);
-      
-        var admin = {
-            UserID: '1',
-            Username: 'root',
-            Password: 'root',
-            Role: 'Admin',
-            CompanyID: 1,
-            FirstName:'John',
-            LastName: 'Doe',
-            Address: 'Calgary,AB',
-            Email: 'admin@abc.com',
-            Phone: '403-233-3333',
-            StaffID: '1'
-        };
 
-        var manager = {
-            UserID: '2',
-            Username: 'manager',
-            Password: 'manager',
-            Role: 'Manager',
-            CompanyID: 1,
-            FirstName:'John',
-            LastName: 'Doe',
-            Address: 'Calgary,AB',
-            Email: 'admin@abc.com',
-            Phone: '403-233-3333',
-            StaffID: '1'
-        };
-        var driver = {
-            UserID: '3',
-            Username: 'driver',
-            Password: 'driver',
-            Role: 'Driver',
-            CompanyID: 1,
-            FirstName:'John',
-            LastName: 'Doe',
-            Address: 'Calgary,AB',
-            Email: 'admin@abc.com',
-            Phone: '403-233-3333',
-            StaffID: '1'
-        };
-        await db.addUser(admin);
-        await db.addUser(manager);
-        await db.addUser(driver);
+        await seedCompanies();
 
-        var adminProfile = {
-            UserID: '1',
-            FirstName: 'John',
-            LastName: 'Doe',
-            Address: '24 Ave Calgary, AB',
-            Email: 'admin@abc.com',
-            Phone: '403-343-3434',
-            StaffID: '001',
-        };
+        await seedUsers();
+        // var adminProfile = {
+        //     UserID: '1',
+        //     FirstName: 'John',
+        //     LastName: 'Doe',
+        //     Address: '24 Ave Calgary, AB',
+        //     Email: 'admin@abc.com',
+        //     Phone: '403-343-3434',
+        //     StaffID: '001',
+        // };
 
-        await db.updateProfile(adminProfile);
+        // await db.updateProfile(adminProfile);
 
-        var depot = {
-            DepotID: '1',
-            Name: 'SW Dumpster',
-            Address: 'Calgary, AB',
-            CompanyID: 1,
-        };
-        await db.addDepot(depot);
+        await seedDepots();
+
         await seedSensors();
+
+        await seedSensorReports();
 
         console.log('Closing connection');
         await db.closePool();
