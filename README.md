@@ -45,7 +45,8 @@ https://nodejs.org/en/ - Version 15.1.0 Current
 
      SET DEBUG=express-locallibrary-tutorial:* & npm run devstart
 
-   open [http://localhost:3000/](http://localhost:3000/)
+open [http://localhost:3000/](http://localhost:3000/)
+
 ## Commiting
 
 Run `npm run check` before commmiting to git.

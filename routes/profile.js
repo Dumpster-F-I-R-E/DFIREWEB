@@ -22,7 +22,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
     console.log('Staff ID', p.StaffID);
     res.render('profile', {
         profile: p,
-        role: res.locals.User.Role
+        role: res.locals.User.Role,
     });
 });
 
@@ -32,31 +32,36 @@ router.post('/', auth.requireAuth, async function (req, res) {
     res.redirect('/profile');
 });
 
-router.get('/id/:id', auth.requireAuth, auth.requireAdmin, async function (req, res) {
-    let id = req.params.id;
-    let p = await profile.getProfileById(id);
-    let role = await profile.getRole(id);
-    if (!p) {
-        p = {
-            UserID: id,
-            Role: role,
-            FirstName: 'Fist Name',
-            LastName: 'Last Name',
-            Address: '24 Ave Calgary, AB',
-            Email: 'admin@abc.com',
-            Phone: '403-343-3434',
-            StaffID: 'Staff ID',
-        };
+router.get(
+    '/id/:id',
+    auth.requireAuth,
+    auth.requireAdmin,
+    async function (req, res) {
+        let id = req.params.id;
+        let p = await profile.getProfileById(id);
+        let role = await profile.getRole(id);
+        if (!p) {
+            p = {
+                UserID: id,
+                Role: role,
+                FirstName: 'Fist Name',
+                LastName: 'Last Name',
+                Address: '24 Ave Calgary, AB',
+                Email: 'admin@abc.com',
+                Phone: '403-343-3434',
+                StaffID: 'Staff ID',
+            };
+        }
+
+        res.render('profile', {
+            profile: p,
+        });
     }
-    
-    res.render('profile', {
-        profile: p
-    });
-});
+);
 
 router.post('/change-password', auth.requireAuth, async function (req, res) {
     const data = req.body;
-    await profile.changePassword(res.locals.User,data.UserID, data.Password);
+    await profile.changePassword(res.locals.User, data.UserID, data.Password);
     res.redirect('/profile');
 });
 
@@ -71,10 +76,10 @@ router.get('/image/:id', auth.requireAuth, async function (req, res) {
 
 router.post('/upload-photo', auth.requireAuth, async function (req, res) {
     const data = req.body;
-    console.log("Uploading Photo...", req.body.UserID);
+    console.log('Uploading Photo...', req.body.UserID);
     await profile.changeImage(res.locals.User, data.UserID, data.Image);
-   
-    res.json({success:true});
+
+    res.json({ success: true });
 });
 
 module.exports = router;

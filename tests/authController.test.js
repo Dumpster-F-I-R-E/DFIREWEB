@@ -46,17 +46,17 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-function initUser(user){
-    user.FirstName ='John';
+function initUser(user) {
+    user.FirstName = 'John';
     user.LastName = 'Doe';
-    user.Address= 'Calgary,AB';
-    user.Email= 'admin@abc.com';
-    user.Phone= '403-233-3333';
-    user.StaffID= '1';
+    user.Address = 'Calgary,AB';
+    user.Email = 'admin@abc.com';
+    user.Phone = '403-233-3333';
+    user.StaffID = '1';
     return user;
 }
 
-async function addUser(user){
+async function addUser(user) {
     let u = initUser(user);
     await db.addUser(u);
 }
