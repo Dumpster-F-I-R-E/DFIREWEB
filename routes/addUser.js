@@ -3,11 +3,11 @@ var router = express.Router();
 const auth = require('../controllers/authController');
 const user = require('../controllers/userController');
 
-router.get('/add', auth.requireAuth, function (req, res) {
+router.get('/add', auth.requireAuth, auth.requireAdminOrManager, function (req, res) {
     res.render('addUser');
 });
 
-router.post('/add', auth.requireAuth, async function (req, res) {
+router.post('/add', auth.requireAuth, auth.requireAdminOrManager, async function (req, res) {
     const data = req.body;
     let u = await user.createUser(res.locals.User, data);
     let msg = '';
@@ -23,7 +23,7 @@ router.post('/add', auth.requireAuth, async function (req, res) {
     });
 });
 
-router.post('/delete', auth.requireAuth, async function (req, res) {
+router.post('/delete', auth.requireAuth, auth.requireAdminOrManager, async function (req, res) {
     const data = req.body;
     await user.deleteUser(res.locals.User, data.UserID);
     let msg = '';

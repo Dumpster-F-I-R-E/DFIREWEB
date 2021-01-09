@@ -3,7 +3,7 @@ var router = express.Router();
 const auth = require('../controllers/authController');
 const users = require('../controllers/userListController');
 
-router.get('/', auth.requireAuth, async function (req, res) {
+router.get('/', auth.requireAuth, auth.requireAdminOrManager, async function (req, res) {
     let role = req.query.role;
     let name = req.query.name;
     let list = await users.getUsers(name, role);
