@@ -60,6 +60,7 @@ exports.requireAuth = async (req, res, next) => {
                 User: {
                     UserID: user.UserID,
                     Role: user.Role,
+                    Username: user.Username,
                 },
             };
             next();

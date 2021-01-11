@@ -16,11 +16,12 @@
     <div class="wrapper">
         <%- include('nav.ejs') %>
         <div class="content">
-            <h1>Welcome to DFIRE</h1>
+            <h1>Welcome to DFIRE <%= user %></h1>
+            
             <p>
-            DFire allows you to keep track of all the dumpsters.<br/>
-            It allows you to understand and predict the fullness levels and dumpster
-            statistics.
+            You have logged in as <%= role %>.<br>
+            ***Need to find more information to put in here, but these information should be something else other than our information.<br>
+            It can be something like our last activity or some notification or something else.
             </p>
             <img src="/images/dumpster_welcome.jpg" />
         </div>
