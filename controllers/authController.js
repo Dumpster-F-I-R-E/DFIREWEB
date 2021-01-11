@@ -98,10 +98,12 @@ exports.requireManager = (req, res, next) => {
 };
 
 exports.requireAdminOrManager = (req, res, next) => {
-    if (res.locals.User.Role === 'Admin' || res.locals.User.Role === 'Manager') {
+    if (
+        res.locals.User.Role === 'Admin' ||
+        res.locals.User.Role === 'Manager'
+    ) {
         next();
     } else {
         res.render('mainMenu');
     }
 };
-
