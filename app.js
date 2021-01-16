@@ -13,6 +13,7 @@ var userlistRouter = require('./routes/userList');
 var dumpsterRouter = require('./routes/dumpster');
 var mainMenuRouter = require('./routes/mainMenu');
 var addUserRouter = require('./routes/addUser');
+var addDumpsterRouter = require('./routes/addDumpster');
 var apiRouter = require('./routes/api');
 
 var app = express();
@@ -37,6 +38,7 @@ app.use('/userlist', userlistRouter);
 app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
 app.use('/user', addUserRouter);
+app.use('/addDumpster', addDumpsterRouter);
 app.use('/api', apiRouter);
 app.use('/routes', dumpsterRoutesRouter);
 // catch 404 and forward to error handler
