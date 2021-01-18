@@ -14,6 +14,10 @@ router.get('/login', async function (req, res) {
 
 router.post('/login', async function (req, res) {
     console.log(req.body);
+    if(req.body.aboutUs === "About Us"){
+        res.redirect('/aboutUs');
+    }
+    else {
     const { valid, authToken } = await auth.authenticate(
         req.body.username,
         req.body.password
@@ -23,8 +27,9 @@ router.post('/login', async function (req, res) {
         res.cookie('AuthToken', authToken);
         res.redirect('/mainMenu');
     } else {
-        res.render('login', { message: 'Please enter both id and password' });
+        res.render('login', { message: 'Please enter id and/or password' });
     }
+}
 });
 
 router.get('/logout', async function (req, res) {
