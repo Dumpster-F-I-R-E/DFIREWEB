@@ -21,6 +21,7 @@ router.post(
         let u = await sensor.addDumpster(res.locals.Sensor, data);
         let msg = '';
         let s = true;
+        console.log(u);
         if (!u) {
             msg = "You don't have permission to create this dumpster.";
             s = false;

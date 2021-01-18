@@ -37,9 +37,12 @@
             dumpster.CompanyID = 1;
 
                 $.post("/addDumpster", dumpster, function(data){
+                    //console.log(data);
                     if(data.success){
+                            console.log("success");
                             location.href = "/dumpster/" + data.sensor.SensorID;
                     }else{
+                        console.log(data.error);
                         $(".error-message").text(data.error);
                     }
                     
@@ -70,7 +73,7 @@
                         </div>
                     </div>
                     <div class="form">
-                        <label for="username">Dumpster Sensor Serial ID </label>
+                        <label>Dumpster Sensor Serial ID </label>
                         <input type="text" name="SensorSerialNumber" id="SensorSerialNumber" >                        
                     </div>
                 </div>

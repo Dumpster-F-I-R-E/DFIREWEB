@@ -1,6 +1,7 @@
 const db = require('../database/db');
 
 exports.createUser = async (user, profile) => {
+    console.log(profile);
     if (user.Role == 'Admin') {
         let account = await db.createUser(profile);
         return account;
