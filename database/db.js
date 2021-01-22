@@ -181,7 +181,6 @@ exports.addDepot = async (depot) => {
 exports.addSensor = async (sensor) => {
     let sql =
         'INSERT INTO Sensors (`SensorSerialNumber`, `CompanyID`) VALUES(?, ?)';
-
     await pool
         .execute(sql, [sensor.SensorSerialNumber, sensor.CompanyID])
         .catch(printErrors);
