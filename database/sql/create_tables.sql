@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `SensorReports` (
 	`BatteryLevel` DOUBLE NOT NULL,
 	`FullnessLevel` DOUBLE NOT NULL,
 	`ErrorCode` INT NOT NULL,
-	`InsertionTime` DATETIME NOT NULL DEFAULT NOW(),
+	`Time` DATETIME NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (`ReportID`),
     FOREIGN KEY (`SensorID`) REFERENCES Sensors(`SensorID`)
 );
@@ -77,6 +77,6 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
 	`SessionID` INT NOT NULL AUTO_INCREMENT,
 	`UserID` INT NOT NULL,
 	`Token` VARCHAR(120) NOT NULL,
-	`ExpireDate` DATE NOT NULL,
+	`ExpireDate` DATETIME NOT NULL,
 	PRIMARY KEY (`SessionID`)
 );

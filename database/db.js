@@ -187,11 +187,7 @@ exports.addSensor = async (sensor) => {
 };
 
 exports.storeSensorReport = async (report) => {
-    let sql =
-        'INSERT INTO SensorReports' +
-        '(`SensorID`, `Longitude`, `Latitude`, `BatteryLevel`, `FullnessLevel`, `ErrorCode`)' +
-        'VALUES(?, ?, ?, ?, ?, ?)';
-
+    let sql = 'INSERT INTO SensorReports (SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, ErrorCode, Time) VALUES(?, ?, ?, ?, ?,?,?)';
     await pool
         .execute(sql, [
             report.SensorID,
@@ -200,6 +196,7 @@ exports.storeSensorReport = async (report) => {
             report.BatteryLevel,
             report.FullnessLevel,
             report.ErrorCode,
+            report.Time,
         ])
         .catch(printErrors);
 };
@@ -208,7 +205,7 @@ exports.getSensorData = async () => {
     let sql =
         'SELECT  * ' +
         'FROM SensorReports,' +
-        '(SELECT SensorID, max(ReportID) as ReportID ' +
+        '(SELECT SensorID,ReportID, max(Time) as Time ' +
         'FROM SensorReports ' +
         'GROUP BY SensorID) latest ' +
         'WHERE SensorReports.ReportID=latest.ReportID ;';

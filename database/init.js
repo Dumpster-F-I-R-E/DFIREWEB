@@ -94,6 +94,7 @@ var seedSensorReports = async () => {
         BatteryLevel: 50,
         FullnessLevel: 60,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 05:00:00'),
     };
 
     let report2 = {
@@ -103,6 +104,7 @@ var seedSensorReports = async () => {
         BatteryLevel: 50,
         FullnessLevel: 60,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 05:00:00'),
     };
 
     let report3 = {
@@ -112,6 +114,7 @@ var seedSensorReports = async () => {
         BatteryLevel: 50,
         FullnessLevel: 60,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 05:00:00'),
     };
 
     let report4 = {
@@ -119,13 +122,18 @@ var seedSensorReports = async () => {
         Longitude: -114.08529,
         Latitude: 51.15011,
         BatteryLevel: 50,
-        FullnessLevel: 60,
+        FullnessLevel: 70,
         ErrorCode: 0,
+        Time: new Date('2020-12-20 06:00:00'),
     };
+
 
     await db.storeSensorReport(report1);
     await db.storeSensorReport(report2);
     await db.storeSensorReport(report3);
+    await db.storeSensorReport(report4);
+    report4.FullnessLevel = 10;
+    report4.Time = new Date('2020-12-20 08:00:00');
     await db.storeSensorReport(report4);
 };
 
