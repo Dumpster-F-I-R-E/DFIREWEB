@@ -17,3 +17,8 @@ exports.deleteUser = async (user, userid) => {
         await db.deleteUser(userid);
     }
 };
+
+exports.getUser = async (username) => {
+    let u = await db.getUserByUsername(username);
+    return u;
+};

@@ -13,11 +13,8 @@ var userlistRouter = require('./routes/userList');
 var dumpsterRouter = require('./routes/dumpster');
 var mainMenuRouter = require('./routes/mainMenu');
 var addUserRouter = require('./routes/addUser');
-<<<<<<< HEAD
 var aboutUsRouter = require('./routes/aboutUs');
-=======
 var addDumpsterRouter = require('./routes/addDumpster');
->>>>>>> origin/issue21
 var apiRouter = require('./routes/api');
 
 var app = express();

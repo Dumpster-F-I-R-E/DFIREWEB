@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `ProfileImages` (
 );
 
 
-
 CREATE TABLE IF NOT EXISTS `Companies` (
 	`CompanyID` INT NOT NULL AUTO_INCREMENT,
 	`Name` TEXT NOT NULL,

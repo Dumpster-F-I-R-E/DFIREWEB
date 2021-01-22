@@ -18,6 +18,16 @@ router.post(
     auth.requireAdminOrManager,
     async function (req, res) {
         const data = req.body;
+        let prevUser = await user.getUser(data.Username);
+        console.log('prev_user', prevUser);
+        if(prevUser){
+            res.json({
+                success: false,
+                user: null,
+                error: 'Username is not available. Please choose another!.',
+            });
+            return;
+        }
         let u = await user.createUser(res.locals.User, data);
         let msg = '';
         let s = true;
