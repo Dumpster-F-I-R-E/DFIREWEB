@@ -265,8 +265,21 @@ exports.getUsers = async () => {
     }
 };
 
-exports.getDepots = async () => {
+exports.getDepotsSearch = async (name, address) => {
     let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
+    if (name && name != '*') {
+        sql += ' WHERE (Name LIKE ?)';
+        sql = mysql.format(sql, [name]);
+    }
+
+    if (address && address != '*') {
+        if (name && name != '*') {
+            sql += ' AND Address Like ?';
+        }
+        sql += ' WHERE Address Like ?';
+        sql = mysql.format(sql, [address]);
+    }
+    console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];

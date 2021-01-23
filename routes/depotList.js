@@ -8,12 +8,12 @@ router.get(
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
-        let role = req.query.role;
+        let address = req.query.address;
         let name = req.query.name;
-        let list = await depots.getDepots(name, role);
+        let list = await depots.getDepots(name, address);
         res.render('depotList', {
             depots: list,
-            role: role,
+            address: address,
             name: name,
         });
     }

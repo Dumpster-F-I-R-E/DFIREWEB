@@ -43,14 +43,14 @@
 
           <div class="form">
             <div class="labels">
-              <label for="name">Name: </label>
-              <label for="role">Role</label>
+              <label for="name">Name </label>
+              <label for="address">Address</label>
             </div>
 
             <div class="fields">
-              <form action="/userList" id="search_form">
+              <form action="/depotList" id="search_form">
                 <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
-                <input type="text" name="role" id="role" placeholder="*" value="<%=role%>">
+                <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
               </form>
             </div>
           </div>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-2">
           <h2 class="title">Depot List</h2>
-          <a href="/user/add" class="btn add-user">Add User </a>
+          <a href="/addDepot" class="btn addDepot">Add Depot </a>
           <a class="btn delete-user">Delete User </a>
           <table style="width:100%">
             <tr>
