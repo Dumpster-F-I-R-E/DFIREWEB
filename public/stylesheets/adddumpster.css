@@ -1,0 +1,10 @@
+@import 'adduser.css';
+
+.content {
+    margin: auto auto;
+    background-color: white;
+}
+
+.wrapper {
+    background-color: rgb(180, 200, 216);
+}

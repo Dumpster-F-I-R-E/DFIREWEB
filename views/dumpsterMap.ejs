@@ -11,6 +11,17 @@
             defer></script> 
     <%- include('common.ejs') %>
 </head>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".btn.add-dumpster").click(function () {
+      console.log("Hello");
+      location.href = '/addDumpster';
+    });
+  });
+  
+</script>
+
 <body>
     <%- include('messageBox.ejs') %>
     <div class="header">
@@ -19,6 +30,9 @@
     <div class="wrapper"> 
       <%- include('nav.ejs') %>
       <div class="content">
+        <div class="toolbar">
+          <input class='btn primary-btn add-dumpster' type="button" value="Add Dumpster">
+        </div>
         <div id="map"></div>
       </div>
     </div>

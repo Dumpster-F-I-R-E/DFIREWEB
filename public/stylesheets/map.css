@@ -1,10 +1,14 @@
 @import 'nav.css';
 @import 'layout.css';
-
+@import 'button.css';
 /* Always set the map height explicitly to define the size of the div
         * element that contains the map. */
 #map {
     height: 100%;
+}
+
+.toolbar {
+    margin: 10px;
 }
 
 @media only screen and (max-width: 400px) {
