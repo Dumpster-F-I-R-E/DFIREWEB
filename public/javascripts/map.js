@@ -11,9 +11,11 @@ function initMap() {
     google.maps.event.addListener(map, 'idle', showDumpsters);
 }
 
+// eslint-disable-next-line no-unused-vars
 function addDepot(lat,lng){
     var iconBase = '/images/depot-2.png';
 
+    // eslint-disable-next-line no-unused-vars
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 function showMessage(title, msg, type) {
     $('.modal-title').text(title);
     $('.modal-body').text(msg);
