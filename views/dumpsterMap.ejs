@@ -8,9 +8,11 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="/javascripts/map.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXl5WzhM1ZWUSQYcQcz1_sFkX1EvHJrNc&callback=initMap&libraries=&v=weekly"
-            defer></script>   
+            defer></script> 
+    <%- include('common.ejs') %>
 </head>
 <body>
+    <%- include('messageBox.ejs') %>
     <div class="header">
         <h1 class="title"> Dumpster FIRE </h1>
     </div>

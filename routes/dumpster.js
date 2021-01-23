@@ -13,9 +13,9 @@ router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
 
 router.get('/history/:dumpsterId', auth.requireAuth, async function (req, res) {
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
-    let data = d.map(i => {
+    let data = d.map((i) => {
         return {
-            y:i.FullnessLevel,
+            y: i.FullnessLevel,
             x: new Date(i.Time),
         };
     });

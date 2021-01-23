@@ -136,7 +136,6 @@ exports.createUser = async (profile) => {
     profile.CompanyID = 1;
     console.log(profile);
     await exports.addUser(profile);
-    return profile;    
 };
 
 exports.addUser = async (user) => {
@@ -179,7 +178,8 @@ exports.addSensor = async (sensor) => {
 };
 
 exports.storeSensorReport = async (report) => {
-    let sql = 'INSERT INTO SensorReports (SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, ErrorCode, Time) VALUES(?, ?, ?, ?, ?,?,?)';
+    let sql =
+        'INSERT INTO SensorReports (SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, ErrorCode, Time) VALUES(?, ?, ?, ?, ?,?,?)';
     await pool
         .execute(sql, [
             report.SensorID,

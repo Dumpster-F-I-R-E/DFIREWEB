@@ -20,7 +20,7 @@ router.post(
         const data = req.body;
         let prevUser = await user.getUser(data.Username);
         console.log('prev_user', prevUser);
-        if(prevUser){
+        if (prevUser) {
             res.json({
                 success: false,
                 user: null,

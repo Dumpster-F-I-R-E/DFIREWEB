@@ -127,7 +127,6 @@ var seedSensorReports = async () => {
         Time: new Date('2020-12-20 06:00:00'),
     };
 
-
     await db.storeSensorReport(report1);
     await db.storeSensorReport(report2);
     await db.storeSensorReport(report3);
