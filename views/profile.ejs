@@ -66,10 +66,7 @@
             profile.Email = $("#email").val();
             profile.Address = $("#address").val();
             profile.Role = $("#role").val();
-
-            if (imageUploaded && image != null) {
-                profile.Image = image;
-            }
+          
 
             $.post("/profile", profile);
 
