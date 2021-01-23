@@ -61,3 +61,11 @@ a {
 a.btn {
     display: inline-block;
 }
+
+@media only screen and (max-width: 900px) {
+
+    .content{
+        display: block;
+    }
+
+}

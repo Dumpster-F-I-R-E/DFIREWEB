@@ -57,4 +57,8 @@ div.input{
         padding: 0;
         border: none;
     }
+
+    div.input{
+        margin: 20px auto;
+    }
 }

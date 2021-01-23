@@ -20,12 +20,44 @@ body {
     border: 1px solid gray;
 }
 
-.header .title {
-    text-align: center;
+.header .top-bar{
+    background-color: #438afc;
+    /* text-align: center; */
+    display: flex;
+}
+
+.toggle-nav {
+    display: block;
+}
+
+.header .menu-icon{
+    left: 0;
+    margin: 10px;
+    font-size: 30px;   
+    display:none;
+    color:black;
+}
+
+.header .main-title {    
     font-size: 20px;
     font-weight: 400;
-    color: white;
-    background-color: #438afc;
-    margin: 0;
+    color: white;    
+    margin: 0 auto;
     padding: 10px;
+    display: inline-block;
 }
+
+@media only screen and (max-width: 600px) {
+    .wrapper {
+        grid-template-columns: auto;
+    }
+
+    .header .menu-icon{
+        display: block;
+    }
+
+    .toggle-nav {
+        display: block !important;
+    }
+}
+

@@ -49,9 +49,30 @@
 
 .nav-items li:hover {
     background-color: #34465d;
+    color:white;
 }
 
 .nav-items a {
     text-decoration: none;
     color: white;
+}
+
+@media only screen and (max-width: 600px) {
+    .nav {
+        display:none;
+        height: 100vh;
+    }
+
+    .nav-items{
+        text-align: center;
+    }
+
+    .thumbnail {
+        margin: 0 auto;
+    }
+}
+@media only screen and (min-width: 600px) {
+    .nav {
+        display:block;
+    }
 }
