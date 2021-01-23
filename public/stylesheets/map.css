@@ -6,6 +6,33 @@
 #map {
     height: 100%;
 }
+.input{
+    padding: 10px;
+}
+
+.input h2 {
+    margin: 5px;
+}
+
+#autocomplete{
+    width: 100%;
+}
+
+div.background{
+    z-index: 1;
+    position:fixed;
+    top: 0;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
+    width: 100vw;
+    display:none;
+}
+
+div.input{
+    margin: 200px auto;
+    width: 300px;
+    background-color: white;
+}
 
 .toolbar {
     margin: 10px;

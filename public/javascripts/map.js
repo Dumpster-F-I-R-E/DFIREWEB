@@ -11,6 +11,16 @@ function initMap() {
     google.maps.event.addListener(map, 'idle', showDumpsters);
 }
 
+function addDepot(lat,lng){
+    var iconBase = '/images/depot-2.png';
+
+    const marker = new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map,
+        icon: iconBase
+    });
+}
+
 function addMarker(dumpster, map) {
     // The marker, positioned at Uluru
     let lat = dumpster.Latitude;
