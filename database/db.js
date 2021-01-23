@@ -265,6 +265,14 @@ exports.getUsers = async () => {
     }
 };
 
+exports.getDepots = async () => {
+    let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
 exports.getUsersSearch = async (name, role) => {
     let sql =
         'SELECT Users.UserID, FirstName, LastName, Email, Role' + ' FROM Users';

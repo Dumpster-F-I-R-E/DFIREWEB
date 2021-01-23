@@ -16,6 +16,11 @@
             <li>User List</li>
         </a>
         <% } %>
+        <% if (User.Role == "Admin" || User.Role == "Manager") { %>
+            <a href="/depotList">
+                <li>Depot List</li>
+            </a>
+            <% } %>
         <a href="/routes">
             <li>Routes</li>
         </a>
