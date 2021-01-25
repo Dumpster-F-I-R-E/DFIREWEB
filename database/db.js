@@ -160,6 +160,26 @@ exports.addUser = async (user) => {
         .catch(printErrors);
 };
 
+exports.deleteDepot = async (depotid) => {
+    let sql = 'DELETE FROM Depots WHERE DepotID=?';
+    await pool.query(sql, [depotid]).catch(printErrors);
+};
+
+exports.createDepot = async (depot) => {
+    let sql = "SELECT MAX(DepotID) AS 'MaxID' FROM depots";
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        console.log(results[0][0].MaxID);
+        let val = results[0][0].MaxID;
+        let depotid = val + 1;
+        depot.DepotID = depotid;
+        depot.CompanyID = 1;
+        console.log(depot);
+        await exports.addDepot(depot);
+        return depot;
+    }
+};
+
 exports.addDepot = async (depot) => {
     let sql =
         'INSERT INTO Depots (`Name`, `Address`, `CompanyID`) VALUES(?, ?, ?)';
@@ -247,6 +267,27 @@ exports.runQuery = async (sql) => {
 
 exports.getUsers = async () => {
     let sql = 'SELECT FirstName, LastName, Email, Role' + ' FROM Users ';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getDepotsSearch = async (name, address) => {
+    let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
+    if (name && name != '*') {
+        sql += ' WHERE (Name LIKE ?)';
+        sql = mysql.format(sql, [name]);
+    }
+
+    if (address && address != '*') {
+        if (name && name != '*') {
+            sql += ' AND Address Like ?';
+        }
+        sql += ' WHERE Address Like ?';
+        sql = mysql.format(sql, [address]);
+    }
+    console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
