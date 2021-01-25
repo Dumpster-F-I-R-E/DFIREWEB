@@ -294,3 +294,23 @@ exports.changeImage = async (userId, image) => {
     console.log('ChangeImage DB', userId);
     await pool.execute(sql, [userId, image]).catch(printErrors);
 };
+
+
+exports.getDrivers = async () => {
+    let sql = 'SELECT UserID,FirstName, LastName, Email, Role FROM Users  WHERE Role=\'Driver\'';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.setDriver = async (sensorId, driverId) => {
+    let sql =
+        'UPDATE Sensors SET' +
+        ' DriverID = ? ' +
+        ' WHERE SensorID=?;';
+
+    await pool
+        .execute(sql, [driverId, sensorId]).catch(printErrors);
+
+};
