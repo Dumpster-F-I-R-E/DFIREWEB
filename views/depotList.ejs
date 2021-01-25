@@ -12,16 +12,16 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('a.delete-user').click(function(){
+    $('a.delete-depot').click(function(){
       console.log("Click delete");
       $('.checks').each(function(index){
         if(this.checked){
           let k = $(this).parent().parent();
-          let userid = k.children('.userid').first().html().trim();
+          let depotid = k.children('.depotid').first().html().trim();
           let req = {
-            UserID: userid
+            DepotID: depotid
           };
-          $.post('/user/delete', req, function(data){
+          $.post('/deleteDepot', req, function(data){
             location.reload();
           });
         }
@@ -63,7 +63,7 @@
         <div class="col-2">
           <h2 class="title">Depot List</h2>
           <a href="/addDepot" class="btn addDepot">Add Depot </a>
-          <a class="btn delete-user">Delete User </a>
+          <a class="btn delete-depot">Delete Depot </a>
           <table style="width:100%">
             <tr>
               <th></th>
@@ -76,13 +76,13 @@
                 <td>
                   <input class="checks" type="checkbox">
                 </td>
-                <td class='depotid' onclick="window.location='/dumpster/<%= depot.DepotID %>';">
+                <td class='depotid'>
                   <%= depot.DepotID %>
                 </td>
-                <td onclick="window.location='/dumpster/<%= depot.DepotID %>';">
+                <td>
                   <%= depot.Name %>
                 </td>
-                <td onclick="window.location='/dumpster/<%= depot.DepotID %>';">
+                <td>
                   <%= depot.Address %>
                 </td>
               </tr>

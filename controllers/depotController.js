@@ -1,12 +1,10 @@
 const db = require('../database/db');
 
 exports.createDepot = async (depot, data) => {
-        let newDepot = await db.addDepot(data);
+        let newDepot = await db.createDepot(data);
         return newDepot;
 };
 
-exports.deleteDepot = async (user, userid) => {
-    // if (user.Role == 'Admin') {
-    //     await db.deleteUser(userid);
-    // }
+exports.deleteDepot = async (user, depotid) => {
+        await db.deleteDepot(depotid);
 };

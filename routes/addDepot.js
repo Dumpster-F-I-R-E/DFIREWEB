@@ -27,25 +27,25 @@ router.post(
         }
         res.json({
             success: s,
-            user: u,
+            depot: u,
             error: msg,
         });
     }
 );
 
-// router.post(
-//     '/',
-//     auth.requireAuth,
-//     auth.requireAdminOrManager,
-//     async function (req, res) {
-//         const data = req.body;
-//         await user.deleteUser(res.locals.User, data.UserID);
-//         let msg = '';
-//         res.json({
-//             success: true,
-//             error: msg,
-//         });
-//     }
-// );
+router.post(
+    '/deleteDepot',
+    auth.requireAuth,
+    auth.requireAdminOrManager,
+    async function (req, res) {
+        const data = req.body;
+        await user.deleteUser(res.locals.User, data.UserID);
+        let msg = '';
+        res.json({
+            success: true,
+            error: msg,
+        });
+    }
+);
 
 module.exports = router;
