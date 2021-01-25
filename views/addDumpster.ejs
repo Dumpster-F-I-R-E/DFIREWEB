@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE - Profile</title>
+    <%- include('common.ejs') %>
+    <link rel='stylesheet' href='/stylesheets/adddumpster.css' />
+   
+</head>
+
+<% var Role = User.Role %>
+<script type="text/javascript">
+    let role = "<%= Role %>";
+    var permission = {
+        Admin : [],
+        Manager: ['staffid'],
+        Driver: ['staffid', 'role']
+    }
+   
+
+
+    $(document).ready(function () {
+
+        $("button.apply").click(function () {
+            let dumpster = {};
+            dumpster.SensorSerialNumber = $("#SensorSerialNumber").val();
+            dumpster.CompanyID = 1;
+
+                $.post("/addDumpster", dumpster, function(data){
+                    //console.log(data);
+                    if(data.success){
+                            console.log("success");
+                            location.href = "/dumpster/" + data.sensor.SensorID;
+                    }else{
+                        console.log(data.error);
+                        showMessage('Error', data.error ,'Error');
+                    }
+                    
+                });
+            
+        
+        });
+
+        $("button.cancel").click(function () {
+            location.reload(true);
+        });
+    });
+
+</script>
+<body>
+    <%- include('messageBox.ejs') %>
+    <%- include('header.ejs') %>
+    <div class="wrapper">
+        <%- include('nav.ejs') %>
+            <div class="content">
+                <h1 class="title">Add Dumpster</h1>
+                <div class="container">
+                    <div class="col-1">
+                        <div class="btn-container">
+                            <button class="btn apply">Add Dumpster</button>
+                            <button class="btn cancel">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="form">
+                        <label>Dumpster Sensor Serial ID </label>
+                        <input type="text" name="SensorSerialNumber" id="SensorSerialNumber" >                        
+                    </div>
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+    </div>
+    </div>
+</body>
+
+
+
+</html>

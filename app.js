@@ -16,6 +16,7 @@ var addUserRouter = require('./routes/addUser');
 var aboutUsRouter = require('./routes/aboutUs');
 var addDepotRouter = require('./routes/addDepot');
 var depotListRouter = require('./routes/depotList');
+var addDumpsterRouter = require('./routes/addDumpster');
 var apiRouter = require('./routes/api');
 
 var app = express();
@@ -41,6 +42,7 @@ app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
 app.use('/user', addUserRouter);
 app.use('/aboutUs', aboutUsRouter);
+app.use('/addDumpster', addDumpsterRouter);
 app.use('/api', apiRouter);
 app.use('/routes', dumpsterRoutesRouter);
 app.use('/addDepot', addDepotRouter);

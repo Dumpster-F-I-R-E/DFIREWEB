@@ -133,18 +133,9 @@ exports.deleteUser = async (userid) => {
 };
 
 exports.createUser = async (profile) => {
-    let sql = "SELECT MAX(UserID) AS 'MaxID' FROM Users";
-    var results = await pool.query(sql).catch(printErrors);
-    if (results && results.length > 0 && results[0].length > 0) {
-        console.log(results[0][0].MaxID);
-        let val = results[0][0].MaxID;
-        let userid = val + 1;
-        profile.UserID = userid;
-        profile.CompanyID = 1;
-        console.log(profile);
-        await exports.addUser(profile);
-        return profile;
-    }
+    profile.CompanyID = 1;
+    console.log(profile);
+    await exports.addUser(profile);
 };
 
 exports.addUser = async (user) => {
@@ -201,7 +192,6 @@ exports.addDepot = async (depot) => {
 exports.addSensor = async (sensor) => {
     let sql =
         'INSERT INTO Sensors (`SensorSerialNumber`, `CompanyID`) VALUES(?, ?)';
-
     await pool
         .execute(sql, [sensor.SensorSerialNumber, sensor.CompanyID])
         .catch(printErrors);
@@ -209,10 +199,7 @@ exports.addSensor = async (sensor) => {
 
 exports.storeSensorReport = async (report) => {
     let sql =
-        'INSERT INTO SensorReports' +
-        '(`SensorID`, `Longitude`, `Latitude`, `BatteryLevel`, `FullnessLevel`, `ErrorCode`)' +
-        'VALUES(?, ?, ?, ?, ?, ?)';
-
+        'INSERT INTO SensorReports (SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, ErrorCode, Time) VALUES(?, ?, ?, ?, ?,?,?)';
     await pool
         .execute(sql, [
             report.SensorID,
@@ -221,6 +208,7 @@ exports.storeSensorReport = async (report) => {
             report.BatteryLevel,
             report.FullnessLevel,
             report.ErrorCode,
+            report.Time,
         ])
         .catch(printErrors);
 };
@@ -229,7 +217,7 @@ exports.getSensorData = async () => {
     let sql =
         'SELECT  * ' +
         'FROM SensorReports,' +
-        '(SELECT SensorID, max(ReportID) as ReportID ' +
+        '(SELECT SensorID,ReportID, max(Time) as Time ' +
         'FROM SensorReports ' +
         'GROUP BY SensorID) latest ' +
         'WHERE SensorReports.ReportID=latest.ReportID ;';

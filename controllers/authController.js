@@ -57,11 +57,7 @@ exports.requireAuth = async (req, res, next) => {
             // Session is still valid
             let user = await db.getUserByUserID(session.UserID);
             res.locals = {
-                User: {
-                    UserID: user.UserID,
-                    Role: user.Role,
-                    Username: user.Username,
-                },
+                User:user,
             };
             next();
         } else {
