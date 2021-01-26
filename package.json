@@ -21,13 +21,15 @@
         "http-errors": "~1.6.3",
         "jest-cli": "^26.6.3",
         "morgan": "~1.9.1",
-        "mysql2": "^2.2.5"
+        "mysql2": "^2.2.5",
+        "nodemailer": "^6.4.17",
+        "req-flash": "0.0.3"
     },
     "devDependencies": {
         "eslint": "^7.14.0",
         "eslint-config-prettier": "^6.15.0",
         "jest": "^26.6.3",
-        "nodemon": "^2.0.6",
+        "nodemon": "^2.0.7",
         "prettier": "2.2.1"
     }
 }

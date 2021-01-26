@@ -17,6 +17,9 @@ router.post('/login', async function (req, res) {
     if(req.body.aboutUs === "About Us"){
         res.redirect('/aboutUs');
     }
+    else if(req.body.forgetPass === "Forget Password"){
+        res.render('getEmail');
+    }
     else {
     const { valid, authToken } = await auth.authenticate(
         req.body.username,
@@ -37,5 +40,6 @@ router.get('/logout', async function (req, res) {
     await auth.logout(authToken);
     res.redirect('/login');
 });
+
 
 module.exports = router;

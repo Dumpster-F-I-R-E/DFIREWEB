@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
 var indexRouter = require('./routes/index');
 var dumpsterMapRouter = require('./routes/dumpsterMap');
 var dumpsterRoutesRouter = require('./routes/dumpsterRoutes');
@@ -14,6 +15,7 @@ var dumpsterRouter = require('./routes/dumpster');
 var mainMenuRouter = require('./routes/mainMenu');
 var addUserRouter = require('./routes/addUser');
 var aboutUsRouter = require('./routes/aboutUs');
+var forgetPassRouter = require('./routes/forgetPassword');
 var apiRouter = require('./routes/api');
 
 var app = express();
@@ -30,6 +32,7 @@ app.use(express.urlencoded({ limit: '25mb', extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', indexRouter);
 app.use('/dumpsterMap', dumpsterMapRouter);
 app.use('/', loginRouter);
@@ -39,8 +42,12 @@ app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
 app.use('/user', addUserRouter);
 app.use('/aboutUs', aboutUsRouter);
+app.use('/forgetPassword',forgetPassRouter);
 app.use('/api', apiRouter);
 app.use('/routes', dumpsterRoutesRouter);
+app.use('/reset',forgetPassRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

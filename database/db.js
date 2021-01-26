@@ -62,7 +62,13 @@ exports.getUserByUserID = async (userid) => {
         return results[0][0];
     }
 };
-
+exports.getUserByEmail = async (email) => {
+    let sql = mysql.format('SELECT * FROM Users WHERE email = ?', [email]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
 exports.updateProfile = async (profile) => {
     let sql =
         'UPDATE Users SET' +
@@ -305,4 +311,18 @@ exports.changeImage = async (userId, image) => {
         ' UPDATE Image=Values(Image)';
     console.log('ChangeImage DB', userId);
     await pool.execute(sql, [userId, image]).catch(printErrors);
+};
+exports.saveResetToken = async(user,token,expired) => {
+    console.log(user.UserID, user.Username, token, expired);
+    let sql =
+    'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
+    await pool.execute(sql, [user.UserID,user.Username, token, expired]).catch(printErrors);
+    
+};
+exports.getUserFromResetToken = async(token) => {
+    let sql = mysql.format('SELECT userId, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
 };

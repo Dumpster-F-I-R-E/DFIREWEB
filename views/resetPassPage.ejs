@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE - Profile</title>
+    <link rel='stylesheet' href='/stylesheets/mainMenu.css' />
+
+</head>
+
+<body>
+    
+    
+        <div class="content">
+            <h1>Reset your password</h1>
+           
+            
+            <form action="/forgetPassword" method="POST">
+                <input class="row-1" type="password" name="newPass" id="newPass"  placeholder = "Password">
+                <input class="row-1" type="password" name="cnfPass" id="cnfPass"  placeholder = "Confirm password">
+                <input type = "hidden" name = "user" value = "<%= userId %>">
+                <input class="btn" type="submit" name = "resetPass" value="Update password">  
+              
+    </form>
+        </div>
+        
+            
+
+        
+    
+</body>
+
+</html>
