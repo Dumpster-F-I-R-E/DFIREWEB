@@ -4,24 +4,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dumpster FIRE - User Management</title>
+  <title>Dumpster FIRE - Depot Management</title>
   <link rel='stylesheet' href='/stylesheets/userlist.css' />
-  <%- include('common.ejs') %>
+  <script src="/javascripts/jquery-3.x-git.min.js"></script>
     
 </head>
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('a.delete-user').click(function(){
+    $('a.delete-depot').click(function(){
       console.log("Click delete");
       $('.checks').each(function(index){
         if(this.checked){
           let k = $(this).parent().parent();
-          let userid = k.children('.userid').first().html().trim();
+          let depotid = k.children('.depotid').first().html().trim();
           let req = {
-            UserID: userid
+            DepotID: depotid
           };
-          $.post('/user/delete', req, function(data){
+          $.post('/deleteDepot', req, function(data){
             location.reload();
           });
         }
@@ -32,7 +32,9 @@
   });
 </script>
 <body>
-  <%- include('header.ejs') %>
+  <div class="header">
+    <h1 class="title"> Dumpster FIRE </h1>
+  </div>
   <div class="wrapper">
     <%- include('nav.ejs') %>
       <div class="content">
@@ -41,14 +43,14 @@
 
           <div class="form">
             <div class="labels">
-              <label for="name">Name: </label>
-              <label for="role">Role</label>
+              <label for="name">Name </label>
+              <label for="address">Address</label>
             </div>
 
             <div class="fields">
-              <form action="/userList" id="search_form">
+              <form action="/depotList" id="search_form">
                 <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
-                <input type="text" name="role" id="role" placeholder="*" value="<%=role%>">
+                <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
               </form>
             </div>
           </div>
@@ -59,37 +61,29 @@
 
         </div>
         <div class="col-2">
-          <h2 class="title">User List</h2>
-          <a href="/user/add" class="btn add-user">Add User </a>
-          <a class="btn delete-user">Delete User </a>
+          <h2 class="title">Depot List</h2>
+          <a href="/addDepot" class="btn addDepot">Add Depot </a>
+          <a class="btn delete-depot">Delete Depot </a>
           <table style="width:100%">
             <tr>
               <th></th>
               <th>ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>EMail</th>
-              <th>Role</th>
+              <th>Name</th>
+              <th>Address</th>
             </tr>
-            <% users.forEach(function(user) { %>
+            <% depots.forEach(function(depot) { %>
               <tr >
                 <td>
                   <input class="checks" type="checkbox">
                 </td>
-                <td class='userid' onclick="window.location='/profile/id/<%= user.UserID %>';">
-                  <%= user.UserID %>
+                <td class='depotid'>
+                  <%= depot.DepotID %>
                 </td>
-                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
-                  <%= user.FirstName %>
+                <td>
+                  <%= depot.Name %>
                 </td>
-                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
-                  <%= user.LastName %>
-                </td>
-                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
-                  <%= user.Email %>
-                </td>
-                <td onclick="window.location='/profile/id/<%= user.UserID %>';">
-                  <%= user.Role %>
+                <td>
+                  <%= depot.Address %>
                 </td>
               </tr>
               <%}); %>

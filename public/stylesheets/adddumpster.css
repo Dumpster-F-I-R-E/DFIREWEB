@@ -1,0 +1,19 @@
+@import 'adduser.css';
+
+.content {
+    margin: 20vh auto;
+    background-color: white;
+    padding: 20px;
+}
+
+.wrapper {
+    background-color: rgb(180, 200, 216);
+}
+
+@media only screen and (max-width: 900px) {
+    .content{
+        margin: 0 auto;
+        width: 100%;
+    }
+
+}

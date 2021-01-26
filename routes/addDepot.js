@@ -1,50 +1,40 @@
 var express = require('express');
 var router = express.Router();
 const auth = require('../controllers/authController');
-const user = require('../controllers/userController');
+const depot = require('../controllers/depotController');
 
 router.get(
-    '/add',
+    '/',
     auth.requireAuth,
     auth.requireAdminOrManager,
     function (req, res) {
-        res.render('addUser');
+        res.render('addDepot');
     }
 );
 
 router.post(
-    '/add',
+    '/',
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
         const data = req.body;
-        let prevUser = await user.getUser(data.Username);
-        console.log('prev_user', prevUser);
-        if (prevUser) {
-            res.json({
-                success: false,
-                user: null,
-                error: 'Username is not available. Please choose another!.',
-            });
-            return;
-        }
-        let u = await user.createUser(res.locals.User, data);
+        let u = await depot.createDepot(res.locals.Depot, data);
         let msg = '';
         let s = true;
         if (!u) {
-            msg = "You don't have permission to create this account";
+            msg = "You don't have permission to create this depot";
             s = false;
         }
         res.json({
             success: s,
-            user: u,
+            depot: u,
             error: msg,
         });
     }
 );
 
 router.post(
-    '/delete',
+    '/deleteDepot',
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
