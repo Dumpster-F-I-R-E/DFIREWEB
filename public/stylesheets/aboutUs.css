@@ -11,3 +11,9 @@
     width:1000px;
     overflow-y: hidden;
 }
+#getEmail, #resetForm {
+    text-align: center;
+}
+#getEmailH1, #resetPageH1 {
+    text-align: center;
+}
