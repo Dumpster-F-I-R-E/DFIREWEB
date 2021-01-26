@@ -43,6 +43,7 @@ router.post('/login', async function (req, res) {
             res.render('login', { message: 'Please enter id and/or password' });
         }
     }
+    }
 });
 
 router.get('/logout', async function (req, res) {
