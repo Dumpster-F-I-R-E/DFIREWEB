@@ -38,12 +38,12 @@
             depot.Name = $("#name").val();
             depot.Address = $("#address").val();
             depot.CompanyID = 1;
-                $.post("/addDepot", depot, function(data){
+                $.post("/depot/add", depot, function(data){
                     //console.log(data);
                     if(data.success){
                             console.log("success");
                             //location.href = "/dumpster/" + data.depot.DepotID;
-                            location.href = "/depotList/";
+                            location.href = "/depot/list/";
                     }else{
                         console.log(data.error);
                         $(".error-message").text(data.error);

@@ -4,7 +4,7 @@ const auth = require('../controllers/authController');
 const depot = require('../controllers/depotController');
 
 router.get(
-    '/',
+    '/add',
     auth.requireAuth,
     auth.requireAdminOrManager,
     function (req, res) {
@@ -13,7 +13,7 @@ router.get(
 );
 
 router.post(
-    '/',
+    '/add',
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
@@ -34,16 +34,32 @@ router.post(
 );
 
 router.post(
-    '/deleteDepot',
+    '/delete',
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
         const data = req.body;
-        await user.deleteUser(res.locals.User, data.UserID);
+        await depot.deleteDepot(res.locals.Depot, data.DepotID);
         let msg = '';
         res.json({
             success: true,
             error: msg,
+        });
+    }
+);
+
+router.get(
+    '/list',
+    auth.requireAuth,
+    auth.requireAdminOrManager,
+    async function (req, res) {
+        let address = req.query.address;
+        let name = req.query.name;
+        let list = await depot.getDepots(name, address);
+        res.render('depotList', {
+            depots: list,
+            address: address,
+            name: name,
         });
     }
 );

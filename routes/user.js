@@ -4,6 +4,22 @@ const auth = require('../controllers/authController');
 const user = require('../controllers/userController');
 
 router.get(
+    '/list',
+    auth.requireAuth,
+    auth.requireAdminOrManager,
+    async function (req, res) {
+        let role = req.query.role;
+        let name = req.query.name;
+        let list = await user.getUsers(name, role);
+        res.render('userList', {
+            users: list,
+            role: role,
+            name: name,
+        });
+    }
+);
+
+router.get(
     '/add',
     auth.requireAuth,
     auth.requireAdminOrManager,

@@ -6,20 +6,15 @@ var logger = require('morgan');
 
 
 var indexRouter = require('./routes/index');
-var dumpsterMapRouter = require('./routes/dumpsterMap');
-var dumpsterRoutesRouter = require('./routes/dumpsterRoutes');
+var routesRouter = require('./routes/routes');
 var loginRouter = require('./routes/login');
 var profileRouter = require('./routes/profile');
-var userlistRouter = require('./routes/userList');
 var dumpsterRouter = require('./routes/dumpster');
 var mainMenuRouter = require('./routes/mainMenu');
-var addUserRouter = require('./routes/addUser');
+var userRouter = require('./routes/user');
 var aboutUsRouter = require('./routes/aboutUs');
 var forgetPassRouter = require('./routes/forgetPassword');
-
-var addDepotRouter = require('./routes/addDepot');
-var depotListRouter = require('./routes/depotList');
-var addDumpsterRouter = require('./routes/addDumpster');
+var depotRouter = require('./routes/depot');
 
 var apiRouter = require('./routes/api');
 
@@ -39,22 +34,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', indexRouter);
-app.use('/dumpsterMap', dumpsterMapRouter);
 app.use('/', loginRouter);
 app.use('/profile', profileRouter);
-app.use('/userlist', userlistRouter);
 app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
-app.use('/user', addUserRouter);
+app.use('/user', userRouter);
 app.use('/aboutUs', aboutUsRouter);
 app.use('/forgetPassword',forgetPassRouter);
 app.use('/reset',forgetPassRouter);
-
-app.use('/addDumpster', addDumpsterRouter);
 app.use('/api', apiRouter);
-app.use('/routes', dumpsterRoutesRouter);
-app.use('/addDepot', addDepotRouter);
-app.use('/depotList', depotListRouter);
+app.use('/routes', routesRouter);
+app.use('/depot', depotRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

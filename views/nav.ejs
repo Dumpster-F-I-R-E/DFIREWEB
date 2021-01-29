@@ -8,16 +8,16 @@
         <a href="/mainMenu">
             <li>Main Menu</li>
         </a>
-        <a href="/dumpsterMap">
+        <a href="/dumpster/map">
             <li>Dumpster Map</li>
         </a>
         <% if (User.Role == "Admin" || User.Role == "Manager") { %>
-        <a href="/userList">
+        <a href="/user/list">
             <li>User List</li>
         </a>
         <% } %>
         <% if (User.Role == "Admin" || User.Role == "Manager") { %>
-            <a href="/depotList">
+            <a href="/depot/list">
                 <li>Depot List</li>
             </a>
             <% } %>

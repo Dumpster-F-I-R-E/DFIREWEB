@@ -21,7 +21,7 @@
           let req = {
             DepotID: depotid
           };
-          $.post('/deleteDepot', req, function(data){
+          $.post('/depot/delete', req, function(data){
             location.reload();
           });
         }
@@ -62,7 +62,7 @@
         </div>
         <div class="col-2">
           <h2 class="title">Depot List</h2>
-          <a href="/addDepot" class="btn addDepot">Add Depot </a>
+          <a href="/depot/add" class="btn addDepot">Add Depot </a>
           <a class="btn delete-depot">Delete Depot </a>
           <table style="width:100%">
             <tr>
