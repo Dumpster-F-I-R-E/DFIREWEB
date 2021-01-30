@@ -8,3 +8,11 @@ exports.createDepot = async (depot, data) => {
 exports.deleteDepot = async (user, depotid) => {
         await db.deleteDepot(depotid);
 };
+
+exports.getDepots = async (name, role) => {
+        let list = await db.getDepotsSearch(name, role);
+        if (!list) {
+            list = [];
+        }
+        return list;
+};
