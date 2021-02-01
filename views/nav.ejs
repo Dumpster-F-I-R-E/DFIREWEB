@@ -8,9 +8,11 @@
         <a href="/mainMenu">
             <li>Main Menu</li>
         </a>
+        <% if (User.Role == "Admin" || User.Role == "Manager") { %>
         <a href="/dumpster/map">
             <li>Dumpster Map</li>
         </a>
+        <% } %>
         <% if (User.Role == "Admin" || User.Role == "Manager") { %>
         <a href="/user/list">
             <li>User List</li>
