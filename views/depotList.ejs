@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dumpster FIRE - Depot Management</title>
+  <link rel='stylesheet' href='/stylesheets/userlist.css' />
+  <script src="/javascripts/jquery-3.x-git.min.js"></script>
+    
+</head>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('a.delete-depot').click(function(){
+      console.log("Click delete");
+      $('.checks').each(function(index){
+        if(this.checked){
+          let k = $(this).parent().parent();
+          let depotid = k.children('.depotid').first().html().trim();
+          let req = {
+            DepotID: depotid
+          };
+          $.post('/depot/delete', req, function(data){
+            location.reload();
+          });
+        }
+        
+      });
+    });
+    
+  });
+</script>
+<body>
+  <div class="header">
+    <h1 class="title"> Dumpster FIRE </h1>
+  </div>
+  <div class="wrapper">
+    <%- include('nav.ejs') %>
+      <div class="content">
+        <div class="col-1">
+          <h2 class="title">Search</h2>
+
+          <div class="form">
+            <div class="labels">
+              <label for="name">Name </label>
+              <label for="address">Address</label>
+            </div>
+
+            <div class="fields">
+              <form action="/depotList" id="search_form">
+                <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
+                <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
+              </form>
+            </div>
+          </div>
+          <div class="btn-container">
+            <button class="btn search" form="search_form" value="Submit">Search</button>
+            <button class="btn reset">Reset</button>
+          </div>
+
+        </div>
+        <div class="col-2">
+          <h2 class="title">Depot List</h2>
+          <a href="/depot/add" class="btn addDepot">Add Depot </a>
+          <a class="btn delete-depot">Delete Depot </a>
+          <table style="width:100%">
+            <tr>
+              <th></th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Address</th>
+            </tr>
+            <% depots.forEach(function(depot) { %>
+              <tr >
+                <td>
+                  <input class="checks" type="checkbox">
+                </td>
+                <td class='depotid'>
+                  <%= depot.DepotID %>
+                </td>
+                <td>
+                  <%= depot.Name %>
+                </td>
+                <td>
+                  <%= depot.Address %>
+                </td>
+              </tr>
+              <%}); %>
+          </table>
+        </div>
+      </div>
+  </div>
+</body>
+
+</html>

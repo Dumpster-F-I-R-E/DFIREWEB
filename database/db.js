@@ -62,7 +62,13 @@ exports.getUserByUserID = async (userid) => {
         return results[0][0];
     }
 };
-
+exports.getUserByEmail = async (email) => {
+    let sql = mysql.format('SELECT * FROM Users WHERE email = ?', [email]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
 exports.updateProfile = async (profile) => {
     let sql =
         'UPDATE Users SET' +
@@ -160,6 +166,26 @@ exports.addUser = async (user) => {
         .catch(printErrors);
 };
 
+exports.deleteDepot = async (depotid) => {
+    let sql = 'DELETE FROM Depots WHERE DepotID=?';
+    await pool.query(sql, [depotid]).catch(printErrors);
+};
+
+exports.createDepot = async (depot) => {
+    let sql = "SELECT MAX(DepotID) AS 'MaxID' FROM depots";
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        console.log(results[0][0].MaxID);
+        let val = results[0][0].MaxID;
+        let depotid = val + 1;
+        depot.DepotID = depotid;
+        depot.CompanyID = 1;
+        console.log(depot);
+        await exports.addDepot(depot);
+        return depot;
+    }
+};
+
 exports.addDepot = async (depot) => {
     let sql =
         'INSERT INTO Depots (`Name`, `Address`, `CompanyID`) VALUES(?, ?, ?)';
@@ -253,6 +279,27 @@ exports.getUsers = async () => {
     }
 };
 
+exports.getDepotsSearch = async (name, address) => {
+    let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
+    if (name && name != '*') {
+        sql += ' WHERE (Name LIKE ?)';
+        sql = mysql.format(sql, [name]);
+    }
+
+    if (address && address != '*') {
+        if (name && name != '*') {
+            sql += ' AND Address Like ?';
+        }
+        sql += ' WHERE Address Like ?';
+        sql = mysql.format(sql, [address]);
+    }
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
 exports.getUsersSearch = async (name, role) => {
     let sql =
         'SELECT Users.UserID, FirstName, LastName, Email, Role' + ' FROM Users';
@@ -295,7 +342,6 @@ exports.changeImage = async (userId, image) => {
     await pool.execute(sql, [userId, image]).catch(printErrors);
 };
 
-
 exports.getDrivers = async () => {
     let sql = 'SELECT UserID,FirstName, LastName, Email, Role FROM Users  WHERE Role=\'Driver\'';
     var results = await pool.query(sql).catch(printErrors);
@@ -312,5 +358,20 @@ exports.setDriver = async (sensorId, driverId) => {
 
     await pool
         .execute(sql, [driverId, sensorId]).catch(printErrors);
+};
+
+exports.saveResetToken = async (user, token, expired) => {
+    console.log(user.UserID, user.Username, token, expired);
+    let sql =
+        'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
+    await pool.execute(sql, [user.UserID, user.Username, token, expired]).catch(printErrors);
+
+};
+exports.getUserFromResetToken = async (token) => {
+    let sql = mysql.format('SELECT userId, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
 
 };

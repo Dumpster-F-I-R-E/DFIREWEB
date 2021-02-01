@@ -80,3 +80,10 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
 	`ExpireDate` DATETIME NOT NULL,
 	PRIMARY KEY (`SessionID`)
 );
+
+CREATE TABLE IF NOT EXISTS `resetPassword` (
+	`userID` INT NOT NULL,
+	`username` VARCHAR(255) NOT NULL,
+	`resetToken` VARCHAR(255) NOT NULL,
+	`resetExpired` DATE NOT NULL	
+);

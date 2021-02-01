@@ -24,3 +24,11 @@ exports.getUser = async (username) => {
     let u = await db.getUserByUsername(username);
     return u;
 };
+
+exports.getUsers = async (name, role) => {
+    let list = await db.getUsersSearch(name, role);
+    if (!list) {
+        list = [];
+    }
+    return list;
+};
