@@ -1,0 +1,19 @@
+@import 'nav.css';
+@import 'layout.css';
+
+.content {
+    padding: 20px;
+    margin: 0 auto;
+    width: 100%;
+
+}
+#aboutUsPara {
+    width:1000px;
+    overflow-y: hidden;
+}
+#getEmail, #resetForm {
+    text-align: center;
+}
+#getEmailH1, #resetPageH1 {
+    text-align: center;
+}
