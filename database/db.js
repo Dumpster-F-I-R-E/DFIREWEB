@@ -247,6 +247,16 @@ exports.getSensorById = async (id) => {
     }
 };
 
+exports.getSensorReports = async () => {
+  let sql =
+        mysql.format('SELECT SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM SensorReports  WHERE ReportID <= ?', ['5']);
+
+     
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
 exports.storeAuthToken = async (userId, token, expires) => {
     let sql =
         'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
