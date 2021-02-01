@@ -64,7 +64,7 @@ exports.sendMail = async(email,token) => {
         to:email,
         subject:"Reset link",
         html: `
-        <p>Please click the following link <a href = "http://localhost:3000/reset/${token}"> link </a></p>
+        <p>Please click the following <a href = "http://localhost:3000/reset/${token}"> link </a> to reset your password.</p>
         `
     }
     console.log("here waiting 3");

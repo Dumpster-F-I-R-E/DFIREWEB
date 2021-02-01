@@ -21,7 +21,7 @@ router.post('/', async function (req, res) {
         }
         else {
              //need to add a message
-             res.render('resetPassPage');
+             res.render('resetPassPage', {userId: req.body.user});
         }
     }
     //if route is 'send email'
