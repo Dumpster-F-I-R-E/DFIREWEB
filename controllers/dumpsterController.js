@@ -13,3 +13,11 @@ exports.addDumpster = async (dumpster, data) => {
     console.log(newDumpster);
     return newDumpster;
 };
+
+exports.getDumpsters = async (SensorSerialNumber) => {
+    let list = await db.getSensorsSearch(SensorSerialNumber);
+    if (!list) {
+        list = [];
+    }
+    return list;
+};

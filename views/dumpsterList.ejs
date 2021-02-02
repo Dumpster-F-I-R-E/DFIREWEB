@@ -43,14 +43,11 @@
 
           <div class="form">
             <div class="labels">
-              <label for="name">Name </label>
-              <label for="address">Address</label>
+              <label for="SensorSerialNumber">SensorSerialNumber </label>
             </div>
-
             <div class="fields">
-              <form action="/depot/list" id="search_form">
-                <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
-                <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
+              <form action="/dumpster/list" id="search_form">
+                <input type="text" name="sensorserialnumber" id="sensorserialnumber" placeholder="*" value="<%=sensorserialnumber%>">
               </form>
             </div>
           </div>
@@ -61,32 +58,28 @@
 
         </div>
         <div class="col-2">
-          <h2 class="title">Depot List</h2>
-          <a href="/depot/add" class="btn addDepot">Add Depot </a>
-          <a class="btn delete-depot">Delete Depot </a>
+          <h2 class="title">Dumpster List</h2>
+          <a href="/dumpster/add" class="btn addDumpster">Add Dumpster </a>
+          <a class="btn delete-dumpster">Delete Dumpster </a>
           <table style="width:100%">
             <tr>
               <th></th>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Address</th>
+              <th>SensorID</th>
+              <th>SensorSerialNumber</th>
             </tr>
-            <% depots.forEach(function(depot) { %>
-              <tr >
-                <td>
-                  <input class="checks" type="checkbox">
-                </td>
-                <td class='depotid'>
-                  <%= depot.DepotID %>
-                </td>
-                <td>
-                  <%= depot.Name %>
-                </td>
-                <td>
-                  <%= depot.Address %>
-                </td>
-              </tr>
-              <%}); %>
+            <% dumpsters.forEach(function(dumpster) { %>
+                <tr >
+                  <td>
+                    <input class="checks" type="checkbox">
+                  </td>
+                  <td class='depotid'>
+                    <%= dumpster.SensorID %>
+                  </td>
+                  <td>
+                    <%= dumpster.SensorSerialNumber %>
+                  </td>
+                </tr>
+                <%}); %>
           </table>
         </div>
       </div>

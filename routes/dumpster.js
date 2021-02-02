@@ -4,6 +4,19 @@ const auth = require('../controllers/authController');
 const dumpster = require('../controllers/dumpsterController');
 
 router.get(
+    '/list',
+    auth.requireAuth,
+    auth.requireAdminOrManager,
+    async function (req, res) {
+        let SensorSerialNumber = req.query.SensorSerialNumber;
+        let list = await dumpster.getDumpsters(SensorSerialNumber);
+        res.render('dumpsterList', {
+            dumpsters: list
+        });
+    }
+);
+
+router.get(
     '/add',
     auth.requireAuth,
     auth.requireAdminOrManager,
@@ -38,6 +51,8 @@ router.post(
 router.get('/map', auth.requireAuth, function (req, res) {
     res.render('dumpsterMap');
 });
+
+
 
 /* GET dumpster . */
 router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {

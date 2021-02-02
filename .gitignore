@@ -1,3 +1,20 @@
 node_modules
 node_modules/*
-.vscode/
+.vscode/*
+
+                <!-- <input type="text" name="sensorSerial" id="sensorSerial" placeholder="*" value="<%=sensorSerial%>"> -->
+
+
+            <!-- <% depots.forEach(function(depot) { %>
+              <tr >
+                <td>
+                  <input class="checks" type="checkbox">
+                </td>
+                <td class='depotid'>
+                  <%= depot.DepotID %>
+                </td>
+                <td>
+                  <%= depot.Name %>
+                </td>
+              </tr>
+              <%}); %> -->
