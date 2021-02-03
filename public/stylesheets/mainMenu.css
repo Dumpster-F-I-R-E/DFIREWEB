@@ -7,12 +7,21 @@
     width: 100%;
     max-width: 100vw;
     overflow: hidden;
-    background-image: url("/images/dumpster_welcome.jpg");
+    
     background-repeat: no-repeat;
     background-position: bottom;
 }
 
+#dumpsterReport {
+    border-radius: 2px;
+    border: solid black;
+    width: 100%;
+    border-collapse: collapse;
+}
 
+table, th, td {
+    border: 1px solid black;
+}
 @media only screen and (max-width: 400px) {
 
 
