@@ -97,10 +97,11 @@ var seedSensorReports = async (numSensors, num = 20) => {
         BatteryLevel: 50,
         FullnessLevel: 100,
         ErrorCode: 0,
-        Time: new Date('2020-12-20 05:00:00'),
+        Time: new Date('2020-12-20 00:00:00'),
     };
     const distance = 0.1 * (numSensors / 5);
     for (let index = 0; index < num; index++) {
+        report.Time = new Date('2020-12-20 00:00:00');
         report.Time.setHours(report.Time.getHours() + index);
         report.SensorID = getRandomInt(1, numSensors);
         report.FullnessLevel = getRandomInt(0, 100);

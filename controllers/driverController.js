@@ -15,6 +15,10 @@ exports.setDumpsters = async (driverId, sensors) => {
 
 };
 
+exports.getDriver = async (sensorId) => {
+    let driver = await db.getDriver(sensorId);
+    return driver;
+};
 
 exports.getRoutes = async () => {
     let result = {
