@@ -53,6 +53,7 @@ router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
 
 router.get('/history/:dumpsterId', auth.requireAuth, async function (req, res) {
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
+    d.reverse();
     let data = d.map((i) => {
         return {
             y: i.FullnessLevel,

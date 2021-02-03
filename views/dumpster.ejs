@@ -24,7 +24,7 @@
             var scatterChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: d.map(i => new Date(i.label).toUTCString()).sort(),
+                    labels: d.map(i => new Date(i.label).toUTCString()),
                     datasets: [{
                         label: 'Fullness',
                         data: d,

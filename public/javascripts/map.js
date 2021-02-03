@@ -12,7 +12,7 @@ function initMap() {
 }
 
 // eslint-disable-next-line no-unused-vars
-function addDepot(lat,lng){
+function addDepot(lat, lng) {
     var iconBase = '/images/depot-2.png';
 
     // eslint-disable-next-line no-unused-vars
@@ -23,6 +23,10 @@ function addDepot(lat,lng){
     });
 }
 
+let defaultIcon = '/icons/trash.png';
+let selectedIcon = '/icons/trash_blue.png';
+let fullIcon = '/icons/trash_red.png';
+
 function addMarker(dumpster, map) {
     // The marker, positioned at Uluru
     let lat = dumpster.Latitude;
@@ -30,6 +34,7 @@ function addMarker(dumpster, map) {
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,
+        icon: defaultIcon,
     });
 
     const contentString =
@@ -42,6 +47,9 @@ function addMarker(dumpster, map) {
         '%<br></p>' +
         '</div>';
 
+    if (dumpster.FullnessLevel == 100) {
+        marker.setIcon(fullIcon);
+    };
     const infowindow = new google.maps.InfoWindow({
         content: contentString,
     });

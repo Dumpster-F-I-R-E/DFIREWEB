@@ -101,14 +101,23 @@ var seedSensorReports = async (numSensors, num = 20) => {
     };
     const distance = 0.1 * (numSensors / 5);
     for (let index = 0; index < num; index++) {
-        report.Time = new Date('2020-12-20 00:00:00');
+        report.Time = new Date('2020-12-20');
         report.Time.setHours(report.Time.getHours() + index);
         report.SensorID = getRandomInt(1, numSensors);
-        report.FullnessLevel = getRandomInt(0, 100);
+        report.FullnessLevel = report.FullnessLevel + getRandomInt(0, 100);
+        
         report.BatteryLevel = getRandomInt(0, 100);
         report.Latitude += getRandomArbitrary(-distance, distance);
         report.Longitude += getRandomArbitrary(-distance, distance);
-        await db.storeSensorReport(report);
+        if(report.FullnessLevel > 100){
+            report.FullnessLevel = 100;
+            await db.storeSensorReport(report);
+            report.FullnessLevel = 0;
+        }else{
+            await db.storeSensorReport(report);
+        }
+        
+
     }
 };
 
