@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const auth = require('../controllers/authController');
 const profile = require('../controllers/profileController');
+const emailController = require('../controllers/emailController');
 
 /* GET profile page. */
 router.get('/', auth.requireAuth, async function (req, res) {
@@ -29,6 +30,10 @@ router.get('/', auth.requireAuth, async function (req, res) {
 router.post('/', auth.requireAuth, async function (req, res) {
     const data = req.body;
     await profile.updateProfile(res.locals.User, data);
+    let subj = "Profile has been changed";
+    let text = "Dear " + req.body.FirstName + "," +"<br> Your information has been updated. <br> Thanks, <br> DFIRE Team";
+    let email = req.body.Email;
+    emailController.sendMail(email,subj,text);
     res.redirect('/profile');
 });
 
