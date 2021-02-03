@@ -223,7 +223,7 @@ exports.getSensorData = async () => {
     let sql =
         'SELECT  * ' +
         'FROM SensorReports,' +
-        '(SELECT SensorID,ReportID, max(Time) as Time ' +
+        '(SELECT SensorID,max(ReportID) as ReportID ' +
         'FROM SensorReports ' +
         'GROUP BY SensorID) latest ' +
         'WHERE SensorReports.ReportID=latest.ReportID ;';
@@ -361,7 +361,7 @@ exports.getDrivers = async () => {
 };
 
 exports.getRoutes = async () => {
-    let sql = 'SELECT DriverID, Sensors.SensorID, Latitude,  Longitude FROM Sensors JOIN SensorReports ON Sensors.SensorID=SensorReports.SensorID;';
+    let sql = 'SELECT SensorID,DriverID,FirstName,LastName FROM Sensors LEFT JOIN Users ON DriverID=UserID';
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];

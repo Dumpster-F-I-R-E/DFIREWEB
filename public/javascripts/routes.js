@@ -8,20 +8,43 @@ function initMap() {
         zoom: 12,
     });
     showDumpsters();
-    // google.maps.event.addListener(map, 'idle', showDumpsters);
-    drawOnMap();
     init();
 }
 
 let selection = false;
 let selected = {};
-let markers = [];
-let defaultIcon = 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red.png';
-let selectedIcon = 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_black.png';
+let markers = {};
+let defaultIcon = '/icons/trash.png';
+let selectedIcon = '/icons/trash_blue.png';
+let fullIcon = '/icons/trash_red.png';
+
+
+function highlightRoute(sensorId) {
+    markers[sensorId].setOpacity(1.0);
+    Object.keys(routes).forEach(d => {
+        if (routes[d].includes(sensorId)) {
+            routes[d].forEach(s => {
+                markers[s].setOpacity(1.0);
+            });
+        }
+    });
+}
+
+function setOpacity() {
+    Object.values(markers).forEach(
+        m => {
+            if (selection && selected[m.SensorID]) {
+                ;
+            } else {
+                m.setOpacity(m.defaultOpacity);
+            }
+
+        }
+    );
+}
 
 
 function addMarker(dumpster, map) {
-
 
     let lat = dumpster.Latitude;
     let lng = dumpster.Longitude;
@@ -29,10 +52,14 @@ function addMarker(dumpster, map) {
         position: { lat: lat, lng: lng },
         map: map,
         icon: defaultIcon,
+        opacity: 0.3
     });
+    marker.defaultOpacity = 0.3;
     marker.SensorID = dumpster.SensorID;
-    markers.push(marker);
-
+    markers[dumpster.SensorID] = marker;
+    if (dumpster.FullnessLevel == 100) {
+        marker.setIcon(fullIcon);
+    };
     const contentString =
         '<div id="body">' +
         '<p>Fullness: ' +
@@ -66,126 +93,52 @@ function addMarker(dumpster, map) {
     });
 
     marker.addListener('mouseover', () => {
-
+        highlightRoute(dumpster.SensorID);
         infowindow.open(map, marker);
+
     });
 
     marker.addListener('mouseout', () => {
-
+        setOpacity();
         infowindow.close();
     });
 }
 
-var coords = [];
-const polygons = [];
-
-function similar(latLng1, latLng2) {
-    const variation = 0.005 * 2 ** (12 - map.zoom);
-    if (
-        Math.abs(latLng1.lat - latLng2.lat) < variation &&
-        Math.abs(latLng1.lng - latLng2.lng) < variation
-    ) {
-        return true;
-    }
-    return false;
-}
-
-const colors = ['#2980B9', '#D35400', '#16A085', '#34495E', '#8E44AD'];
-var counter = 0;
-var color = colors[counter];
-
-function clickOnMap(latLng) {
-    console.log(latLng);
-    // Construct the polygon.
-    if (coords.length > 1 && similar(latLng, coords[0])) {
-        console.log('Draw Polygon');
-
-        let polygon = new google.maps.Polygon({
-            paths: coords,
-            strokeColor: color,
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: color,
-            fillOpacity: 0.35,
-        });
-        polygon.setMap(map);
-        counter = (counter + 1) % colors.length;
-        color = colors[counter];
-        polygons.push(polygon);
-        coords = [];
-    } else {
-        coords.push(latLng);
-    }
-
-    const flightPath = new google.maps.Polyline({
-        path: coords,
-        geodesic: true,
-        strokeColor: color,
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-    });
-    flightPath.setMap(map);
-}
-
-function drawOnMap() {
-    // Configure the click listener.
-    map.addListener('click', (mapsMouseEvent) => {
-        latLng = mapsMouseEvent.latLng.toJSON();
-
-        let radius = 200 * 2 ** (12 - map.zoom);
-        let strokeColor = color;
-        if (coords.length == 0) {
-            strokeColor = '#FFFFFF';
-        }
-        const circle = new google.maps.Circle({
-            strokeColor: strokeColor,
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: color,
-            fillOpacity: 0.35,
-            map,
-            center: latLng,
-            radius: radius,
-        });
-        circle.addListener('click', () => {
-            clickOnMap(circle.center.toJSON());
-        });
-        clickOnMap(latLng);
-    });
-
-}
+var sensors = {};
+var drivers = {};
+var routes = {};
 
 function showDumpsters() {
-    fetch('/api/dumpsters', {
+    fetch('/api/routes', {
         method: 'get',
     })
-        .then((res) => {
-            return res.json();
-        })
-        .then((data) => {
-            console.log(data);
-            data.forEach((dumpster) => {
-                addMarker(dumpster, map);
-            });
-            fetch('/api/routes', {
-                method: 'get',
-            }).then(res => res.json())
-                .then(routes => {
+        .then(res => res.json())
+        .then(data => {
+            sensors = data.Sensors;
+            routes = data.Routes;
+            drivers = data.Drivers;
+            draw();
+        });
 
-                    routes.forEach(d => {
-                        console.log("Path", d );
-                        drawLine(d.Sensors);
-                    });
-                }).catch(err => console.log(err));
-        })
-        .catch((err) => console.log(err));
+}
+
+function draw() {
+    let sensorData = Object.values(sensors);
+
+    sensorData.forEach(element => {
+        addMarker(element, map);
+    });
+    let routesKey = Object.keys(routes);
+    routesKey.forEach(element => {
+        drawLine(routes[element].map(k => sensors[k]), drivers[element]);
+    });
 }
 
 let driverID = 0;
 let driverName = '';
 
 function updateMarkers() {
-    markers.forEach(item => {
+    Object.values(markers).forEach(item => {
         if (selected[item.SensorID]) {
             item.setIcon(selectedIcon);
         } else {
@@ -208,35 +161,52 @@ var stringToColour = function (str) {
 };
 
 
-function drawCircle(marker) {
-    console.log('Drawing circles..');
-    color = stringToColour(driverName);
-    const circle = new google.maps.Circle({
-        strokeColor: color,
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: color,
-        fillOpacity: 0.35,
-        map,
-        center: marker.getPosition(),
-        radius: 2000,
-    });
-}
 
-function drawLine(nodes) {
-    let color = stringToColour(driverName);
-    console.log(markers);
-    let coords = nodes;
-    console.log(coords);
+function drawLine(nodes, driver) {
+    let color = stringToColour(driver.FirstName + driver.LastName);
+    console.log("Coords", nodes);
+    nodes.forEach(sensor => {
+        markers[sensor.SensorID].setOpacity(0.7);
+        markers[sensor.SensorID].defaultOpacity = 0.7;
+    });
+    let coords = nodes.map(node => {
+        return {
+            lat: node.Latitude,
+            lng: node.Longitude
+        };
+    });
+
     const line = new google.maps.Polyline({
         path: coords,
         geodesic: true,
         strokeColor: color,
         strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeWeight: 5,
     });
     line.setMap(map);
 
+    const contentString =
+        '<div id="body">' +
+        '<p>'+ driver.FirstName +' '+ driver.LastName +'</p>' +
+        '</div>';
+
+    const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+    });
+
+
+    google.maps.event.addListener(line,'mouseover', (e) => {
+
+        line.setOptions({ strokeColor: '#ff0000' });
+        infowindow.setPosition(e.latLng); 
+        infowindow.open(map);
+    });
+
+    line.addListener('mouseout', () => {
+
+        line.setOptions({ strokeColor: color });
+        infowindow.close();
+    });
 
 }
 
@@ -275,16 +245,12 @@ function init() {
         $('.btn.apply').click(function () {
             let s = [];
             console.log("selected", selected);
-            let prev = null;
-            markers.forEach(item => {
+            Object.values(markers).forEach(item => {
                 if (selected[item.SensorID]) {
                     s.push(item.SensorID);
-                    if (prev) {
-                        drawLine(prev, item);
-                    }
-                    prev = item;
                 }
             });
+
             let req = {
                 DriverID: driverID,
                 Sensors: s
@@ -295,6 +261,7 @@ function init() {
                     console.log('success');
                     showMessage('Message', 'Driver is assigned!');
                     // location.href = "/dumpster/" + data.sensor.SensorID;
+                    showDumpsters();
                 } else {
                     console.log(data.error);
                     showMessage('Error', data.error, 'Error');
@@ -308,6 +275,7 @@ function init() {
 
         });
     });
+
     fetch('/api/drivers', {
         method: 'get',
     })
