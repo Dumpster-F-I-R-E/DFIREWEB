@@ -1,6 +1,7 @@
 let mysql = require('mysql2/promise');
 let fs = require('fs');
 var path = require('path');
+var auth = require('../controllers/authController');
 var connectionSettings = require('./db.conf.json');
 
 exports.setConnectionSettings = (settings) => {
@@ -94,8 +95,9 @@ exports.updateProfile = async (profile) => {
 
 exports.changePassword = async (userid, password) => {
     console.log('Change Password', userid, password);
+    let hash = auth.hashPassword(password);
     let sql = mysql.format('UPDATE Users SET Password=? WHERE UserID=?', [
-        password,
+        hash,
         userid,
     ]);
     await pool.execute(sql).catch(printErrors);
@@ -149,11 +151,11 @@ exports.addUser = async (user) => {
         'INSERT INTO Users' +
         '(Username, Password, Role, CompanyID, FirstName, LastName, Address, Email, Phone, StaffID)' +
         ' VALUES(?, ?, ?, ?, ?,?,?,?,?,?)';
-
+    let hash = auth.hashPassword(user.Password);
     await pool
         .execute(sql, [
             user.Username,
-            user.Password,
+            hash,
             user.Role,
             user.CompanyID,
             user.FirstName,
@@ -365,6 +367,14 @@ exports.getRoutes = async () => {
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
+    }
+};
+
+exports.getDriver = async (sensorId) => {
+    let sql = 'SELECT DriverID,FirstName,LastName FROM Sensors JOIN Users ON DriverID=UserID WHERE SensorID=?';
+    var results = await pool.query(sql, [sensorId]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
     }
 };
 
