@@ -52,9 +52,9 @@ function addMarker(dumpster, map) {
         position: { lat: lat, lng: lng },
         map: map,
         icon: defaultIcon,
-        opacity: 0.3
+        opacity: 0.4
     });
-    marker.defaultOpacity = 0.3;
+    marker.defaultOpacity = 0.4;
     marker.SensorID = dumpster.SensorID;
     markers[dumpster.SensorID] = marker;
     if (dumpster.FullnessLevel == 100) {
@@ -122,7 +122,12 @@ function showDumpsters() {
 
 }
 
+function clear(){
+    Object.values(markers).forEach(i => i.setMap(null));
+}
+
 function draw() {
+    clear();
     let sensorData = Object.values(sensors);
 
     sensorData.forEach(element => {
