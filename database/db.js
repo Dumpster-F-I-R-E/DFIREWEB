@@ -350,6 +350,14 @@ exports.getDrivers = async () => {
     }
 };
 
+exports.getRoutes = async () => {
+    let sql = 'SELECT DriverID, Sensors.SensorID, Latitude,  Longitude FROM Sensors JOIN SensorReports ON Sensors.SensorID=SensorReports.SensorID;';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
 exports.setDriver = async (sensorId, driverId) => {
     let sql =
         'UPDATE Sensors SET' +

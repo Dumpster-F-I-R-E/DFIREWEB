@@ -167,6 +167,16 @@ function showDumpsters() {
             data.forEach((dumpster) => {
                 addMarker(dumpster, map);
             });
+            fetch('/api/routes', {
+                method: 'get',
+            }).then(res => res.json())
+                .then(routes => {
+
+                    routes.forEach(d => {
+                        console.log("Path", d );
+                        drawLine(d.Sensors);
+                    });
+                }).catch(err => console.log(err));
         })
         .catch((err) => console.log(err));
 }
@@ -213,6 +223,22 @@ function drawCircle(marker) {
     });
 }
 
+function drawLine(nodes) {
+    let color = stringToColour(driverName);
+    console.log(markers);
+    let coords = nodes;
+    console.log(coords);
+    const line = new google.maps.Polyline({
+        path: coords,
+        geodesic: true,
+        strokeColor: color,
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+    });
+    line.setMap(map);
+
+
+}
 
 
 function init() {
@@ -234,10 +260,10 @@ function init() {
         $('div.background').click(function (e) {
             console.log(e);
             let background = document.getElementsByClassName('background')[0];
-            if (e.target == background ){
+            if (e.target == background) {
                 $('.background').hide();
             }
-            
+
         });
 
         $('.btn.cancel').click(function () {
@@ -249,10 +275,14 @@ function init() {
         $('.btn.apply').click(function () {
             let s = [];
             console.log("selected", selected);
+            let prev = null;
             markers.forEach(item => {
                 if (selected[item.SensorID]) {
                     s.push(item.SensorID);
-                    drawCircle(item);
+                    if (prev) {
+                        drawLine(prev, item);
+                    }
+                    prev = item;
                 }
             });
             let req = {

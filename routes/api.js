@@ -28,5 +28,9 @@ router.post('/assign-driver', async function (req, res) {
     });
 });
 
+router.get('/routes', auth.requireAuth, async function (req, res) {
+    let data = await driver.getRoutes();
+    res.json(data);
+});
 
 module.exports = router;
