@@ -12,16 +12,16 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('a.delete-depot').click(function(){
+    $('a.delete-dumpster').click(function(){
       console.log("Click delete");
       $('.checks').each(function(index){
         if(this.checked){
           let k = $(this).parent().parent();
-          let depotid = k.children('.depotid').first().html().trim();
+          let dumpsterid = k.children('.dumpsterid').first().html().trim();
           let req = {
-            DepotID: depotid
+            DepotID: dumpsterid
           };
-          $.post('/depot/delete', req, function(data){
+          $.post('/dumpster/delete', req, function(data){
             location.reload();
           });
         }
@@ -43,7 +43,7 @@
 
           <div class="form">
             <div class="labels">
-              <label for="SensorSerialNumber">SensorSerialNumber </label>
+              <label for="sensorserialnumber">SensorSerialNumber </label>
             </div>
             <div class="fields">
               <form action="/dumpster/list" id="search_form">
@@ -72,7 +72,7 @@
                   <td>
                     <input class="checks" type="checkbox">
                   </td>
-                  <td class='depotid'>
+                  <td class='dumpsterid'>
                     <%= dumpster.SensorID %>
                   </td>
                   <td>

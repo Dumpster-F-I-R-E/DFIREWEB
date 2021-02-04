@@ -8,10 +8,11 @@ router.get(
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
-        let SensorSerialNumber = req.query.SensorSerialNumber;
+        let SensorSerialNumber = req.query.sensorserialnumber;
         let list = await dumpster.getDumpsters(SensorSerialNumber);
         res.render('dumpsterList', {
-            dumpsters: list
+            dumpsters: list,
+            sensorserialnumber: SensorSerialNumber
         });
     }
 );
