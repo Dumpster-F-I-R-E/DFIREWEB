@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const auth = require('../controllers/authController');
-var mmDLController = require('../controllers/mainMenuDumpsterListController');
+var mainMenuController = require('../controllers/mainMenuController');
 
 router.get('/', auth.requireAuth, async function (req, res) {
     console.log('Username is ' + res.locals.User.Role);
-    report = await mmDLController.getReports();
+    report = await mainMenuController.getReports();
     console.log(report);
     res.render('mainMenu', {
         user: res.locals.User.Username,

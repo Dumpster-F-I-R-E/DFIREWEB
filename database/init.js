@@ -66,15 +66,15 @@ var seedCompanies = async () => {
     await db.addCompany(company);
 };
 
-var seedSensors = async (num = 5) => {
-    console.log('seedSensors');
-    let sensor = {
-        SensorSerialNumber: 1,
+var seedDumpsters = async (num = 5) => {
+    console.log('seedDumpsters');
+    let dumpster = {
+        dumpsterSerialNumber: 1,
         CompanyID: 1,
     };
     for (let index = 0; index < num; index++) {
-        sensor.SensorSerialNumber = index;
-        await db.addSensor(sensor);
+        dumpster.DumpsterSerialNumber = index;
+        await db.addDumpster(dumpster);
     }
 };
 
@@ -88,10 +88,10 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-var seedSensorReports = async (numSensors, num = 20) => {
-    console.log('seedSensorReports');
+var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
+    console.log('seedDumpsterReports');
     let report = {
-        SensorID: 1,
+        dumpsterID: 1,
         Longitude: -114.08529,
         Latitude: 51.05011,
         BatteryLevel: 50,
@@ -99,11 +99,11 @@ var seedSensorReports = async (numSensors, num = 20) => {
         ErrorCode: 0,
         Time: new Date('2020-12-20 00:00:00'),
     };
-    const distance = 0.1 * (numSensors / 5);
+    const distance = 0.1 * (numberOfDumpsters / 5);
     for (let index = 0; index < num; index++) {
         report.Time = new Date('2020-12-20');
         report.Time.setHours(report.Time.getHours() + index);
-        report.SensorID = getRandomInt(1, numSensors);
+        report.dumpsterID = getRandomInt(1, numberOfDumpsters);
         report.FullnessLevel = report.FullnessLevel + getRandomInt(0, 100);
         
         report.BatteryLevel = getRandomInt(0, 100);
@@ -111,13 +111,11 @@ var seedSensorReports = async (numSensors, num = 20) => {
         report.Longitude += getRandomArbitrary(-distance, distance);
         if(report.FullnessLevel > 100){
             report.FullnessLevel = 100;
-            await db.storeSensorReport(report);
+            await db.storeDumpsterReport(report);
             report.FullnessLevel = 0;
         }else{
-            await db.storeSensorReport(report);
+            await db.storeDumpsterReport(report);
         }
-        
-
     }
 };
 
@@ -141,28 +139,11 @@ var init = async () => {
         console.log('Initializing Tables..');
         await db.createTables();
         console.log('Creating user account root password=root');
-
         await seedCompanies();
-
         await seedUsers();
-        // var adminProfile = {
-        //     UserID: '1',
-        //     FirstName: 'John',
-        //     LastName: 'Doe',
-        //     Address: '24 Ave Calgary, AB',
-        //     Email: 'admin@abc.com',
-        //     Phone: '403-343-3434',
-        //     StaffID: '001',
-        // };
-
-        // await db.updateProfile(adminProfile);
-
         await seedDepots();
-
-        await seedSensors(20);
-
-        await seedSensorReports(20,100);
-
+        await seedDumpsters(20);
+        await seedDumpsterReports(20,100);
         console.log('Closing connection');
         await db.closePool();
     }

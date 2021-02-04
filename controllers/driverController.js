@@ -5,30 +5,30 @@ exports.getDrivers = async () => {
     return drivers;
 };
 
-exports.setDumpsters = async (driverId, sensors) => {
+exports.setDumpsters = async (driverId, dumpsters) => {
 
-    if (sensors) {
-        sensors.forEach(item => {
+    if (dumpsters) {
+        dumpsters.forEach(item => {
             db.setDriver(item, driverId);
         });
     }
 
 };
 
-exports.getDriver = async (sensorId) => {
-    let driver = await db.getDriver(sensorId);
+exports.getDriver = async (dumpsterId) => {
+    let driver = await db.getDriver(dumpsterId);
     return driver;
 };
 
 exports.getRoutes = async () => {
     let result = {
-        Sensors: {},
+        Dumpsters: {},
         Drivers: {},
         Routes: {}
     };
-    let sensorData = await db.getSensorData();
-    sensorData.forEach(d => {
-        result.Sensors[d.SensorID] = d;
+    let dumpsterData = await db.getDumpsterData();
+    dumpsterData.forEach(d => {
+        result.dumpsters[d.DumpsterID] = d;
     });
     let driverData = await db.getRoutes();
     console.log(driverData);
@@ -38,7 +38,7 @@ exports.getRoutes = async () => {
             if (!result.Routes[d.DriverID]) {
                 result.Routes[d.DriverID] = [];
             }
-            result.Routes[d.DriverID].push(d.SensorID);
+            result.Routes[d.DriverID].push(d.DumpsterID);
         }
 
     });

@@ -13,13 +13,13 @@
 
 </head>
 <!-- <script src="/javascripts/dumpsterInfo.js"></script> -->
-<% var sensorid = dumpster.SensorID %>
+<% var dumpsterid = dumpster.dumpsterID %>
 <script type="text/javascript">
-    var SensorID = "<%= sensorid %>";
-    console.log(SensorID);
+    var DumpsterID = "<%= dumpsterid %>";
+    console.log(DumpsterID);
     $(document).ready(function () {
         var ctx = document.getElementById('myChart').getContext('2d');
-        $.get('/dumpster/history/' + SensorID, function (d) {
+        $.get('/dumpster/history/' + DumpsterID, function (d) {
             console.log(d);          
             var scatterChart = new Chart(ctx, {
                 type: 'line',

@@ -17,7 +17,7 @@
             <h1>Welcome to DFIRE <%= user %></h1>
             
             <p>
-            You have logged in as <%= role %>. Below is the list of 5 most recent sensor reports.<br>
+            You have logged in as <%= role %>. Below is the list of 5 most recent dumpster reports.<br>
             </p>
            
         <div class = "dumpsterMainMenu"> 
@@ -37,7 +37,7 @@
                     <% dumpsterData.forEach(function(data){ %>
             
                 <tr>
-                    <td><%= data.SensorID %></td>
+                    <td><%= data.DumpsterID %></td>
                     <td><%= data.Longitude %></td>
                     <td><%= data.Latitude %></td>
                     <td><%= data.BatteryLevel %></td>

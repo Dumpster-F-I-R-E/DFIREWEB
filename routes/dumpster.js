@@ -9,11 +9,11 @@ router.get(
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
-        let SensorSerialNumber = req.query.sensorserialnumber;
-        let list = await dumpster.getDumpsters(SensorSerialNumber);
+        let DumpsterSerialNumber = req.query.Dumpsterserialnumber;
+        let list = await dumpster.getDumpsters(DumpsterSerialNumber);
         res.render('dumpsterList', {
             dumpsters: list,
-            sensorserialnumber: SensorSerialNumber
+            dumpsterserialnumber: DumpsterSerialNumber
         });
     }
 );
@@ -33,7 +33,7 @@ router.post(
     auth.requireAdminOrManager,
     async function (req, res) {
         const data = req.body;
-        let u = await dumpster.addDumpster(res.locals.Dumpster, data);
+        let u = await dumpster.createDumpster(res.locals.Dumpster, data);
         let msg = '';
         let s = true;
         console.log(u);

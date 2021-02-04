@@ -1,21 +1,20 @@
 const db = require('../database/db');
 
 exports.getDumpstersInfo = () => {
-    return db.getSensorData();
+    return db.getDumpsterData();
 };
 
 exports.getDumpsterInfo = (id) => {
-    return db.getSensorById(id);
+    return db.getDumpsterById(id);
 };
 
-exports.addDumpster = async (dumpster, data) => {
-    let newDumpster = await db.addSensor(data);
-    console.log(newDumpster);
+exports.createDumpster = async (dumpster, data) => {
+    let newDumpster = await db.createDumpster(data);
     return newDumpster;
 };
 
-exports.getDumpsters = async (SensorSerialNumber) => {
-    let list = await db.getSensorsSearch(SensorSerialNumber);
+exports.getDumpsters = async (DumpsterSerialNumber) => {
+    let list = await db.getDumpstersSearch(DumpsterSerialNumber);
     if (!list) {
         list = [];
     }
