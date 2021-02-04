@@ -4,20 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumpster FIRE</title>
-    <link rel='stylesheet' href='/stylesheets/map.css' />
+    <link rel='stylesheet' href='/stylesheets/routes.css' />
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="/javascripts/routes.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXl5WzhM1ZWUSQYcQcz1_sFkX1EvHJrNc&callback=initMap&libraries=&v=weekly"
             defer></script>   
     <%- include('common.ejs') %>
 </head>
+
 <body>
     <%- include('header.ejs') %>
+    <%- include('messageBox.ejs') %>
     <div class="wrapper"> 
       <%- include('nav.ejs') %>
       <div class="content">
+        <div class="toolbar">
+          <input class='btn primary-btn assign-driver' type="button" value="Assign Driver">
+        </div>
         <div id="map"></div>
+        <div class="background">
+          <div class="input">
+            <h2 class="title">Assign Driver</h2>
+            <label for="driver">Driver:</label>
+            <select name="driver" id="driver">             
+            </select>
+            <input class='btn next' type="button" value="Next">
+          </div>
+        </div>
+        <div class="select-dumpsters">
+          <h2 class="title">Select Dumpsters</h2>
+          <p>Click on dumpsters to select</p>
+          <input class='btn apply' type="button" value="Apply">
+          <input class='btn cancel' type="button" value="Cancel">
+        </div>
       </div>
+      
     </div>
 </body>
 </html>

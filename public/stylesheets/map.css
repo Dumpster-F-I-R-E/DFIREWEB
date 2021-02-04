@@ -20,17 +20,17 @@
 
 div.background{
     z-index: 1;
-    position:fixed;
-    top: 0;
+    position: absolute;
+    top: 50px;
     height: 100vh;
     background-color: rgba(0,0,0,0.2);
-    width: 100vw;
-    display:none;
+    width: 80%;
+    display:none;    
 }
 
 div.input{
     margin: 200px auto;
-    width: 300px;
+    width: max-content;
     background-color: white;
 }
 

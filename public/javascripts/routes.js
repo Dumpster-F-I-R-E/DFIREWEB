@@ -7,27 +7,66 @@ function initMap() {
         center: { lat: 51.05011, lng: -114.08529 },
         zoom: 12,
     });
-
-    // google.maps.event.addListener(map, 'idle', showDumpsters);
-    drawOnMap();
+    showDumpsters();
+    init();
 }
 
+let selection = false;
+let selected = {};
+let markers = {};
+let defaultIcon = '/icons/trash.png';
+let selectedIcon = '/icons/trash_blue.png';
+let fullIcon = '/icons/trash_red.png';
+
+
+function highlightRoute(sensorId) {
+    markers[sensorId].setOpacity(1.0);
+    Object.keys(routes).forEach(d => {
+        if (routes[d].includes(sensorId)) {
+            routes[d].forEach(s => {
+                markers[s].setOpacity(1.0);
+            });
+        }
+    });
+}
+
+function setOpacity() {
+    Object.values(markers).forEach(
+        m => {
+            if (selection && selected[m.SensorID]) {
+                ;
+            } else {
+                m.setOpacity(m.defaultOpacity);
+            }
+
+        }
+    );
+}
+
+
 function addMarker(dumpster, map) {
-    // The marker, positioned at Uluru
-    let lat = dumpster.lat;
-    let lng = dumpster.lng;
+
+    let lat = dumpster.Latitude;
+    let lng = dumpster.Longitude;
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,
+        icon: defaultIcon,
+        opacity: 0.4
     });
-
+    marker.defaultOpacity = 0.4;
+    marker.SensorID = dumpster.SensorID;
+    markers[dumpster.SensorID] = marker;
+    if (dumpster.FullnessLevel == 100) {
+        marker.setIcon(fullIcon);
+    };
     const contentString =
         '<div id="body">' +
         '<p>Fullness: ' +
-        dumpster.fullness +
+        dumpster.FullnessLevel +
         '%<br>' +
         'Battery: ' +
-        dumpster.battery +
+        dumpster.BatteryLevel +
         '%<br></p>' +
         '</div>';
 
@@ -36,96 +75,213 @@ function addMarker(dumpster, map) {
     });
 
     marker.addListener('click', () => {
-        window.location = '/dumpster/' + dumpster.id;
+        if (selection) {
+
+            if (selected[marker.SensorID]) {
+                selected[marker.SensorID] = false;
+                marker.setIcon(defaultIcon);
+            } else {
+                selected[marker.SensorID] = true;
+                marker.setIcon(selectedIcon);
+            }
+
+
+        } else {
+            window.location = '/dumpster/' + dumpster.SensorID;
+        }
+
     });
 
     marker.addListener('mouseover', () => {
+        highlightRoute(dumpster.SensorID);
         infowindow.open(map, marker);
+
     });
 
     marker.addListener('mouseout', () => {
+        setOpacity();
         infowindow.close();
     });
 }
 
-var coords = [];
-const polygons = [];
+var sensors = {};
+var drivers = {};
+var routes = {};
 
-function similar(latLng1, latLng2) {
-    const variation = 0.005 * 2 ** (12 - map.zoom);
-    if (
-        Math.abs(latLng1.lat - latLng2.lat) < variation &&
-        Math.abs(latLng1.lng - latLng2.lng) < variation
-    ) {
-        return true;
-    }
-    return false;
+function showDumpsters() {
+    fetch('/api/routes', {
+        method: 'get',
+    })
+        .then(res => res.json())
+        .then(data => {
+            sensors = data.Sensors;
+            routes = data.Routes;
+            drivers = data.Drivers;
+            draw();
+        });
+
 }
 
-const colors = ['#2980B9', '#D35400', '#16A085', '#34495E', '#8E44AD'];
-var counter = 0;
-var color = colors[counter];
+function clear(){
+    Object.values(markers).forEach(i => i.setMap(null));
+}
 
-function clickOnMap(latLng) {
-    console.log(latLng);
-    // Construct the polygon.
-    if (coords.length > 1 && similar(latLng, coords[0])) {
-        console.log('Draw Polygon');
+function draw() {
+    clear();
+    let sensorData = Object.values(sensors);
 
-        let polygon = new google.maps.Polygon({
-            paths: coords,
-            strokeColor: color,
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: color,
-            fillOpacity: 0.35,
-        });
-        polygon.setMap(map);
-        counter = (counter + 1) % colors.length;
-        color = colors[counter];
-        polygons.push(polygon);
-        coords = [];
-    } else {
-        coords.push(latLng);
+    sensorData.forEach(element => {
+        addMarker(element, map);
+    });
+    let routesKey = Object.keys(routes);
+    routesKey.forEach(element => {
+        drawLine(routes[element].map(k => sensors[k]), drivers[element]);
+    });
+}
+
+let driverID = 0;
+let driverName = '';
+
+function updateMarkers() {
+    Object.values(markers).forEach(item => {
+        if (selected[item.SensorID]) {
+            item.setIcon(selectedIcon);
+        } else {
+            item.setIcon(defaultIcon);
+        }
+    });
+}
+
+var stringToColour = function (str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
+    var colour = '#';
+    for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 0xFF;
+        colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour;
+};
 
-    const flightPath = new google.maps.Polyline({
+
+
+function drawLine(nodes, driver) {
+    let color = stringToColour(driver.FirstName + driver.LastName);
+    console.log("Coords", nodes);
+    nodes.forEach(sensor => {
+        markers[sensor.SensorID].setOpacity(0.7);
+        markers[sensor.SensorID].defaultOpacity = 0.7;
+    });
+    let coords = nodes.map(node => {
+        return {
+            lat: node.Latitude,
+            lng: node.Longitude
+        };
+    });
+
+    const line = new google.maps.Polyline({
         path: coords,
         geodesic: true,
         strokeColor: color,
         strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeWeight: 5,
     });
-    flightPath.setMap(map);
+    line.setMap(map);
+
+    const contentString =
+        '<div id="body">' +
+        '<p>'+ driver.FirstName +' '+ driver.LastName +'</p>' +
+        '</div>';
+
+    const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+    });
+
+
+    google.maps.event.addListener(line,'mouseover', (e) => {
+
+        line.setOptions({ strokeColor: '#ff0000' });
+        infowindow.setPosition(e.latLng); 
+        infowindow.open(map);
+    });
+
+    line.addListener('mouseout', () => {
+
+        line.setOptions({ strokeColor: color });
+        infowindow.close();
+    });
+
 }
 
-function drawOnMap() {
-    // Configure the click listener.
-    map.addListener('click', (mapsMouseEvent) => {
-        latLng = mapsMouseEvent.latLng.toJSON();
 
-        let radius = 200 * 2 ** (12 - map.zoom);
-        let strokeColor = color;
-        if (coords.length == 0) {
-            strokeColor = '#FFFFFF';
-        }
-        const circle = new google.maps.Circle({
-            strokeColor: strokeColor,
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: color,
-            fillOpacity: 0.35,
-            map,
-            center: latLng,
-            radius: radius,
+function init() {
+    $(document).ready(function () {
+        $('.btn.assign-driver').click(function () {
+            $('.background').toggle();
         });
-        circle.addListener('click', () => {
-            clickOnMap(circle.center.toJSON());
+
+        $('.btn.next').click(function () {
+            driverID = $('#driver').val();
+            driverName = $('#driver option:selected').text().trim();
+            $('.background').toggle();
+            console.log('Select Dumpsters');
+            $('.select-dumpsters').show();
+            $('#map').focus();
+            selection = true;
         });
-        clickOnMap(latLng);
+
+        $('div.background').click(function (e) {
+            console.log(e);
+            let background = document.getElementsByClassName('background')[0];
+            if (e.target == background) {
+                $('.background').hide();
+            }
+
+        });
+
+        $('.btn.cancel').click(function () {
+            selection = false;
+            selected = {};
+            $('.select-dumpsters').hide();
+            updateMarkers();
+        });
+        $('.btn.apply').click(function () {
+            let s = [];
+            console.log("selected", selected);
+            Object.values(markers).forEach(item => {
+                if (selected[item.SensorID]) {
+                    s.push(item.SensorID);
+                }
+            });
+
+            let req = {
+                DriverID: driverID,
+                Sensors: s
+            };
+            console.log("req", req);
+            $.post('/api/assign-driver', req, function (data) {
+                if (data.success) {
+                    console.log('success');
+                    showMessage('Message', 'Driver is assigned!');
+                    // location.href = "/dumpster/" + data.sensor.SensorID;
+                    showDumpsters();
+                } else {
+                    console.log(data.error);
+                    showMessage('Error', data.error, 'Error');
+                }
+            });
+
+            selection = false;
+            selected = {};
+            $('.select-dumpsters').hide();
+            updateMarkers();
+
+        });
     });
 
-    fetch('/api/dumpsters', {
+    fetch('/api/drivers', {
         method: 'get',
     })
         .then((res) => {
@@ -133,9 +289,13 @@ function drawOnMap() {
         })
         .then((data) => {
             console.log(data);
-            data.forEach((dumpster) => {
-                addMarker(dumpster, map);
+            $.each(data, function (i, item) {
+                $('#driver').append($('<option>', {
+                    value: item.UserID,
+                    text: item.FirstName + ' ' + item.LastName
+                }));
             });
         })
         .catch((err) => console.log(err));
+
 }

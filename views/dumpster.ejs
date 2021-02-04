@@ -20,17 +20,11 @@
     $(document).ready(function () {
         var ctx = document.getElementById('myChart').getContext('2d');
         $.get('/dumpster/history/' + SensorID, function (d) {
-            console.log(d);
-            d = d.map(function(i){
-                return {
-                    x: new Date(i.x).toUTCString(),
-                    y: i.y
-                };
-            })
+            console.log(d);          
             var scatterChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: d.map(i => i.x).sort(),
+                    labels: d.map(i => new Date(i.label).toUTCString()),
                     datasets: [{
                         label: 'Fullness',
                         data: d,
@@ -81,7 +75,12 @@
 
                             <div class="col-2">
                                 <label for="">Calgary </label>
-                                <label for="">Ryan H. </label>
+                                <label for=""><% if(driver){ %>
+                                    <%= driver.FirstName + ' ' + driver.LastName %>
+                                    <% } else { %>
+                                        None
+                                    <% } %>
+                                </label>
                                 <label for="">
                                     <%= dumpster.FullnessLevel %>%
                                 </label>

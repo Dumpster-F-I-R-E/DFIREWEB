@@ -5,92 +5,196 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dumpster FIRE - Depot Management</title>
-  <link rel='stylesheet' href='/stylesheets/userlist.css' />
-  <script src="/javascripts/jquery-3.x-git.min.js"></script>
-    
+  <link rel='stylesheet' href='/stylesheets/depotList.css' />
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXl5WzhM1ZWUSQYcQcz1_sFkX1EvHJrNc&libraries=places&v=weekly"
+    defer></script>
+  <%- include('common.ejs') %>
+
 </head>
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('a.delete-depot').click(function(){
+    $(".btn.add-depot").click(function () {
+      $('#autocomplete').val('');
+      $('.background').toggle();
+    });
+    $(".btn.confirm").click(function () {
+      const place = autocomplete.getPlace();
+      const address = $('#autocomplete').val()
+      const name = $('#name-field').val()
+      console.log("Address", address);
+      let lat = place.geometry.location.lat()
+      let lng = place.geometry.location.lng()
+      console.log("lat:", lat, "lng", lng);
+      addDepot(name,address)
+      $('.background').toggle();
+    });
+    $('div.background').click(function (e) {
+      console.log(e);
+      let background = document.getElementsByClassName('background')[0];
+      if (e.target == background) {
+        $('.background').hide();
+      }
+
+    });
+    initAutocomplete();
+  });
+  let placeSearch;
+  var autocomplete;
+
+  function initAutocomplete() {
+    // Create the autocomplete object, restricting the search predictions to
+    // geographical location types.
+    autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete"),
+      { types: ["geocode"] }
+    );
+    // Avoid paying for data that you don't need by restricting the set of
+    // place fields that are returned to just the address components.
+    autocomplete.setFields(["geometry"]);
+
+
+  }
+
+
+
+
+
+  function geolocate() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const geolocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        const circle = new google.maps.Circle({
+          center: geolocation,
+          radius: position.coords.accuracy,
+        });
+        autocomplete.setBounds(circle.getBounds());
+      });
+    }
+  }
+
+</script>
+
+<script type="text/javascript">
+
+  function addDepot(name, address) {
+    let depot = {};
+    depot.Name = name;
+    depot.Address = address;
+    depot.CompanyID = 1;
+    $.post("/depot/add", depot, function (data) {
+      //console.log(data);
+      if (data.success) {
+        console.log("success");
+        //location.href = "/dumpster/" + data.depot.DepotID;
+        location.href = "/depot/list/";
+      } else {
+        console.log(data.error);
+        $(".error-message").text(data.error);
+      }
+
+    });
+  }
+
+  $(document).ready(function () {
+    $('a.delete-depot').click(function () {
       console.log("Click delete");
-      $('.checks').each(function(index){
-        if(this.checked){
+      $('.checks').each(function (index) {
+        if (this.checked) {
           let k = $(this).parent().parent();
           let depotid = k.children('.depotid').first().html().trim();
           let req = {
             DepotID: depotid
           };
-          $.post('/depot/delete', req, function(data){
+          $.post('/depot/delete', req, function (data) {
             location.reload();
           });
         }
-        
+
       });
     });
-    
+
   });
 </script>
-<body>
-  <div class="header">
-    <h1 class="title"> Dumpster FIRE </h1>
-  </div>
-  <div class="wrapper">
-    <%- include('nav.ejs') %>
-      <div class="content">
-        <div class="col-1">
-          <h2 class="title">Search</h2>
 
-          <div class="form">
-            <div class="labels">
-              <label for="name">Name </label>
-              <label for="address">Address</label>
-            </div>
+<body>
+  <%- include('header.ejs') %>
+    <div class="wrapper">
+      <%- include('nav.ejs') %>
+        <div class="content">
+          <div class="col-1">
+            <h2 class="title">Search</h2>
+
+            <div class="form">
+              <div class="labels">
+                <label for="name">Name </label>
+                <label for="address">Address</label>
+              </div>
+
 
             <div class="fields">
               <form action="/depot/list" id="search_form">
                 <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
                 <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
               </form>
+              </div>
             </div>
+            <div class="btn-container">
+              <button class="btn search" form="search_form" value="Submit">Search</button>
+              <button class="btn reset">Reset</button>
+
+            </div>
+
           </div>
-          <div class="btn-container">
-            <button class="btn search" form="search_form" value="Submit">Search</button>
-            <button class="btn reset">Reset</button>
+          <div class="col-2">
+            <h2 class="title">Depot List</h2>
+            <a class="btn add-depot">Add Depot </a>
+            <a class="btn delete-depot">Delete Depot </a>
+            <table style="width:100%">
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+              </tr>
+              <% depots.forEach(function(depot) { %>
+                <tr>
+                  <td>
+                    <input class="checks" type="checkbox">
+                  </td>
+                  <td class='depotid'>
+                    <%= depot.DepotID %>
+                  </td>
+                  <td>
+                    <%= depot.Name %>
+                  </td>
+                  <td>
+                    <%= depot.Address %>
+                  </td>
+                </tr>
+                <%}); %>
+            </table>
           </div>
 
+          <div class="background">
+            <div class="input">
+              <h2>Add Depot</h2>
+              <div id="locationField">
+                <label for='name'>Name:</label>
+                <input type="text" id='name-field' name='name'>
+                <br>
+                <label for='autocomplete'>Address:</label>
+                <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" />
+                <input class='btn primary-btn confirm' type="button" value="Add Depot">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-2">
-          <h2 class="title">Depot List</h2>
-          <a href="/depot/add" class="btn addDepot">Add Depot </a>
-          <a class="btn delete-depot">Delete Depot </a>
-          <table style="width:100%">
-            <tr>
-              <th></th>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Address</th>
-            </tr>
-            <% depots.forEach(function(depot) { %>
-              <tr >
-                <td>
-                  <input class="checks" type="checkbox">
-                </td>
-                <td class='depotid'>
-                  <%= depot.DepotID %>
-                </td>
-                <td>
-                  <%= depot.Name %>
-                </td>
-                <td>
-                  <%= depot.Address %>
-                </td>
-              </tr>
-              <%}); %>
-          </table>
-        </div>
-      </div>
-  </div>
+    </div>
 </body>
 
 </html>

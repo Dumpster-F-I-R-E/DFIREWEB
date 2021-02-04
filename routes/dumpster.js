@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const auth = require('../controllers/authController');
 const dumpster = require('../controllers/dumpsterController');
+const driverController = require('../controllers/driverController');
 
 router.get(
     '/list',
@@ -58,17 +59,22 @@ router.get('/map', auth.requireAuth, function (req, res) {
 /* GET dumpster . */
 router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
+    let drv = await driverController.getDriver(req.params.dumpsterId);
+    console.log("Driver", drv);
     res.render('dumpster', {
         dumpster: d[0],
+        driver: drv
     });
 });
 
 router.get('/history/:dumpsterId', auth.requireAuth, async function (req, res) {
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
+    d.reverse();
     let data = d.map((i) => {
         return {
             y: i.FullnessLevel,
-            x: new Date(i.Time),
+            x: i.ReportID,
+            label: new Date(i.Time),
         };
     });
     res.json(data);
