@@ -19,10 +19,15 @@
         </a>
         <% } %>
         <% if (User.Role == "Admin" || User.Role == "Manager") { %>
+            <a href="/dumpster/list">
+                <li>Dumpster List</li>
+            </a>
+        <% } %>
+        <% if (User.Role == "Admin" || User.Role == "Manager") { %>
             <a href="/depot/list">
                 <li>Depot List</li>
             </a>
-            <% } %>
+        <% } %>
         <a href="/routes">
             <li>Routes</li>
         </a>

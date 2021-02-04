@@ -135,16 +135,18 @@
                 <label for="address">Address</label>
               </div>
 
-              <div class="fields">
-                <form action="/depotList" id="search_form">
-                  <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
-                  <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
-                </form>
+
+            <div class="fields">
+              <form action="/depot/list" id="search_form">
+                <input type="text" name="name" id="name" placeholder="*" value="<%=name%>">
+                <input type="text" name="address" id="address" placeholder="*" value="<%=address%>">
+              </form>
               </div>
             </div>
             <div class="btn-container">
               <button class="btn search" form="search_form" value="Submit">Search</button>
               <button class="btn reset">Reset</button>
+
             </div>
 
           </div>

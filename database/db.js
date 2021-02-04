@@ -334,6 +334,18 @@ exports.getUsersSearch = async (name, role) => {
     }
 };
 
+exports.getSensorsSearch = async (SensorSerialNumber) => {
+    let sql = 'SELECT SensorID, SensorSerialNumber' + ' FROM Sensors ';
+    if (SensorSerialNumber && SensorSerialNumber != '*') {
+        sql += ' WHERE (SensorSerialNumber LIKE ?)';
+        sql = mysql.format(sql, [SensorSerialNumber]);
+    }
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
 exports.getImage = async (userid) => {
     let sql = mysql.format(
         'SELECT UserID,Image FROM ProfileImages WHERE UserID = ?',
