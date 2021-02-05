@@ -203,7 +203,16 @@ exports.addSensor = async (sensor) => {
     await pool
         .execute(sql, [sensor.SensorSerialNumber, sensor.CompanyID])
         .catch(printErrors);
+
+    let sql2 = 'SELECT * FROM `Sensors` WHERE SensorID=(SELECT MAX(SensorID) FROM `Sensors`);';
+    var results = await pool.query(sql2).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+
 };
+
+
 
 exports.storeSensorReport = async (report) => {
     let sql =
@@ -250,10 +259,10 @@ exports.getSensorById = async (id) => {
 };
 
 exports.getSensorReports = async () => {
-  let sql =
+    let sql =
         mysql.format('SELECT SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM SensorReports  WHERE ReportID <= ?', ['5']);
 
-     
+
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
@@ -384,7 +393,7 @@ exports.getRoutes = async () => {
 
 exports.getRoute = async (driverId) => {
     let sql = 'SELECT SensorID,DriverID FROM Sensors WHERE DriverID=?';
-    var results = await pool.query(sql,[driverId]).catch(printErrors);
+    var results = await pool.query(sql, [driverId]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }

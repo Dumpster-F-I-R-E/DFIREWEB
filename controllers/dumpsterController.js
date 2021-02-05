@@ -9,8 +9,7 @@ exports.getDumpsterInfo = (id) => {
 };
 
 exports.addDumpster = async (dumpster, data) => {
-    let newDumpster = await db.addSensor(data);
-    console.log(newDumpster);
+    let newDumpster = await db.addSensor(data);    
     return newDumpster;
 };
 
