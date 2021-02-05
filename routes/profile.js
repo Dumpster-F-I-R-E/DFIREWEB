@@ -67,6 +67,11 @@ router.get(
 router.post('/change-password', auth.requireAuth, async function (req, res) {
     const data = req.body;
     await profile.changePassword(res.locals.User, data.UserID, data.Password);
+    let result = await profile.getUser(data.UserID);
+    let subj = "Password has been changed";
+    let text = "Dear " + result.FirstName + "," +"<br> Your password has been updated. Please contact the admin for the new password.<br> Thanks, <br> DFIRE Team";
+    let email = result.Email;
+    emailController.sendMail(email,subj,text);
     res.redirect('/profile');
 });
 
