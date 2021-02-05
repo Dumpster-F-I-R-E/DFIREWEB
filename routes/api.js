@@ -21,7 +21,7 @@ router.get('/drivers', auth.requireAuth, async function (req, res) {
 router.post('/assign-driver', async function (req, res) {
     console.log(req.body);
     let data = req.body;
-    driver.setDumpsters(data.DriverID, data.Dumpsters);
+    await driver.setDumpsters(data.DriverID, data.Dumpsters);
     res.json({
         success:true,
         error:'Error Message'

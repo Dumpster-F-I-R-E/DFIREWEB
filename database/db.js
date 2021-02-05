@@ -422,7 +422,7 @@ exports.getDriver = async (DumpsterId) => {
     }
 };
 
-exports.setDriver = async (SumpsterId, driverId) => {
+exports.setDriver = async (dumpsterId, driverId) => {
     let sql =
         'UPDATE Dumpsters SET' +
         ' DriverID = ? ' +

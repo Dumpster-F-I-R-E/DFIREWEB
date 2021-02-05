@@ -364,7 +364,7 @@ function init() {
 
             let req = {
                 DriverID: driverID,
-                Sensors: s
+                Dumpsters: s
             };
             console.log("req", req);
             $.post('/api/assign-driver', req, function (data) {

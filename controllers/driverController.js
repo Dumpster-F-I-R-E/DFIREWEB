@@ -6,11 +6,10 @@ exports.getDrivers = async () => {
 };
 
 exports.setDumpsters = async (driverId, dumpsters) => {
-
-    if (dumpsters) {
-        dumpsters.forEach(item => {
-            db.setDriver(item, driverId);
-        });
+    if (dumpsters) {        
+        for (var i in dumpsters) {    
+            await db.setDriver(dumpsters[i], driverId);
+        }
     }
 
 };
