@@ -32,7 +32,7 @@
                     //console.log(data);
                     if(data.success){
                             console.log("success");
-                            location.href = "/dumpster/" + data.dumpster.SensorID;
+                            location.href = "/dumpster/" + data.dumpster.DumpsterID;
                     }else{
                         console.log(data.error);
                         showMessage('Error', data.error ,'Error');
