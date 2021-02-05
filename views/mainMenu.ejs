@@ -21,7 +21,10 @@
             </p>
            
         <div class = "dumpsterMainMenu"> 
+        
             
+                <% if(dumpsterData && dumpsterData.length != 0){ %>
+                        
             <table id = "dumpsterReport">
                 <tr>
                     <th>Dumpster ID</th>
@@ -32,7 +35,6 @@
                     <th>Time</th>
                 </tr>
 
-                <% if(dumpsterData.length != 0){ %>
                     <% var i = 1; %>
                     <% dumpsterData.forEach(function(data){ %>
             
@@ -46,9 +48,7 @@
                 </tr>
                 <%  i++; }) %>
         <% } else{ %>
-            <tr>
-                <td colspan="7">No Data Found</td>
-            </tr>
+           <p>No recent data is found.</p>
         <% } %>
                 
             </table>
