@@ -7,11 +7,19 @@ exports.generateAuthToken = () => {
     return crypto.randomBytes(60).toString('hex');
 };
 
+const salt = 'dEnELfire';
+
+exports.hashPassword = (password) => {
+    const hash = crypto.createHash('sha256');
+    hash.update(salt+password);
+    return hash.digest('utf8');
+};
+
 exports.authenticate = async (username, password) => {
     let result = { valid: false, authToken: null };
     var user = await db.getUserByUsername(username);
     if (user) {
-        if (user.Password === password) {
+        if (user.Password === exports.hashPassword(password)) {
             const authToken = exports.generateAuthToken();
 
             // Store authentication token

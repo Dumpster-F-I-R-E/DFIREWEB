@@ -1,6 +1,7 @@
 let mysql = require('mysql2/promise');
 let fs = require('fs');
 var path = require('path');
+var auth = require('../controllers/authController');
 var connectionSettings = require('./db.conf.json');
 
 exports.setConnectionSettings = (settings) => {
@@ -94,8 +95,9 @@ exports.updateProfile = async (profile) => {
 
 exports.changePassword = async (userid, password) => {
     console.log('Change Password', userid, password);
+    let hash = auth.hashPassword(password);
     let sql = mysql.format('UPDATE Users SET Password=? WHERE UserID=?', [
-        password,
+        hash,
         userid,
     ]);
     await pool.execute(sql).catch(printErrors);
@@ -149,11 +151,11 @@ exports.addUser = async (user) => {
         'INSERT INTO Users' +
         '(Username, Password, Role, CompanyID, FirstName, LastName, Address, Email, Phone, StaffID)' +
         ' VALUES(?, ?, ?, ?, ?,?,?,?,?,?)';
-
+    let hash = auth.hashPassword(user.Password);
     await pool
         .execute(sql, [
             user.Username,
-            user.Password,
+            hash,
             user.Role,
             user.CompanyID,
             user.FirstName,
@@ -201,7 +203,16 @@ exports.addSensor = async (sensor) => {
     await pool
         .execute(sql, [sensor.SensorSerialNumber, sensor.CompanyID])
         .catch(printErrors);
+
+    let sql2 = 'SELECT * FROM `Sensors` WHERE SensorID=(SELECT MAX(SensorID) FROM `Sensors`);';
+    var results = await pool.query(sql2).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+
 };
+
+
 
 exports.storeSensorReport = async (report) => {
     let sql =
@@ -223,7 +234,7 @@ exports.getSensorData = async () => {
     let sql =
         'SELECT  * ' +
         'FROM SensorReports,' +
-        '(SELECT SensorID,ReportID, max(Time) as Time ' +
+        '(SELECT SensorID,max(ReportID) as ReportID ' +
         'FROM SensorReports ' +
         'GROUP BY SensorID) latest ' +
         'WHERE SensorReports.ReportID=latest.ReportID ;';
@@ -248,10 +259,14 @@ exports.getSensorById = async (id) => {
 };
 
 exports.getSensorReports = async () => {
-  let sql =
-        mysql.format('SELECT SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM sensorreports  WHERE ReportID <= ?', ['5']);
 
-     
+ 
+=======
+    let sql =
+        mysql.format('SELECT SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM SensorReports  WHERE ReportID <= ?', ['5']);
+
+
+
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
@@ -332,6 +347,18 @@ exports.getUsersSearch = async (name, role) => {
     }
 };
 
+exports.getSensorsSearch = async (SensorSerialNumber) => {
+    let sql = 'SELECT SensorID, SensorSerialNumber' + ' FROM Sensors ';
+    if (SensorSerialNumber && SensorSerialNumber != '*') {
+        sql += ' WHERE (SensorSerialNumber LIKE ?)';
+        sql = mysql.format(sql, [SensorSerialNumber]);
+    }
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
 exports.getImage = async (userid) => {
     let sql = mysql.format(
         'SELECT UserID,Image FROM ProfileImages WHERE UserID = ?',
@@ -351,17 +378,61 @@ exports.changeImage = async (userId, image) => {
     console.log('ChangeImage DB', userId);
     await pool.execute(sql, [userId, image]).catch(printErrors);
 };
-exports.saveResetToken = async(user,token,expired) => {
+
+exports.getDrivers = async () => {
+    let sql = 'SELECT UserID,FirstName, LastName, Email, Role FROM Users  WHERE Role=\'Driver\'';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getRoutes = async () => {
+    let sql = 'SELECT SensorID,DriverID,FirstName,LastName FROM Sensors LEFT JOIN Users ON DriverID=UserID';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getRoute = async (driverId) => {
+    let sql = 'SELECT SensorID,DriverID FROM Sensors WHERE DriverID=?';
+    var results = await pool.query(sql, [driverId]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getDriver = async (sensorId) => {
+    let sql = 'SELECT DriverID,FirstName,LastName FROM Sensors JOIN Users ON DriverID=UserID WHERE SensorID=?';
+    var results = await pool.query(sql, [sensorId]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
+
+exports.setDriver = async (sensorId, driverId) => {
+    let sql =
+        'UPDATE Sensors SET' +
+        ' DriverID = ? ' +
+        ' WHERE SensorID=?;';
+
+    await pool
+        .execute(sql, [driverId, sensorId]).catch(printErrors);
+};
+
+exports.saveResetToken = async (user, token, expired) => {
     console.log(user.UserID, user.Username, token, expired);
     let sql =
-    'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
-    await pool.execute(sql, [user.UserID,user.Username, token, expired]).catch(printErrors);
-    
+        'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
+    await pool.execute(sql, [user.UserID, user.Username, token, expired]).catch(printErrors);
+
 };
-exports.getUserFromResetToken = async(token) => {
+exports.getUserFromResetToken = async (token) => {
     let sql = mysql.format('SELECT userId, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
+
 };

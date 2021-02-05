@@ -1,3 +1,15 @@
+
+<% if(locals.message) { %>
+    <% var msg = message %>
+<% } %>
+
+<script>
+    let message = "<%= msg %>";
+    if(message.trim().length > 0){
+        showMessage('Error', message);
+    }
+
+</script>
 <div class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -8,7 +20,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Message!!</p>
+                <p><% if(locals.message) { %>
+                    <%= message %>
+                <% } %>
+                </p>
             </div>
             <div class="modal-footer">
 

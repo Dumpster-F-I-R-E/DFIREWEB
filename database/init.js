@@ -66,74 +66,59 @@ var seedCompanies = async () => {
     await db.addCompany(company);
 };
 
-var seedSensors = async () => {
+var seedSensors = async (num = 5) => {
     console.log('seedSensors');
-    let sensor1 = {
+    let sensor = {
         SensorSerialNumber: 1,
         CompanyID: 1,
     };
-    let sensor2 = {
-        SensorSerialNumber: 2,
-        CompanyID: 1,
-    };
-    let sensor3 = {
-        SensorSerialNumber: 3,
-        CompanyID: 1,
-    };
-    await db.addSensor(sensor1);
-    await db.addSensor(sensor2);
-    await db.addSensor(sensor3);
+    for (let index = 0; index < num; index++) {
+        sensor.SensorSerialNumber = index;
+        await db.addSensor(sensor);
+    }
 };
 
-var seedSensorReports = async () => {
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+var seedSensorReports = async (numSensors, num = 20) => {
     console.log('seedSensorReports');
-    let report1 = {
+    let report = {
         SensorID: 1,
         Longitude: -114.08529,
         Latitude: 51.05011,
         BatteryLevel: 50,
-        FullnessLevel: 60,
+        FullnessLevel: 100,
         ErrorCode: 0,
-        Time: new Date('2020-12-20 05:00:00'),
+        Time: new Date('2020-12-20 00:00:00'),
     };
+    const distance = 0.1 * (numSensors / 5);
+    for (let index = 0; index < num; index++) {
+        report.Time = new Date('2020-12-20');
+        report.Time.setHours(report.Time.getHours() + index);
+        report.SensorID = getRandomInt(1, numSensors);
+        report.FullnessLevel = report.FullnessLevel + getRandomInt(0, 100);
+        
+        report.BatteryLevel = getRandomInt(0, 100);
+        report.Latitude += getRandomArbitrary(-distance, distance);
+        report.Longitude += getRandomArbitrary(-distance, distance);
+        if(report.FullnessLevel > 100){
+            report.FullnessLevel = 100;
+            await db.storeSensorReport(report);
+            report.FullnessLevel = 0;
+        }else{
+            await db.storeSensorReport(report);
+        }
+        
 
-    let report2 = {
-        SensorID: 2,
-        Longitude: -114.18529,
-        Latitude: 51.05011,
-        BatteryLevel: 50,
-        FullnessLevel: 60,
-        ErrorCode: 0,
-        Time: new Date('2020-12-20 05:00:00'),
-    };
-
-    let report3 = {
-        SensorID: 3,
-        Longitude: -114.08529,
-        Latitude: 51.15011,
-        BatteryLevel: 50,
-        FullnessLevel: 60,
-        ErrorCode: 0,
-        Time: new Date('2020-12-20 05:00:00'),
-    };
-
-    let report4 = {
-        SensorID: 3,
-        Longitude: -114.08529,
-        Latitude: 51.15011,
-        BatteryLevel: 50,
-        FullnessLevel: 70,
-        ErrorCode: 0,
-        Time: new Date('2020-12-20 06:00:00'),
-    };
-
-    await db.storeSensorReport(report1);
-    await db.storeSensorReport(report2);
-    await db.storeSensorReport(report3);
-    await db.storeSensorReport(report4);
-    report4.FullnessLevel = 10;
-    report4.Time = new Date('2020-12-20 08:00:00');
-    await db.storeSensorReport(report4);
+    }
 };
 
 var init = async () => {
@@ -174,9 +159,9 @@ var init = async () => {
 
         await seedDepots();
 
-        await seedSensors();
+        await seedSensors(20);
 
-        await seedSensorReports();
+        await seedSensorReports(20,100);
 
         console.log('Closing connection');
         await db.closePool();
