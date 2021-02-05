@@ -260,8 +260,6 @@ exports.getSensorById = async (id) => {
 
 exports.getSensorReports = async () => {
 
- 
-=======
     let sql =
         mysql.format('SELECT SensorID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM SensorReports  WHERE ReportID <= ?', ['5']);
 
