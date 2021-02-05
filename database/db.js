@@ -382,6 +382,14 @@ exports.getRoutes = async () => {
     }
 };
 
+exports.getRoute = async (driverId) => {
+    let sql = 'SELECT SensorID,DriverID FROM Sensors WHERE DriverID=?';
+    var results = await pool.query(sql,[driverId]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
 exports.getDriver = async (sensorId) => {
     let sql = 'SELECT DriverID,FirstName,LastName FROM Sensors JOIN Users ON DriverID=UserID WHERE SensorID=?';
     var results = await pool.query(sql, [sensorId]).catch(printErrors);

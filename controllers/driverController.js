@@ -45,3 +45,13 @@ exports.getRoutes = async () => {
     return result;
 
 };
+
+exports.getRoute = async (driverId) => {
+    let route = await db.getRoute(driverId);
+    var sensors = [];
+    for (let index = 0; index < route.length; index++) {
+        let s = await db.getSensorById(route[index].SensorID);
+        sensors[index] = s[0];
+    }
+    return sensors;
+};

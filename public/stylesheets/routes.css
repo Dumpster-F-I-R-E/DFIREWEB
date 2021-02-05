@@ -9,3 +9,19 @@
     border: 1px solid gray;
     padding: 20px;
 }
+
+#legend {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid gray;
+    width: max-content;
+  }
+
+  .dot {
+      display: inline-block;
+      width:25px;
+      height:5px;
+      margin-right: 5px;
+  }

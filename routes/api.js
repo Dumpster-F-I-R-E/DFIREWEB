@@ -33,4 +33,9 @@ router.get('/routes', auth.requireAuth, async function (req, res) {
     res.json(data);
 });
 
+router.get('/my-route', auth.requireAuth, async function (req, res) {
+    let data = await driver.getRoute(res.locals.User.UserID);
+    res.json(data);
+});
+
 module.exports = router;
