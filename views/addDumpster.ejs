@@ -28,7 +28,7 @@
             dumpster.SensorSerialNumber = $("#SensorSerialNumber").val();
             dumpster.CompanyID = 1;
 
-                $.post("/addDumpster", dumpster, function(data){
+                $.post("/dumpster/add", dumpster, function(data){
                     //console.log(data);
                     if(data.success){
                             console.log("success");

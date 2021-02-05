@@ -228,7 +228,7 @@ function addMarker(dumpster) {
     });
 
     marker.addListener('mouseout', () => {
-        setOpacity();
+        deselectPath(dumpster.DriverID);
         infowindow.close();
     });
 }
