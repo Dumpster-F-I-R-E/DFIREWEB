@@ -55,7 +55,7 @@ function addMarker(dumpster, map) {
     });
 
     marker.addListener('click', () => {
-        window.location = '/dumpster/' + dumpster.SensorID;
+        window.location = '/dumpster/' + dumpster.DumpsterID;
     });
 
     marker.addListener('mouseover', () => {
