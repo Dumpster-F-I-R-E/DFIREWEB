@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `Sensors` (
 	`SensorID` INT NOT NULL AUTO_INCREMENT,
 	`SensorSerialNumber` INT NOT NULL,
 	`CompanyID` INT NOT NULL,
+	`DriverID` INT NULL,
 	PRIMARY KEY (`SensorID`),
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
 );

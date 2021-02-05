@@ -15,7 +15,7 @@ var userRouter = require('./routes/user');
 var aboutUsRouter = require('./routes/aboutUs');
 var forgetPassRouter = require('./routes/forgetPassword');
 var depotRouter = require('./routes/depot');
-
+var driverRouter = require('./routes/driver');
 var apiRouter = require('./routes/api');
 
 var app = express();
@@ -27,7 +27,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 // app.use(express.json());
 app.use(express.json({ limit: '25mb' }));
-app.use(express.urlencoded({ limit: '25mb', extended: false }));
+app.use(express.urlencoded({ limit: '25mb', extended: true }));
 // app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,6 +45,7 @@ app.use('/reset',forgetPassRouter);
 app.use('/api', apiRouter);
 app.use('/routes', routesRouter);
 app.use('/depot', depotRouter);
+app.use('/driver', driverRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
