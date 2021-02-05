@@ -58,8 +58,10 @@ router.get('/map', auth.requireAuth, function (req, res) {
 
 /* GET dumpster . */
 router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
+    console.log(req.params.dumpsterId);
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
     let drv = await driverController.getDriver(req.params.dumpsterId);
+    console.log("Dumpster", d);
     console.log("Driver", drv);
     res.render('dumpster', {
         dumpster: d[0],

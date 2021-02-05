@@ -91,7 +91,6 @@ function getRandomArbitrary(min, max) {
 var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
     console.log('seedDumpsterReports');
     let report = {
-        dumpsterID: 1,
         Longitude: -114.08529,
         Latitude: 51.05011,
         BatteryLevel: 50,
@@ -103,7 +102,7 @@ var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
     for (let index = 0; index < num; index++) {
         report.Time = new Date('2020-12-20');
         report.Time.setHours(report.Time.getHours() + index);
-        report.dumpsterID = getRandomInt(1, numberOfDumpsters);
+        report.DumpsterID = getRandomInt(1, numberOfDumpsters);
         report.FullnessLevel = report.FullnessLevel + getRandomInt(0, 100);
         
         report.BatteryLevel = getRandomInt(0, 100);

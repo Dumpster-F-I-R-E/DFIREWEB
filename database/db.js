@@ -390,16 +390,16 @@ exports.getDrivers = async () => {
 };
 
 exports.getRoutes = async () => {
-    let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Sumpsters LEFT JOIN Users ON DriverID=UserID';
+    let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters LEFT JOIN Users ON DriverID=UserID';
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
 };
 
-exports.getDriver = async (SumpsterId) => {
+exports.getDriver = async (DumpsterId) => {
     let sql = 'SELECT DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID WHERE DumpsterID=?';
-    var results = await pool.query(sql, [dumpsterId]).catch(printErrors);
+    var results = await pool.query(sql, [DumpsterId]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }

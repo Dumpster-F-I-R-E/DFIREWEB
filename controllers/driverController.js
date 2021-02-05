@@ -28,7 +28,7 @@ exports.getRoutes = async () => {
     };
     let dumpsterData = await db.getDumpsterData();
     dumpsterData.forEach(d => {
-        result.dumpsters[d.DumpsterID] = d;
+        result.Dumpsters[d.DumpsterID] = d;
     });
     let driverData = await db.getRoutes();
     console.log(driverData);
