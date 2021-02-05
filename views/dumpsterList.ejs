@@ -70,10 +70,10 @@
                   <td>
                     <input class="checks" type="checkbox">
                   </td>
-                  <td class='dumpsterid'>
+                  <td onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterID %>
                   </td>
-                  <td>
+                  <td onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterSerialNumber %>
                   </td>
                 </tr>
