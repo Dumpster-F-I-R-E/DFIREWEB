@@ -1,5 +1,5 @@
 const db = require('../database/db');
-const nodemailer = require('nodemailer');
+const emailController = require('../controllers/emailController')
 
 exports.getUser = async(email) => {
    let user = await db.getUserByEmail(email);
@@ -49,42 +49,8 @@ exports.savePassword = async(userId,password) => {
     await db.changePassword(userId,password);
 }
 exports.sendMail = async(email,token) => {
-    console.log("here waiting 1");
-    let result = {status: false, message: "Sending email"};
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'dfirecapstone@gmail.com',
-            pass: 'capstone2021'
-        }
-    });
-    console.log("here waiting 2");
-    let mailOptions = {
-        from:'dfirecapstone@gmail.com',
-        to:email,
-        subject:"Reset link",
-        html: `
-        <p>Please click the following <a href = "http://localhost:3000/reset/${token}"> link </a> to reset your password.</p>
-        `
-    }
-    console.log("here waiting 3");
-    transporter.sendMail(mailOptions, function(err,data){
-        console.log("here waiting 4");   
-        if(err){
-            console.log("error occured");
-            result = {
-                status:false,
-                message: "An error occured"
-            };
-        }
-        else {
-            console.log("Email sent");
-            result = {
-                status:true,
-                message:"Email sent"
-            };
-        }
-        
-    })
+    let text = "Please click the following <a href = http://localhost:3000/reset/" +token+ "> link </a> to reset your password";
+    let subj = "Reset Link";
+    let result = await emailController.sendMail(email,subj,text);
     return result;
 }

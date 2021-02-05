@@ -36,7 +36,6 @@ router.post(
         let u = await dumpster.createDumpster(res.locals.Dumpster, data);
         let msg = '';
         let s = true;
-        console.log(u);
         if (!u) {
             msg = "You don't have permission to create this dumpster.";
             s = false;
@@ -61,12 +60,14 @@ router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
     console.log(req.params.dumpsterId);
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
     let drv = await driverController.getDriver(req.params.dumpsterId);
-    console.log("Dumpster", d);
-    console.log("Driver", drv);
-    res.render('dumpster', {
-        dumpster: d[0],
-        driver: drv
-    });
+    if(!d){
+        res.redirect('/dumpster/list');
+    }else{
+        res.render('dumpster', {
+            dumpster: d[0],
+            driver: drv
+        });
+    }
 });
 
 router.get('/history/:dumpsterId', auth.requireAuth, async function (req, res) {

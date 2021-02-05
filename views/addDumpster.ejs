@@ -29,10 +29,10 @@
             dumpster.CompanyID = 1;
 
                 $.post("/dumpster/add", dumpster, function(data){
-                    console.log(data);
+                    //console.log(data);
                     if(data.success){
                             console.log("success");
-                            location.href = "/dumpster/" + data.dumpster.DumpsterID;
+                            location.href = "/dumpster/" + data.dumpster.SensorID;
                     }else{
                         console.log(data.error);
                         showMessage('Error', data.error ,'Error');

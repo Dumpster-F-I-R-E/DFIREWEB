@@ -218,7 +218,15 @@ exports.addDumpster = async (dumpster) => {
     await pool
         .execute(sql, [dumpster.DumpsterSerialNumber, dumpster.CompanyID])
         .catch(printErrors);
+
+    let sql2 = 'SELECT * FROM `Sensors` WHERE SensorID=(SELECT MAX(SensorID) FROM `Sensors`);';
+    var results = await pool.query(sql2).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+
 };
+
 
 exports.storeDumpsterReport = async (report) => {
     let sql =
@@ -268,7 +276,8 @@ exports.getDumpsterReports = async () => {
   let sql =
         mysql.format('SELECT DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM dumpsterReports  WHERE ReportID <= ?', ['5']);
 
-     
+
+
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
@@ -392,6 +401,14 @@ exports.getDrivers = async () => {
 exports.getRoutes = async () => {
     let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters LEFT JOIN Users ON DriverID=UserID';
     var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getRoute = async (driverId) => {
+    let sql = 'SELECT SensorID,DriverID FROM Sensors WHERE DriverID=?';
+    var results = await pool.query(sql, [driverId]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
