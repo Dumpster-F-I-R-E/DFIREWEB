@@ -9,11 +9,11 @@ router.get(
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
-        let SensorSerialNumber = req.query.sensorserialnumber;
-        let list = await dumpster.getDumpsters(SensorSerialNumber);
+        let DumpsterSerialNumber = req.query.Dumpsterserialnumber;
+        let list = await dumpster.getDumpsters(DumpsterSerialNumber);
         res.render('dumpsterList', {
             dumpsters: list,
-            sensorserialnumber: SensorSerialNumber
+            dumpsterserialnumber: DumpsterSerialNumber
         });
     }
 );
@@ -33,7 +33,7 @@ router.post(
     auth.requireAdminOrManager,
     async function (req, res) {
         const data = req.body;
-        let u = await dumpster.addDumpster(res.locals.Dumpster, data);
+        let u = await dumpster.createDumpster(res.locals.Dumpster, data);
         let msg = '';
         let s = true;
         if (!u) {
@@ -57,6 +57,7 @@ router.get('/map', auth.requireAuth, function (req, res) {
 
 /* GET dumpster . */
 router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
+    console.log(req.params.dumpsterId);
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
     let drv = await driverController.getDriver(req.params.dumpsterId);
     if(!d){
@@ -67,7 +68,6 @@ router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
             driver: drv
         });
     }
-    
 });
 
 router.get('/history/:dumpsterId', auth.requireAuth, async function (req, res) {

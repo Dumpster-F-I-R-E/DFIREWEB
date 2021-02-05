@@ -16,19 +16,6 @@ CREATE TABLE IF NOT EXISTS `Users` (
 	PRIMARY KEY (`UserID`)
 );
 
--- CREATE TABLE IF NOT EXISTS `Profile` (
--- 	`UserID` INT NOT NULL,
--- 	`FirstName` TEXT NOT NULL,
--- 	`LastName` TEXT NOT NULL,
--- 	`Address` TEXT NOT NULL,
--- 	`Email` TEXT NOT NULL,
--- 	`Phone` TEXT NOT NULL,
--- 	`StaffID` TEXT,
--- 	`Image` MEDIUMBLOB,
--- 	PRIMARY KEY (`UserID`),
---     FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
--- );
-
 CREATE TABLE IF NOT EXISTS `ProfileImages` (
 	`UserID` INT NOT NULL,
 	`Image` MEDIUMBLOB,
@@ -55,17 +42,17 @@ CREATE TABLE IF NOT EXISTS `Depots` (
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
 );
 
-CREATE TABLE IF NOT EXISTS `Sensors` (
-	`SensorID` INT NOT NULL AUTO_INCREMENT,
-	`SensorSerialNumber` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `Dumpsters` (
+	`DumpsterID` INT NOT NULL AUTO_INCREMENT,
+	`DumpsterSerialNumber` INT NOT NULL,
 	`CompanyID` INT NOT NULL,
-	PRIMARY KEY (`SensorID`),
+	PRIMARY KEY (`DumpsterID`),
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
 );
 
-CREATE TABLE IF NOT EXISTS `SensorReports` (
+CREATE TABLE IF NOT EXISTS `DumpsterReports` (
 	`ReportID` INT NOT NULL AUTO_INCREMENT,
-	`SensorID` INT NOT NULL,
+	`DumpsterID` INT NOT NULL,
 	`Longitude` DOUBLE NOT NULL,
 	`Latitude` DOUBLE NOT NULL,
 	`BatteryLevel` DOUBLE NOT NULL,
@@ -73,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `SensorReports` (
 	`ErrorCode` INT NOT NULL,
 	`InsertionTime` DATETIME NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (`ReportID`),
-    FOREIGN KEY (`SensorID`) REFERENCES Sensors(`SensorID`)
+    FOREIGN KEY (`DumpsterID`) REFERENCES Dumpsters(`DumpsterID`)
 );
 
 CREATE TABLE IF NOT EXISTS `Sessions` (

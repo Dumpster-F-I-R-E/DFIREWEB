@@ -25,7 +25,7 @@
 
         $("button.apply").click(function () {
             let dumpster = {};
-            dumpster.SensorSerialNumber = $("#SensorSerialNumber").val();
+            dumpster.DumpsterSerialNumber = $("#DumpsterSerialNumber").val();
             dumpster.CompanyID = 1;
 
                 $.post("/dumpster/add", dumpster, function(data){
@@ -64,8 +64,8 @@
                         </div>
                     </div>
                     <div class="form">
-                        <label>Dumpster Sensor Serial ID </label>
-                        <input type="text" name="SensorSerialNumber" id="SensorSerialNumber" >                        
+                        <label>Dumpster Dumpster Serial ID </label>
+                        <input type="text" name="DumpsterSerialNumber" id="DumpsterSerialNumber" >                        
                     </div>
                 </div>
                 <div class="col-4">

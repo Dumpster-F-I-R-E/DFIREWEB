@@ -41,11 +41,11 @@
 
           <div class="form">
             <div class="labels">
-              <label for="sensorserialnumber">SensorSerialNumber </label>
+              <label for="dumpsterserialnumber">DumpsterSerialNumber </label>
             </div>
             <div class="fields">
               <form action="/dumpster/list" id="search_form">
-                <input type="text" name="sensorserialnumber" id="sensorserialnumber" placeholder="*" value="<%=sensorserialnumber%>">
+                <input type="text" name="dumpsterserialnumber" id="dumpsterserialnumber" placeholder="*" value="<%=dumpsterserialnumber%>">
               </form>
             </div>
           </div>
@@ -62,8 +62,8 @@
           <table style="width:100%">
             <tr>
               <th></th>
-              <th>SensorID</th>
-              <th>SensorSerialNumber</th>
+              <th>DumpsterID</th>
+              <th>DumpsterSerialNumber</th>
             </tr>
             <% dumpsters.forEach(function(dumpster) { %>
                 <tr >
@@ -71,10 +71,10 @@
                     <input class="checks" type="checkbox">
                   </td>
                   <td class='dumpsterid'>
-                    <%= dumpster.SensorID %>
+                    <%= dumpster.DumpsterID %>
                   </td>
                   <td>
-                    <%= dumpster.SensorSerialNumber %>
+                    <%= dumpster.DumpsterSerialNumber %>
                   </td>
                 </tr>
                 <%}); %>
