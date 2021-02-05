@@ -7,10 +7,7 @@
     width: 100%;
 
 }
-#aboutUsPara {
-    width:1000px;
-    overflow-y: hidden;
-}
+
 #getEmail, #resetForm {
     text-align: center;
 }
