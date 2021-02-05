@@ -183,8 +183,8 @@ function addMarker(dumpster) {
         opacity: opacity
     });
     marker.defaultOpacity = opacity;
-    marker.SensorID = dumpster.SensorID;
-    markers[dumpster.SensorID] = marker;
+    marker.DumpsterID = dumpster.DumpsterID;
+    markers[dumpster.DumpsterID] = marker;
     if (dumpster.FullnessLevel == 100) {
         marker.setIcon(fullIcon);
     };
@@ -205,17 +205,17 @@ function addMarker(dumpster) {
     marker.addListener('click', () => {
         if (selection) {
 
-            if (selected[marker.SensorID]) {
-                selected[marker.SensorID] = false;
+            if (selected[marker.DumpsterID]) {
+                selected[marker.DumpsterID] = false;
                 marker.setIcon(defaultIcon);
             } else {
-                selected[marker.SensorID] = true;
+                selected[marker.DumpsterID] = true;
                 marker.setIcon(selectedIcon);
             }
 
 
         } else {
-            window.location = '/dumpster/' + dumpster.SensorID;
+            window.location = '/dumpster/' + dumpster.DumpsterID;
         }
 
     });
@@ -233,7 +233,7 @@ function addMarker(dumpster) {
     });
 }
 
-var sensors = {};
+var dumpsters = {};
 var drivers = {};
 var routes = {};
 
@@ -243,7 +243,7 @@ function showDumpsters() {
     })
         .then(res => res.json())
         .then(data => {
-            sensors = data.Sensors;
+            dumpsters = data.Dumpsters;
             routes = data.Routes;
             drivers = data.Drivers;
             draw();
@@ -260,13 +260,13 @@ function draw() {
 
     let routesKey = Object.keys(routes);
     routesKey.forEach(element => {
-        // drawLine(routes[element].map(k => sensors[k]), drivers[element]);
+        // drawLine(routes[element].map(k => dumpsters[k]), drivers[element]);
         let waypoints = routes[element].map(d => {
-            sensors[d].DriverID = element;
+            dumpsters[d].DriverID = element;
             return {
                 location: {
-                    lat: sensors[d].Latitude,
-                    lng: sensors[d].Longitude
+                    lat: dumpsters[d].Latitude,
+                    lng: dumpsters[d].Longitude
                 },
                 stopover: true,
             };
@@ -277,7 +277,7 @@ function draw() {
 
     });
 
-    let sensorData = Object.values(sensors);
+    let sensorData = Object.values(dumpsters);
     sensorData.forEach(element => {
         addMarker(element);
     });
@@ -301,7 +301,7 @@ function drawLegend() {
 
 function updateMarkers() {
     Object.values(markers).forEach(item => {
-        if (selected[item.SensorID]) {
+        if (selected[item.DumpsterID]) {
             item.setIcon(selectedIcon);
         } else {
             item.setIcon(defaultIcon);
@@ -357,8 +357,8 @@ function init() {
             let s = [];
             console.log("selected", selected);
             Object.values(markers).forEach(item => {
-                if (selected[item.SensorID]) {
-                    s.push(item.SensorID);
+                if (selected[item.DumpsterID]) {
+                    s.push(item.DumpsterID);
                 }
             });
 
@@ -371,7 +371,7 @@ function init() {
                 if (data.success) {
                     console.log('success');
                     showMessage('Message', 'Driver is assigned!');
-                    // location.href = "/dumpster/" + data.sensor.SensorID;
+                    // location.href = "/dumpster/" + data.sensor.DumpsterID;
                     showDumpsters();
                 } else {
                     console.log(data.error);
