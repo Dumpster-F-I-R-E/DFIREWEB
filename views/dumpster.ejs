@@ -26,8 +26,9 @@
                 data: {
                     labels: d.map(i => new Date(i.label).toUTCString()),
                     datasets: [{
-                        label: 'Fullness',
+                        label: 'Fullness Level',
                         data: d,
+                        backgroundColor: '#000',
                         fill: false,
                         borderColor: 'rgba(100, 0, 0, 1.0)',
                         pointRadius: 10,
@@ -35,15 +36,57 @@
                 },
                 
                 options: {
+                    title: {
+                        text: "The fullness levels of the selected dumpster",
+                        fontSize:40,
+                        fontColor: '#000',
+                        display: true
+                    },
+                    legend:{labels: {fontColor: `rgb(255,0,0)`, fontSize: 24}},
                     tooltips: {
                         bodyFontSize: 18,
                         titleFontSize: 18
                     },
-                //     scales: {
-                //         yAxes: [{
-                //             stacked: false
-                //         }]
-                //     }
+                    scales: {
+                        yAxes: [{
+                ticks: {
+                    
+                        fontStyle: 'Bold',
+                        fontSize: 20,
+                        fontColor: '#fff',
+                    
+                    callback: function(label, index, labels) {
+                        return label;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Fullness',
+                    fontColor: '#ff0000',
+                    fontSize: 24,
+                    fontStyle: 'Bold'
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    
+                        fontStyle: 'Bold',
+                        fontSize: 20,
+                        fontColor: '#fff',
+                    
+                    callback: function(label, index, labels) {
+                        return label;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Date',
+                    fontColor: '#ff0000',
+                    fontSize: 24,
+                    fontStyle: 'Bold'
+                }
+            }]
+                    }
                 }
 
             });
