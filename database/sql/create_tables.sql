@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS `Depots` (
 	`DepotID` INT NOT NULL AUTO_INCREMENT,
 	`Name` TEXT NOT NULL,
 	`Address` TEXT NOT NULL,
+	`Longitude` DOUBLE NOT NULL,
+	`Latitude` DOUBLE NOT NULL,
 	`CompanyID` INT NOT NULL,
 	PRIMARY KEY (`DepotID`),
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)

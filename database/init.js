@@ -7,6 +7,8 @@ var seedDepots = async () => {
     var depot1 = {
         Name: 'SW Dumpster',
         Address: 'Calgary, AB',
+        Longitude: -114.08529,
+        Latitude: 51.05011,
         CompanyID: 1,
     };
     await db.addDepot(depot1);
@@ -88,6 +90,10 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+function getRandomBoolean(){
+    return Math.random() > 0.5;
+}
+
 var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
     console.log('seedDumpsterReports');
     let report = {
@@ -98,7 +104,7 @@ var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
         ErrorCode: 0,
         Time: new Date('2020-12-20 00:00:00'),
     };
-    const distance = 0.1 * (numberOfDumpsters / 5);
+    const distance = 0.002 * (numberOfDumpsters / 5);
     for (let index = 0; index < num; index++) {
         report.Time = new Date('2020-12-20');
         report.Time.setHours(report.Time.getHours() + index);
@@ -106,8 +112,12 @@ var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
         report.FullnessLevel = report.FullnessLevel + getRandomInt(0, 100);
         
         report.BatteryLevel = getRandomInt(0, 100);
-        report.Latitude += getRandomArbitrary(-distance, distance);
-        report.Longitude += getRandomArbitrary(-distance, distance);
+        if(getRandomBoolean()){
+            report.Latitude += getRandomArbitrary(-distance, distance);
+        }else{
+            report.Longitude += getRandomArbitrary(-distance, distance);
+        }        
+        
         if(report.FullnessLevel > 100){
             report.FullnessLevel = 100;
             await db.storeDumpsterReport(report);
