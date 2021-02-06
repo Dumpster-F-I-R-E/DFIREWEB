@@ -3,6 +3,7 @@ var router = express.Router();
 const dumpster = require('../controllers/dumpsterController');
 const auth = require('../controllers/authController');
 const driver = require('../controllers/driverController');
+const depot = require('../controllers/depotController');
 /* GET dumpseter infor. */
 // router.get('/dumpster/:dumpsterId', auth.requireAuth, function(req, res, next) {
 
@@ -15,6 +16,11 @@ router.get('/dumpsters', auth.requireAuth, async function (req, res) {
 
 router.get('/drivers', auth.requireAuth, async function (req, res) {
     let data = await driver.getDrivers();
+    res.json(data);
+});
+
+router.get('/depots', auth.requireAuth, async function (req, res) {
+    let data = await depot.getAllDepots();
     res.json(data);
 });
 

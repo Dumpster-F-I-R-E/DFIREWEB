@@ -27,7 +27,7 @@
       let lat = place.geometry.location.lat()
       let lng = place.geometry.location.lng()
       console.log("lat:", lat, "lng", lng);
-      addDepot(name,address)
+      addDepot(name,address,lat,lng)
       $('.background').toggle();
     });
     $('div.background').click(function (e) {
@@ -81,11 +81,13 @@
 
 <script type="text/javascript">
 
-  function addDepot(name, address) {
+  function addDepot(name, address, lat, lng) {
     let depot = {};
     depot.Name = name;
     depot.Address = address;
     depot.CompanyID = 1;
+    depot.Latitude = lat;
+    depot.Longitude = lng;
     $.post("/depot/add", depot, function (data) {
       //console.log(data);
       if (data.success) {

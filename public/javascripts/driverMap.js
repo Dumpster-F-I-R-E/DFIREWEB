@@ -58,16 +58,20 @@ function drawPin(position) {
 }
 
 let depoIcon = '/icons/depot.png';
-function drawDepot() {
+
+depots = {};
+
+function drawDepot(depot) {
 
     let lat = depot.Latitude;
-    let lng = depot.Longitude;  
+    let lng = depot.Longitude;
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,
         icon: depoIcon,
     });
     depot.marker = marker;
+    depots[depot.DepotID] = depot;
 
     const contentString =
         '<div id="body">' +
@@ -180,8 +184,7 @@ function addMarker(dumpster) {
     });
 }
 
-var sensors = {};
-var depot = null;
+let depot = null;
 
 function showDumpsters() {
     fetch('/api/my-route', {
@@ -194,10 +197,23 @@ function showDumpsters() {
             draw();
         });
 
+    fetch('/api/depots', {
+        method: 'get',
+    })
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            data.forEach((depot) => {
+                drawDepot(depot);
+            });
+        })
+        .catch((err) => console.log(err));
 }
 
 function clear() {
     Object.values(markers).forEach(i => i.setMap(null));
+    Object.values(depots).forEach(i => i.marker.setMap(null));
 }
 
 function draw() {
@@ -216,8 +232,6 @@ function draw() {
         addMarker(element);
     });
     getLocation();
-    drawDepot();
-
 }
 
 
