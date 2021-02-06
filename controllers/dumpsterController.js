@@ -9,7 +9,7 @@ exports.getDumpsterInfo = (id) => {
 };
 
 exports.createDumpster = async (dumpster, data) => {
-    let newDumpster = await db.createDumpster(data);
+    let newDumpster = await db.addDumpster(data);
     return newDumpster;
 };
 

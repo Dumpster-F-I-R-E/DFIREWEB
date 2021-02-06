@@ -173,21 +173,6 @@ exports.deleteDepot = async (depotid) => {
     await pool.query(sql, [depotid]).catch(printErrors);
 };
 
-exports.createDepot = async (depot) => {
-    let sql = "SELECT MAX(DepotID) AS 'MaxID' FROM depots";
-    var results = await pool.query(sql).catch(printErrors);
-    if (results && results.length > 0 && results[0].length > 0) {
-        console.log(results[0][0].MaxID);
-        let val = results[0][0].MaxID;
-        let depotid = val + 1;
-        depot.DepotID = depotid;
-        depot.CompanyID = 1;
-        console.log(depot);
-        await exports.addDepot(depot);
-        return depot;
-    }
-};
-
 exports.addDepot = async (depot) => {
     let sql =
         'INSERT INTO Depots (`Name`, `Address`, `Latitude`, `Longitude`, `CompanyID`) VALUES(?, ?, ?, ? ,?)';
@@ -195,21 +180,13 @@ exports.addDepot = async (depot) => {
     await pool
         .execute(sql, [depot.Name, depot.Address, depot.Latitude, depot.Longitude, depot.CompanyID])
         .catch(printErrors);
-};
 
-exports.createDumpster = async (dumpster) => {
-    let sql = "SELECT MAX(DumpsterID) AS 'MaxID' FROM dumpsters";
-    var results = await pool.query(sql).catch(printErrors);
+    let sql2 = 'SELECT * FROM `Depots` WHERE DepotID=(SELECT MAX(DepotID) FROM `Depots`);';
+    var results = await pool.query(sql2).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
-        console.log(results[0][0].MaxID);
-        let val = results[0][0].MaxID;
-        let dumpsterid = val + 1;
-        dumpster.DumpsterID = dumpsterid;
-        dumpster.CompanyID = 1;
-        console.log(dumpster);
-        await exports.addDumpster(dumpster);
-        return dumpster;
+        return results[0][0];
     }
+
 };
 
 exports.addDumpster = async (dumpster) => {
@@ -219,7 +196,7 @@ exports.addDumpster = async (dumpster) => {
         .execute(sql, [dumpster.DumpsterSerialNumber, dumpster.CompanyID])
         .catch(printErrors);
 
-    let sql2 = 'SELECT * FROM `Sensors` WHERE SensorID=(SELECT MAX(SensorID) FROM `Sensors`);';
+    let sql2 = 'SELECT * FROM `Dumpsters` WHERE DumpsterID=(SELECT MAX(DumpsterID) FROM `Dumpsters`);';
     var results = await pool.query(sql2).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
@@ -273,10 +250,8 @@ exports.getDumpsterById = async (id) => {
 };
 
 exports.getDumpsterReports = async () => {
-  let sql =
+    let sql =
         mysql.format('SELECT DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM dumpsterReports  WHERE ReportID <= ?', ['5']);
-
-
 
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {

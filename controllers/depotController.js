@@ -1,7 +1,7 @@
 const db = require('../database/db');
 
 exports.createDepot = async (depot, data) => {
-        let newDepot = await db.createDepot(data);
+        let newDepot = await db.addDepot(data);
         return newDepot;
 };
 
@@ -12,7 +12,12 @@ exports.deleteDepot = async (user, depotid) => {
 exports.getDepots = async (name, role) => {
         let list = await db.getDepotsSearch(name, role);
         if (!list) {
-            list = [];
+                list = [];
         }
+        return list;
+};
+
+exports.getAllDepots = async () => {
+        let list = await db.getDepots();
         return list;
 };

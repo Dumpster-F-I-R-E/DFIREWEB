@@ -82,7 +82,7 @@ function selectPath(driverId) {
 
 function deselectPath(driverId) {
     if (lines[driverId]) {
-        lines[driverId].forEach(line => {            
+        lines[driverId].forEach(line => {
             line.setOptions({ strokeOpacity: 0.5, });
         });
     }
@@ -99,47 +99,42 @@ lines = {};
 depots = {};
 let depoIcon = '/icons/depot.png';
 
+function drawDepot(depot) {
+    depots[depot.DepotID] = depot;
+    let lat = depot.Latitude;
+    let lng = depot.Longitude;
+    const marker = new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map,
+        icon: depoIcon,
+    });
+    depot.marker = marker;
 
-function drawDepot(driverId) {
-    let depot = routes[driverId].Route.Depot;
-    if (!depots[depot.DepotID]) {
-        depots[depot.DepotID] = depot;
-        let lat = depot.Latitude;
-        let lng = depot.Longitude;
-        console.log('Depot position', routes[driverId].Route.Depot, lat, lng);
-        const marker = new google.maps.Marker({
-            position: { lat: lat, lng: lng },
-            map: map,
-            icon: depoIcon,
-        });
-        depot.marker = marker;
+    const contentString =
+        '<div id="body">' +
+        '<p>' + depot.Name + '<br>' + depot.Address + '</p>' +
+        '</div>';
 
-        const contentString =
-            '<div id="body">' +
-            '<p>' + depot.Name + '<br>' + depot.Address+ '</p>' +
-            '</div>';
+    const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+    });
 
-        const infowindow = new google.maps.InfoWindow({
-            content: contentString,
-        });
+    google.maps.event.addListener(marker, 'mouseover', (e) => {
 
-        google.maps.event.addListener(marker, 'mouseover', (e) => {
+        infowindow.setPosition(e.latLng);
+        infowindow.open(map);
+    });
 
-            infowindow.setPosition(e.latLng);
-            infowindow.open(map);
-        });
+    marker.addListener('mouseout', () => {
 
-        marker.addListener('mouseout', () => {
+        infowindow.close();
+    });
 
-            infowindow.close();
-        });
 
-    }
 
 }
 
-function drawRoute(points, driverId) {
-    drawDepot(driverId);
+function drawRoute(points, driverId) { 
 
     let driver = routes[driverId].Driver;
 
@@ -276,10 +271,10 @@ function addMarker(dumpster) {
 }
 
 var dumpsters = {};
-var drivers = {};
 var routes = {};
 
 function showDumpsters() {
+    clear();
     fetch('/api/routes', {
         method: 'get',
     })
@@ -290,16 +285,29 @@ function showDumpsters() {
             draw();
         });
 
+    fetch('/api/depots', {
+        method: 'get',
+    })
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            console.log("Finished fetching depots");
+            data.forEach((depot) => {
+                drawDepot(depot);
+            });
+        })
+        .catch((err) => console.log(err));
+
 }
 
 function clear() {
     Object.values(markers).forEach(i => i.setMap(null));
     Object.values(depots).forEach(i => i.marker.setMap(null));
-    depots = {};
 }
 
 function draw() {
-    clear();
+   
 
     for (let driverId in routes) {
 
