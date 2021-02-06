@@ -19,11 +19,24 @@ function initMap() {
 
 function getLocation() {
     if (navigator.geolocation) {
-        return navigator.geolocation.getCurrentPosition(showRoute);
+        return navigator.geolocation.getCurrentPosition(showRoute, permissionDenied);
     } else {
+        alert('Geolocation error');
         console.log("Geolocation is not supported");
         showMessage('Error', "Geolocation is not supported by this browser.", 'Error');
     }
+}
+
+function permissionDenied() {
+    showMessage("GPS", "Geolocation is not enabled");
+    let coords = {
+        latitude: depot.Latitude,
+        longitude: depot.Longitude
+    };
+    let position = {
+        coords: coords
+    };
+    showRoute(position);
 }
 
 function showRoute(position) {
@@ -44,8 +57,42 @@ function drawPin(position) {
     markers[-1] = marker;
 }
 
+let depoIcon = '/icons/depot.png';
+function drawDepot() {
 
-var l;
+    let lat = depot.Latitude;
+    let lng = depot.Longitude;  
+    const marker = new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map,
+        icon: depoIcon,
+    });
+    depot.marker = marker;
+
+    const contentString =
+        '<div id="body">' +
+        '<p>' + depot.Name + '<br>' + depot.Address + '</p>' +
+        '</div>';
+
+    const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+    });
+
+    google.maps.event.addListener(marker, 'mouseover', (e) => {
+
+        infowindow.setPosition(e.latLng);
+        infowindow.open(map);
+    });
+
+    marker.addListener('mouseout', () => {
+
+        infowindow.close();
+    });
+
+
+
+}
+
 function calculateAndDisplayRoute(position) {
     let renderOptions = {
         suppressMarkers: true
@@ -53,10 +100,17 @@ function calculateAndDisplayRoute(position) {
     const directionsRenderer = new google.maps.DirectionsRenderer(renderOptions);
     directionsRenderer.setMap(map);
 
+    let destination = position;
+    if (depot) {
+        destination = {
+            lat: depot.Latitude,
+            lng: depot.Longitude
+        };
+    }
     directionsService.route(
         {
             origin: position,
-            destination: position,
+            destination: destination,
             travelMode: google.maps.TravelMode.DRIVING,
             optimizeWaypoints: true,
             waypoints: waypoints
@@ -86,7 +140,7 @@ function addMarker(dumpster) {
 
     let lat = dumpster.Latitude;
     let lng = dumpster.Longitude;
-    let opacity = 0.4;
+    let opacity = 1.0;
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,
@@ -127,6 +181,7 @@ function addMarker(dumpster) {
 }
 
 var sensors = {};
+var depot = null;
 
 function showDumpsters() {
     fetch('/api/my-route', {
@@ -134,7 +189,8 @@ function showDumpsters() {
     })
         .then(res => res.json())
         .then(data => {
-            sensors = data;
+            dumpsters = data.Dumpsters;
+            depot = data.Depot;
             draw();
         });
 
@@ -146,7 +202,7 @@ function clear() {
 
 function draw() {
     clear();
-    waypoints = sensors.map(s => {
+    waypoints = dumpsters.map(s => {
         return {
             location: {
                 lat: s.Latitude,
@@ -156,10 +212,11 @@ function draw() {
         };
     });
     // calculateAndDisplayRoute(waypoints);
-    sensors.forEach(element => {
+    dumpsters.forEach(element => {
         addMarker(element);
     });
     getLocation();
+    drawDepot();
 
 }
 

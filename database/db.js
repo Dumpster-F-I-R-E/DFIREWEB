@@ -190,10 +190,10 @@ exports.createDepot = async (depot) => {
 
 exports.addDepot = async (depot) => {
     let sql =
-        'INSERT INTO Depots (`Name`, `Address`, `CompanyID`) VALUES(?, ?, ?)';
+        'INSERT INTO Depots (`Name`, `Address`, `Latitude`, `Longitude`, `CompanyID`) VALUES(?, ?, ?, ? ,?)';
 
     await pool
-        .execute(sql, [depot.Name, depot.Address, depot.CompanyID])
+        .execute(sql, [depot.Name, depot.Address, depot.Latitude, depot.Longitude, depot.CompanyID])
         .catch(printErrors);
 };
 
@@ -315,6 +315,14 @@ exports.getUsers = async () => {
     }
 };
 
+exports.getDepots = async () => {
+    let sql = 'SELECT * FROM Depots ';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
 exports.getDepotsSearch = async (name, address) => {
     let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
     if (name && name != '*') {
@@ -399,7 +407,7 @@ exports.getDrivers = async () => {
 };
 
 exports.getRoutes = async () => {
-    let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters LEFT JOIN Users ON DriverID=UserID';
+    let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID';
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
@@ -407,7 +415,7 @@ exports.getRoutes = async () => {
 };
 
 exports.getRoute = async (driverId) => {
-    let sql = 'SELECT SensorID,DriverID FROM Sensors WHERE DriverID=?';
+    let sql = 'SELECT DumpsterID,DriverID FROM Dumpsters WHERE DriverID=?';
     var results = await pool.query(sql, [driverId]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];

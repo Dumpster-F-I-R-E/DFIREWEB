@@ -7,7 +7,7 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 51.05011, lng: -114.08529 },
-        zoom: 12,
+        zoom: 14,
     });
 
     map.controls[google.maps.ControlPosition.LEFT_TOP].push
@@ -17,28 +17,13 @@ function initMap() {
     init();
 }
 
-function getLocation() {
-    if (navigator.geolocation) {
-        return navigator.geolocation.getCurrentPosition(showRoute);
-    } else {
-        console.log("Geolocation is not supported");
-        showMessage('Error', "Geolocation is not supported by this browser.", 'Error');
-    }
-}
-
-function showRoute(position) {
-    let coord = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-    };
-    console.log(coord);
-    calculateAndDisplayRoute();
-}
-
-
 function calculateAndDisplayRoute(waypoints, driverId) {
     console.log(waypoints);
-    let position = { lat: 51.15011, lng: -114.08529 };
+    let depot = routes[driverId].Route.Depot;
+    let position = {
+        lat: depot.Latitude,
+        lng: depot.Longitude
+    };
     directionsService.route(
         {
             origin: position,
@@ -86,8 +71,10 @@ function selectPath(driverId) {
     }
 
     if (routes[driverId]) {
-        routes[driverId].forEach(s => {
-            markers[s].setOpacity(1.0);
+        routes[driverId].Route.Dumpsters.forEach(s => {
+            markers[s.DumpsterID].setOpacity(1.0);
+            markers[s.DumpsterID].setAnimation(google.maps.Animation.BOUNCE);
+
         });
     }
 
@@ -95,23 +82,66 @@ function selectPath(driverId) {
 
 function deselectPath(driverId) {
     if (lines[driverId]) {
-        lines[driverId].forEach(line => {
+        lines[driverId].forEach(line => {            
             line.setOptions({ strokeOpacity: 0.5, });
         });
     }
 
     if (routes[driverId]) {
-        routes[driverId].forEach(s => {
-            markers[s].setOpacity(markers[s].defaultOpacity);
+        routes[driverId].Route.Dumpsters.forEach(s => {
+            markers[s.DumpsterID].setOpacity(markers[s.DumpsterID].defaultOpacity);
+            markers[s.DumpsterID].setAnimation(null);
         });
     }
 }
 
 lines = {};
+depots = {};
+let depoIcon = '/icons/depot.png';
+
+
+function drawDepot(driverId) {
+    let depot = routes[driverId].Route.Depot;
+    if (!depots[depot.DepotID]) {
+        depots[depot.DepotID] = depot;
+        let lat = depot.Latitude;
+        let lng = depot.Longitude;
+        console.log('Depot position', routes[driverId].Route.Depot, lat, lng);
+        const marker = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            icon: depoIcon,
+        });
+        depot.marker = marker;
+
+        const contentString =
+            '<div id="body">' +
+            '<p>' + depot.Name + '<br>' + depot.Address+ '</p>' +
+            '</div>';
+
+        const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+        });
+
+        google.maps.event.addListener(marker, 'mouseover', (e) => {
+
+            infowindow.setPosition(e.latLng);
+            infowindow.open(map);
+        });
+
+        marker.addListener('mouseout', () => {
+
+            infowindow.close();
+        });
+
+    }
+
+}
 
 function drawRoute(points, driverId) {
+    drawDepot(driverId);
 
-    let driver = drivers[driverId];
+    let driver = routes[driverId].Driver;
 
     let name = driver.FirstName + ' ' + driver.LastName;
     let color = stringToColour(name);
@@ -124,6 +154,17 @@ function drawRoute(points, driverId) {
             strokeWeight: 3
         }
     );
+
+    var line2 = new google.maps.Polyline(
+        {
+            path: points,
+            strokeColor: color,
+            strokeOpacity: 0.001,
+            strokeWeight: 20,
+            map: map
+        }
+    );
+
     line.setMap(map);
     line.defaultColor = color;
 
@@ -141,7 +182,7 @@ function drawRoute(points, driverId) {
         content: contentString,
     });
 
-    google.maps.event.addListener(line, 'mouseover', (e) => {
+    google.maps.event.addListener(line2, 'mouseover', (e) => {
 
         // line.setOptions({ strokeColor: '#ff0000' });
         selectPath(driverId);
@@ -149,7 +190,7 @@ function drawRoute(points, driverId) {
         infowindow.open(map);
     });
 
-    line.addListener('mouseout', () => {
+    line2.addListener('mouseout', () => {
 
         deselectPath(driverId);
         infowindow.close();
@@ -163,6 +204,7 @@ let selection = false;
 let selected = {};
 let markers = {};
 let defaultIcon = '/icons/trash.png';
+let grayIcon = '/icons/trash_gray.png';
 let selectedIcon = '/icons/trash_blue.png';
 let fullIcon = '/icons/trash_red.png';
 
@@ -171,15 +213,15 @@ function addMarker(dumpster) {
 
     let lat = dumpster.Latitude;
     let lng = dumpster.Longitude;
-    let opacity = 0.4;
+    let opacity = 0.8;
+    let icon = grayIcon;
     if (dumpster.DriverID) {
-        opacity = 0.6;
-        console.log("Driver ", dumpster.DriverID);
+        icon = defaultIcon;
     }
     const marker = new google.maps.Marker({
         position: { lat: lat, lng: lng },
         map: map,
-        icon: defaultIcon,
+        icon: icon,
         opacity: opacity
     });
     marker.defaultOpacity = opacity;
@@ -245,7 +287,6 @@ function showDumpsters() {
         .then(data => {
             dumpsters = data.Dumpsters;
             routes = data.Routes;
-            drivers = data.Drivers;
             draw();
         });
 
@@ -253,29 +294,30 @@ function showDumpsters() {
 
 function clear() {
     Object.values(markers).forEach(i => i.setMap(null));
+    Object.values(depots).forEach(i => i.marker.setMap(null));
+    depots = {};
 }
 
 function draw() {
     clear();
 
-    let routesKey = Object.keys(routes);
-    routesKey.forEach(element => {
-        // drawLine(routes[element].map(k => dumpsters[k]), drivers[element]);
-        let waypoints = routes[element].map(d => {
-            dumpsters[d].DriverID = element;
+    for (let driverId in routes) {
+
+        let waypoints = routes[driverId].Route.Dumpsters.map(d => {
+            dumpsters[d.DumpsterID].DriverID = driverId;
             return {
                 location: {
-                    lat: dumpsters[d].Latitude,
-                    lng: dumpsters[d].Longitude
+                    lat: d.Latitude,
+                    lng: d.Longitude
                 },
                 stopover: true,
             };
 
         });
 
-        calculateAndDisplayRoute(waypoints, element);
+        calculateAndDisplayRoute(waypoints, driverId);
 
-    });
+    }
 
     let sensorData = Object.values(dumpsters);
     sensorData.forEach(element => {
@@ -287,17 +329,17 @@ function draw() {
 
 function drawLegend() {
     var legend = document.getElementById('legend');
-    for (var driver in drivers) {
-        var name = drivers[driver].FirstName + ' ' +drivers[driver].LastName;
+    legend.innerHTML = '';
+    for (var driver in routes) {
+        var name = routes[driver].Driver.FirstName + ' ' + routes[driver].Driver.LastName;
         var color = stringToColour(name);
         var div = document.createElement('div');
-        console.log(driver,name);
-        div.innerHTML = '<div class=\'dot\' style="background-color:'+color+'"></div>' + name;
+        console.log(driver, name);
+        div.innerHTML = '<div class=\'dot\' style="background-color:' + color + '"></div>' + name;
         legend.appendChild(div);
     }
 
 }
-
 
 function updateMarkers() {
     Object.values(markers).forEach(item => {
