@@ -11,18 +11,6 @@ function initMap() {
     google.maps.event.addListener(map, 'idle', showDumpsters);
 }
 
-// eslint-disable-next-line no-unused-vars
-function addDepot(lat, lng) {
-    var iconBase = '/images/depot-2.png';
-
-    // eslint-disable-next-line no-unused-vars
-    const marker = new google.maps.Marker({
-        position: { lat: lat, lng: lng },
-        map: map,
-        icon: iconBase
-    });
-}
-
 let defaultIcon = '/icons/trash.png';
 let selectedIcon = '/icons/trash_blue.png';
 let fullIcon = '/icons/trash_red.png';
@@ -48,19 +36,18 @@ function drawDepot(depot) {
     const infowindow = new google.maps.InfoWindow({
         content: contentString,
     });
-
-    google.maps.event.addListener(marker, 'mouseover', (e) => {
-
-        infowindow.setPosition(e.latLng);
-        infowindow.open(map);
+  
+    
+    marker.addListener('mouseover', () => {
+        infowindow.open(map, marker);
     });
 
     marker.addListener('mouseout', () => {
-
         infowindow.close();
     });
-
 }
+
+
 
 
 
