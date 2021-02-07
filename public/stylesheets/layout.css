@@ -22,10 +22,14 @@ body {
 }
 
 .header .top-bar{
-    background-color: #438afc;
+    /* background-color: #438afc; */
+    background-image: linear-gradient(to right,#1b2430, #2c8081);
     /* text-align: center; */
     display: flex;
-}
+    /* background-image: url("/images/bannerNew.jpg");
+    width: 100%;
+    height: 80px;*/
+} 
 
 .toggle-nav {
     display: block;
@@ -41,12 +45,15 @@ body {
 
 .header .main-title {    
     font-size: 20px;
-    font-weight: 400;
-    color: white;    
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:white;    
     margin: 0 auto;
     padding: 10px;
     display: inline-block;
+    
 }
+
 
 @media only screen and (max-width: 600px) {
     .wrapper {
