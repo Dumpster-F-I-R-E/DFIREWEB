@@ -13,96 +13,93 @@
 
 </head>
 <!-- <script src="/javascripts/dumpsterInfo.js"></script> -->
-<% var dumpsterid = dumpster.DumpsterID %>
-<script type="text/javascript">
-    var DumpsterID = "<%= dumpsterid %>";
-    console.log(DumpsterID);
-    $(document).ready(function () {
-        var ctx = document.getElementById('myChart').getContext('2d');
-        $.get('/dumpster/history/' + DumpsterID, function (d) {
-            console.log(d);          
-            var scatterChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: d.map(i => new Date(i.label).toUTCString()),
-                    datasets: [{
-                        label: 'Fullness',
-                        data: d,
-                        fill: false,
-                        borderColor: 'rgba(100, 0, 0, 1.0)',
-                        pointRadius: 10,
-                    }]
-                },
-                
-                options: {
-                    tooltips: {
-                        bodyFontSize: 18,
-                        titleFontSize: 18
+<% var dumpsterid=dumpster.DumpsterID %>
+    <script type="text/javascript">
+        var DumpsterID = "<%= dumpsterid %>";
+        console.log(DumpsterID);
+        $(document).ready(function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            $.get('/dumpster/history/' + DumpsterID, function (d) {
+                console.log(d);
+                var scatterChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: d.map(i => new Date(i.label).toUTCString()),
+                        datasets: [{
+                            label: 'Fullness',
+                            data: d,
+                            fill: false,
+                            borderColor: 'rgba(100, 0, 0, 1.0)',
+                            pointRadius: 10,
+                        }]
                     },
-                //     scales: {
-                //         yAxes: [{
-                //             stacked: false
-                //         }]
-                //     }
-                }
+
+                    options: {
+                        tooltips: {
+                            bodyFontSize: 18,
+                            titleFontSize: 18
+                        },
+                        //     scales: {
+                        //         yAxes: [{
+                        //             stacked: false
+                        //         }]
+                        //     }
+                    }
+
+                });
 
             });
-
         });
-    });
 
 
-</script>
+    </script>
 
-<body>
-    <%- include('messageBox.ejs') %>
-    <%- include('header.ejs') %>
-    <div class="wrapper">
-        <%- include('nav.ejs') %>
-            <div class="content">
-                <h1 class="title">Dumpster Information </h1>
-                <div class="container">
+    <body>
+        <%- include('messageBox.ejs') %>
+            <%- include('header.ejs') %>
+                <div class="wrapper">
+                    <%- include('nav.ejs') %>
+                        <div class="content">
+                            <h1 class="title">Dumpster Information </h1>
+                            <div class="container">
 
-                    <div class="col-3">
-                        <div class="form">
-                            <div class="col-1">
-                                <label for="">Location: </label>
-                                <label for="">Designated Driver: </label>
-                                <label for="">Fullness Status: </label>
-                                <label for="">Battery Status: </label>
-                                <label for="">Estimated fill up date: </label>
+                                <div class="col-3">
+                                    <div class="form">
+                                        <label for="">Location: </label>
+                                        <label for="">Calgary </label>
+                                        <label for="">Designated Driver: </label>
+                                        <label for="">
+                                            <% if(driver){ %>
+                                                <%= driver.FirstName + ' ' + driver.LastName %>
+                                                    <% } else { %>
+                                                        None
+                                                        <% } %>
+                                        </label>
+                                        <label for="">Fullness Status: </label>
+                                        <label for="">
+                                            <%= dumpster.FullnessLevel %>%
+                                        </label>
+                                        <label for="">Battery Status: </label>
+                                        <label for="">
+                                            <%= dumpster.BatteryLevel %>%
+                                        </label>
+                                        <label for="">Estimated fill up date: </label>
+                                        <label for="">2020/11/20</label>
+
+                                    </div>
+                                    <div class="btn-container">
+                                        <button class="btn apply">Add/Change Driver</button>
+                                        <button class="btn cancel">Alert Driver</button>
+                                    </div>
+                                </div>
+                                <canvas id="myChart" width="400" height="400"></canvas>
+
                             </div>
 
-                            <div class="col-2">
-                                <label for="">Calgary </label>
-                                <label for=""><% if(driver){ %>
-                                    <%= driver.FirstName + ' ' + driver.LastName %>
-                                    <% } else { %>
-                                        None
-                                    <% } %>
-                                </label>
-                                <label for="">
-                                    <%= dumpster.FullnessLevel %>%
-                                </label>
-                                <label for="">
-                                    <%= dumpster.BatteryLevel %>%
-                                </label>
-                                <label for="">2020/11/20</label>
-                            </div>
-                        </div>
-                        <div class="btn-container">
-                            <button class="btn apply">Add/Change Driver</button>
-                            <button class="btn cancel">Alert Driver</button>
-                        </div>
-                    </div>
-                    <canvas id="myChart" width="400" height="400"></canvas>
 
+
+                        </div>
                 </div>
-
-
-
-            </div>
-    </div>
-</body>
+    </body>
 
 </html>
