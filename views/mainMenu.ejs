@@ -5,62 +5,169 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumpster FIRE - Profile</title>
-    <link rel='stylesheet' href='/stylesheets/mainMenu.css' />
     <%- include('common.ejs') %>
+    <link rel='stylesheet' href='/stylesheets/mainMenu.css' />
+   
 </head>
+
+<style>
+    svg.radial-progress {
+        height: auto;
+        max-width: 100px;
+        padding: 1em;
+        transform: rotate(-90deg);
+        width: 100%;
+    }
+
+    svg.radial-progress circle {
+        fill: rgba(0, 0, 0, 0);
+        stroke: #fff;
+        stroke-dashoffset: 219.91148575129;
+        stroke-width: 10;
+    }
+
+    svg.radial-progress circle.incomplete {
+        opacity: 0.25;
+    }
+
+    svg.radial-progress circle.complete {
+        stroke-dasharray: 219.91148575129;
+    }
+
+    svg.radial-progress text {
+        fill: black;
+        text-anchor: middle;
+    }
+
+    svg.radial-progress.battery circle { stroke: #a2ed56; }
+    svg.radial-progress.fullness circle { stroke: #e29a15; }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
+    </script>
+
+<script>
+    $('svg.radial-progress').each(function (index, value) {
+        $(this).find($('circle.complete')).removeAttr('style');
+    });
+
+    $(document).ready(
+        function () {
+            $('svg.radial-progress').each(function (index, value) {
+                // If svg.radial-progress is approximately 25% vertically into the window when scrolling from the top or the bottom
+
+                // Get percentage of progress
+                percent = $(value).data('percentage');
+                // Get radius of the svg's circle.complete
+                radius = $(this).find($('circle.complete')).attr('r');
+                // Get circumference (2πr)
+                circumference = 2 * Math.PI * radius;
+                // Get stroke-dashoffset value based on the percentage of the circumference
+                strokeDashOffset = circumference - ((percent * circumference) / 100);
+                // Transition progress for 1.25 seconds
+                $(this).find($('circle.complete')).animate({ 'stroke-dashoffset': strokeDashOffset }, 1250);
+
+            });
+        }
+    );
+
+</script>
 
 <body>
     <%- include('header.ejs') %>
-    <div class="wrapper">
-        <%- include('nav.ejs') %>
-        <div class="content">
-            <h1>Welcome to DFIRE <%= user %></h1>
-            
-            <p>
-            You have logged in as <%= role %>. Below is the list of 5 most recent dumpster reports.<br>
-            </p>
-           
-        <div class = "dumpsterMainMenu"> 
-        
-            
-                <% if(dumpsterData && dumpsterData.length != 0){ %>
-                        
-            <table id = "dumpsterReport">
-                <tr>
-                    <th>Dumpster ID</th>
-                    <th>Longitude</th>
-                    <th>Latitude</th>
-                    <th>Battery Level</th>
-                    <th>Fullness Level</th>
-                    <th>Time</th>
-                </tr>
+        <div class="wrapper">
+            <%- include('nav.ejs') %>
+                <div class="content">
+                    <h1>Welcome to DFIRE <%= user %>
+                    </h1>
 
-                    <% var i = 1; %>
-                    <% dumpsterData.forEach(function(data){ %>
-            
-                <tr>
-                    <td><%= data.DumpsterID %></td>
-                    <td><%= data.Longitude %></td>
-                    <td><%= data.Latitude %></td>
-                    <td><%= data.BatteryLevel %></td>
-                    <td><%= data.FullnessLevel %></td>
-                    <td><%= data.Time %></td>
-                </tr>
-                <%  i++; }) %>
-        <% } else{ %>
-           <p>No recent data is found.</p>
-        <% } %>
-                
-            </table>
+                    <p>
+                        You have logged in as <%= role %>. Below is the list of 5 most recent dumpster reports.<br>
+                    </p>
+
+                    <div class="dumpsterMainMenu">
 
 
-        </div>    
+                        <% if(dumpsterData && dumpsterData.length !=0){ %>
+
+                            <table id="dumpsterReport">
+                                <tr class='headers'>
+                                    <th>Dumpster ID</th>
+                                    <th>Longitude</th>
+                                    <th>Latitude</th>
+                                    <th>Battery Level</th>
+                                    <th>Fullness Level</th>
+                                    <th>Time</th>
+                                </tr>
+
+                                <% var i=1; %>
+                                    <% dumpsterData.forEach(function(data){ %>
+
+                                        <tr>
+                                            <td>
+                                                <%= data.DumpsterID %>
+                                            </td>
+                                            <td>
+                                                <%= (data.Longitude).toFixed(3) %>
+                                            </td>
+                                            <td>
+                                                <%= (data.Latitude).toFixed(3) %>
+                                            </td>
+                                            <td>
+                                                <svg class="radial-progress battery" data-percentage="<%= data.BatteryLevel %>"
+                                                    viewBox="0 0 80 80">
+
+                                                    <circle class="incomplete" cx="40" cy="40" r="35"></circle>
+
+                                                    <circle class="complete" cx="40" cy="40" r="35"
+                                                        style="stroke-dashoffset: 220.58406743523136;"></circle>
+
+                                                    <text class="percentage" x="50%" y="57%"
+                                                        transform="matrix(0, 1, -1, 0, 80, 0)">
+                                                        <%= data.BatteryLevel %>
+                                                    </text>
+
+                                                </svg>
+
+
+                                            </td>
+                                            <td>
+                                                <svg class="radial-progress fullness" data-percentage="<%= data.FullnessLevel %>"
+                                                    viewBox="0 0 80 80">
+
+                                                    <circle class="incomplete" cx="40" cy="40" r="35"></circle>
+
+                                                    <circle class="complete" cx="40" cy="40" r="35"
+                                                        style="stroke-dashoffset: 220.58406743523136;"></circle>
+
+                                                    <text class="percentage" x="50%" y="57%"
+                                                        transform="matrix(0, 1, -1, 0, 80, 0)">
+                                                        <%= data.FullnessLevel %>
+                                                    </text>
+
+                                                </svg>
+                                                
+                                            </td>
+                                            <td>
+                                                <%= data.Time.toUTCString() %>
+                                            </td>
+                                        </tr>
+                                        <% i++; }) %>
+                                            <% } else{ %>
+                                                <p>No recent data is found.</p>
+                                                <% } %>
+
+                            </table>
+
+
+                    </div>
+                </div>
+
+
+
+
         </div>
-        
-            
-
-        
-    </div>
 </body>
 
 </html>

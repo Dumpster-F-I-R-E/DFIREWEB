@@ -84,7 +84,6 @@ function drawDepot(depot) {
 
     google.maps.event.addListener(marker, 'mouseover', (e) => {
 
-        infowindow.setPosition(e.latLng);
         infowindow.open(map);
     });
 
