@@ -258,6 +258,17 @@ exports.getDumpsterReports = async () => {
         return results[0];
     }
 };
+exports.getLastHourReports = async() => {
+    let sql = 'Select DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time' +
+                ' From dumpsterreports'+
+                ' where time>=date_sub((select max(time) from dumpsterreports),interval 6 hour) order by reportID desc;';
+    
+
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
 exports.storeAuthToken = async (userId, token, expires) => {
     let sql =
         'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
