@@ -25,7 +25,7 @@
             var scatterChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: d.map(i => new Date(i.label).toDateString()),
+                    labels: d.map(i => new Date(i.label).toLocaleDateString()), //changing this for testng
                     datasets: [{
                         label: 'Fullness Level',
                         data: d,
@@ -41,7 +41,7 @@
                         text: "The fullness levels of the selected dumpster",
                         fontSize:40,
                         fontColor: '#000',
-                        display: true
+                        display: false
                     },
                     legend:{labels: {fontColor: `rgb(255,0,0)`, fontSize: 24}},
                     tooltips: {
@@ -57,7 +57,7 @@
                         fontColor: '#fff',
                     
                     callback: function(label, index, labels) {
-                        return label;
+                        return index % 2 === 0 ? label : '';
                     }
                 },
                 scaleLabel: {
@@ -69,6 +69,7 @@
                 }
             }],
             xAxes: [{
+                
                 ticks: {
                     
                         fontStyle: 'Bold',
@@ -76,7 +77,9 @@
                         fontColor: '#fff',
                     
                     callback: function(label, index, labels) {
-                        return label;
+                        console.log("here");
+                        console.log(labels);
+                        return index % 2 === 0 ? label : '';
                     }
                 },
                 scaleLabel: {
@@ -107,10 +110,11 @@
                 <div class="wrapper">
                     <%- include('nav.ejs') %>
                         <div class="content">
-                            <h1 class="title">Dumpster Information </h1>
+                            
                             <div class="container">
 
                                 <div class="col-3">
+                                    <h1 class="title">Dumpster Information </h1>
                                     <div class="form">
                                         <label for="">Location: </label>
                                         <label for="">Calgary </label>

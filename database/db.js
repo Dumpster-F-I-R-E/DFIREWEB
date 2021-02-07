@@ -251,7 +251,7 @@ exports.getDumpsterById = async (id) => {
 
 exports.getDumpsterReports = async () => {
     let sql =
-        mysql.format('SELECT DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM dumpsterReports  WHERE ReportID <= ?', ['5']);
+        mysql.format('SELECT DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM dumpsterReports ORDER BY ReportID DESC limit 5');
 
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
