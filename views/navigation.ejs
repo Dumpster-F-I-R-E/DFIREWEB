@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE</title>
+    <link rel='stylesheet' href='/stylesheets/map.css' />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="/javascripts/driverMap.js"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXl5WzhM1ZWUSQYcQcz1_sFkX1EvHJrNc&callback=initMap&v=weekly"
+        defer></script>
+    <%- include('common.ejs') %>
+</head>
+
+<script>
+
+    function geoLocation() {
+        if (navigator.geolocation) {
+            return navigator.geolocation.getCurrentPosition(createUrl, permissionDenied);
+        } else {
+            alert('Geolocation error');
+            console.log("Geolocation is not supported");
+            showMessage('Error', "Geolocation is not supported by this browser.", 'Error');
+        }
+    }
+
+    function permissionDenied() {
+        showMessage("GPS", "Geolocation is not enabled");
+        let coords = {
+            latitude: depot.Latitude,
+            longitude: depot.Longitude
+        };
+        let position = {
+            coords: coords
+        };
+        createUrl(position);
+    }
+
+    function createUrl(position){
+        let base = 'https://www.google.com/maps/dir/?api=1';
+        url = base +'&origin='+position.coords.latitude+','+position.coords.longitude;
+        url += '&destination=' + depot.Latitude + ','+depot.Longitude;
+        url+= '&waypoints='
+        for (let index = 0; index < dumpsters.length; index++) {
+            url += dumpsters[index].Latitude +',' + dumpsters[index].Longitude +'|'
+            
+        }
+        url+='travelmode=driving'
+        url = encodeURI(url);
+        window.location = url;
+    };
+
+
+    fetch('/api/my-route', {
+        method: 'get',
+    })
+        .then(res => res.json())
+        .then(data => {
+            dumpsters = data.Dumpsters;
+            depot = data.Depot;
+            geoLocation();
+        });
+</script>
+
+<body>
+    <%- include('messageBox.ejs') %>
+        <%- include('header.ejs') %>
+            <div class="wrapper">
+                <%- include('nav.ejs') %>
+                    <div class="content">
+                        <div id="map"></div>
+
+                    </div>
+            </div>
+
+</body>
+
+</html>

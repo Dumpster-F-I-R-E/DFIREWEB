@@ -9,4 +9,9 @@ router.get('/map', auth.requireAuth,function (req, res) {
     });
 });
 
+router.get('/navigation', auth.requireAuth,function (req, res) {
+
+    res.render('navigation');
+});
+
 module.exports = router;

@@ -186,6 +186,7 @@ function addMarker(dumpster) {
 let depot = null;
 
 function showDumpsters() {
+    clear();
     fetch('/api/my-route', {
         method: 'get',
     })
@@ -216,7 +217,7 @@ function clear() {
 }
 
 function draw() {
-    clear();
+    
     waypoints = dumpsters.map(s => {
         return {
             location: {

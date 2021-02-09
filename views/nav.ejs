@@ -38,6 +38,11 @@
                 <li>Map</li>
             </a>
         <% } %>
+        <% if (User.Role == "Driver") { %>
+            <a href="/driver/navigation">
+                <li>Navigation</li>
+            </a>
+        <% } %>
         
         <a href="/logout">
             <li>Logout</li>
