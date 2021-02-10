@@ -47,7 +47,7 @@
             url += dumpsters[index].Latitude +',' + dumpsters[index].Longitude +'|'
             
         }
-        url+='travelmode=driving'
+        url+='&travelmode=driving'
         url = encodeURI(url);
         window.location = url;
     };
