@@ -14,87 +14,184 @@
 </head>
 <!-- <script src="/javascripts/dumpsterInfo.js"></script> -->
 
-<% var dumpsterid = dumpster.DumpsterID %>
-<script type="text/javascript">
-    var DumpsterID = "<%= dumpsterid %>";
-    console.log(DumpsterID);
-    $(document).ready(function () {
-        var ctx = document.getElementById('myChart').getContext('2d');
-        $.get('/dumpster/history/' + DumpsterID, function (d) {
-            console.log(d);          
-            var scatterChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: d.map(i => new Date(i.label).toLocaleDateString()), //changing this for testng
-                    datasets: [{
-                        label: 'Fullness Level',
-                        data: d,
-                        backgroundColor: '#000',
-                        fill: false,
-                        borderColor: 'rgba(100, 0, 0, 1.0)',
-                        pointRadius: 10,
-                    }]
-                },
-                
-                options: {
-                    title: {
-                        text: "The fullness levels of the selected dumpster",
-                        fontSize:40,
-                        fontColor: '#000',
-                        display: false
-                    },
-                    legend:{labels: {fontColor: `rgb(255,0,0)`, fontSize: 24}},
-                    tooltips: {
-                        bodyFontSize: 18,
-                        titleFontSize: 18
-                    },
-                    scales: {
-                        yAxes: [{
-                ticks: {
-                    
-                        fontStyle: 'Bold',
-                        fontSize: 20,
-                        fontColor: '#fff',
-                    
-                    callback: function(label, index, labels) {
-                        return index % 2 === 0 ? label : '';
+<style>
+    div.background {
+        z-index: 1;
+        position: absolute;
+        top: 50px;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.2);
+        width: 80%;
+        display: none;
+    }
+
+    div.input {
+        margin: 200px auto;
+        width: max-content;
+        background-color: white;
+    }
+
+    .input {
+        padding: 10px;
+    }
+
+    .input h2 {
+        margin: 5px;
+    }
+</style>
+
+<% var dumpsterid=dumpster.DumpsterID %>
+    <script type="text/javascript">
+
+        function init() {
+            $(document).ready(function () {
+                let driverID = 0;
+                $('.btn.assign-driver').click(function () {
+                    $('.background').toggle();
+                    console.log("Assign driver");
+                });
+
+                $('.btn.next').click(function () {
+                    driverID = $('#driver').val();
+                    $('.background').toggle();
+
+                    let req = {
+                        DriverID: driverID,
+                        Dumpsters: [DumpsterID]
+                    };
+                    console.log("req", req);
+                    $.post('/api/assign-driver', req, function (data) {
+                        if (data.success) {
+                            console.log('success');
+                            showMessage('Message', 'Driver is assigned!');
+                            // location.href = "/dumpster/" + data.sensor.DumpsterID;
+                            location.reload();
+                        } else {
+                            console.log(data.error);
+                            showMessage('Error', data.error, 'Error');
+                        }
+                    });
+                });
+
+                $('div.background').click(function (e) {
+                    console.log(e);
+                    let background = document.getElementsByClassName('background')[0];
+                    if (e.target == background) {
+                        $('.background').hide();
                     }
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Fullness',
-                    fontColor: '#ff0000',
-                    fontSize: 24,
-                    fontStyle: 'Bold'
-                }
-            }],
-            xAxes: [{
-                
-                ticks: {
-                    
-                        fontStyle: 'Bold',
-                        fontSize: 20,
-                        fontColor: '#fff',
-                    
-                    callback: function(label, index, labels) {
-                        console.log("here");
-                        console.log(labels);
-                        return index % 2 === 0 ? label : '';
-                    }
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Date',
-                    fontColor: '#ff0000',
-                    fontSize: 24,
-                    fontStyle: 'Bold'
-                }
-            }]
-                    }
-                }
+
+                });
+
+                $('.btn.cancel').click(function () {
+                    selection = false;
+                    selected = {};
+                    $('.select-dumpsters').hide();
+                    updateMarkers();
+                });
 
 
-                
+
+            });
+
+            fetch('/api/drivers', {
+                method: 'get',
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    $.each(data, function (i, item) {
+                        $('#driver').append($('<option>', {
+                            value: item.UserID,
+                            text: item.FirstName + ' ' + item.LastName
+                        }));
+                    });
+                })
+                .catch((err) => console.log(err));
+
+        }
+
+        init();
+        var DumpsterID = "<%= dumpsterid %>";
+        console.log(DumpsterID);
+        $(document).ready(function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            $.get('/dumpster/history/' + DumpsterID, function (d) {
+                console.log(d);
+                var scatterChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: d.map(i => new Date(i.label).toLocaleDateString()), //changing this for testng
+                        datasets: [{
+                            label: 'Fullness Level',
+                            data: d,
+                            backgroundColor: '#000',
+                            fill: false,
+                            borderColor: 'rgba(100, 0, 0, 1.0)',
+                            pointRadius: 10,
+                        }]
+                    },
+
+                    options: {
+                        title: {
+                            text: "The fullness levels of the selected dumpster",
+                            fontSize: 40,
+                            fontColor: '#000',
+                            display: false
+                        },
+                        legend: { labels: { fontColor: `rgb(255,0,0)`, fontSize: 24 } },
+                        tooltips: {
+                            bodyFontSize: 18,
+                            titleFontSize: 18
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+
+                                    fontStyle: 'Bold',
+                                    fontSize: 20,
+                                    fontColor: '#fff',
+
+                                    callback: function (label, index, labels) {
+                                        return index % 2 === 0 ? label : '';
+                                    }
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Fullness',
+                                    fontColor: '#ff0000',
+                                    fontSize: 24,
+                                    fontStyle: 'Bold'
+                                }
+                            }],
+                            xAxes: [{
+
+                                ticks: {
+
+                                    fontStyle: 'Bold',
+                                    fontSize: 20,
+                                    fontColor: '#fff',
+
+                                    callback: function (label, index, labels) {
+                                        console.log("here");
+                                        console.log(labels);
+                                        return index % 2 === 0 ? label : '';
+                                    }
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Date',
+                                    fontColor: '#ff0000',
+                                    fontSize: 24,
+                                    fontStyle: 'Bold'
+                                }
+                            }]
+                        }
+                    }
+
+
+
 
                 });
 
@@ -110,7 +207,7 @@
                 <div class="wrapper">
                     <%- include('nav.ejs') %>
                         <div class="content">
-                            
+
                             <div class="container">
 
                                 <div class="col-3">
@@ -139,7 +236,7 @@
 
                                     </div>
                                     <div class="btn-container">
-                                        <button class="btn apply">Add/Change Driver</button>
+                                        <button class="btn assign-driver">Add/Change Driver</button>
                                         <button class="btn cancel">Alert Driver</button>
                                     </div>
                                 </div>
@@ -147,6 +244,15 @@
 
                             </div>
 
+                            <div class="background">
+                                <div class="input">
+                                    <h2 class="title">Assign Driver</h2>
+                                    <label for="driver">Driver:</label>
+                                    <select name="driver" id="driver">
+                                    </select>
+                                    <input class='btn next' type="button" value="Next">
+                                </div>
+                            </div>
 
 
                         </div>

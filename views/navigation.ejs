@@ -38,18 +38,18 @@
         createUrl(position);
     }
 
-    function createUrl(position){
+    function createUrl(position) {
         let base = 'https://www.google.com/maps/dir/?api=1';
-        url = base +'&origin='+position.coords.latitude+','+position.coords.longitude;
-        url += '&destination=' + depot.Latitude + ','+depot.Longitude;
-        url+= '&waypoints='
+        url = base + '&origin=' + position.coords.latitude + ',' + position.coords.longitude;
+        url += '&destination=' + depot.Latitude + ',' + depot.Longitude;
+        url += '&waypoints='
         for (let index = 0; index < dumpsters.length; index++) {
-            url += dumpsters[index].Latitude +',' + dumpsters[index].Longitude +'|'
-            
+            url += dumpsters[index].Latitude + ',' + dumpsters[index].Longitude + '|'
+
         }
-        url+='&travelmode=driving'
+        url += '&travelmode=driving'
         url = encodeURI(url);
-        window.location = url;
+        window.open(url, '_blank');
     };
 
 
