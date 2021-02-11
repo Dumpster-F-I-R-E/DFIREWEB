@@ -9,7 +9,7 @@ router.get(
     auth.requireAuth,
     auth.requireAdminOrManager,
     async function (req, res) {
-        let DumpsterSerialNumber = req.query.Dumpsterserialnumber;
+        let DumpsterSerialNumber = req.query.dumpsterserialnumber;
         let list = await dumpster.getDumpsters(DumpsterSerialNumber);
         res.render('dumpsterList', {
             dumpsters: list,

@@ -341,8 +341,10 @@ exports.getUsersSearch = async (name, role) => {
     if (role && role != '*') {
         if (name && name != '*') {
             sql += ' AND Role Like ?';
+        }else{
+            sql += ' WHERE Role Like ?';
         }
-        sql += ' WHERE Role Like ?';
+        
         sql = mysql.format(sql, [role]);
     }
     console.log(sql);

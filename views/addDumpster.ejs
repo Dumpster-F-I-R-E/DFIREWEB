@@ -22,7 +22,7 @@
 
 
     $(document).ready(function () {
-
+        
         $("button.apply").click(function () {
             let dumpster = {};
             dumpster.DumpsterSerialNumber = $("#DumpsterSerialNumber").val();
@@ -44,7 +44,7 @@
         });
 
         $("button.cancel").click(function () {
-            location.reload(true);
+            window.location = '/dumpster/list';
         });
     });
 

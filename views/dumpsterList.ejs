@@ -19,6 +19,10 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+    $('.btn.reset').click(function () {
+      window.location = '/dumpster/list';
+    });
+
     $('a.delete-dumpster').click(function(){
       console.log("Click delete");
       $('.checks').each(function(index){
