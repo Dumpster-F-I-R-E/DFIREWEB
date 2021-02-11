@@ -435,12 +435,12 @@ exports.setDriver = async (dumpsterId, driverId) => {
 exports.saveResetToken = async (user, token, expired) => {
     console.log(user.UserID, user.Username, token, expired);
     let sql =
-        'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
+        'INSERT INTO resetPassword (`UserID`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
     await pool.execute(sql, [user.UserID, user.Username, token, expired]).catch(printErrors);
 
 };
 exports.getUserFromResetToken = async (token) => {
-    let sql = mysql.format('SELECT userId, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
+    let sql = mysql.format('SELECT UserID, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
