@@ -16,6 +16,9 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+    $('.btn.reset').click(function () {
+      window.location = '/depot/list';
+    });
     $(".btn.add-depot").click(function () {
       $('#autocomplete').val('');
       $('.background').toggle();

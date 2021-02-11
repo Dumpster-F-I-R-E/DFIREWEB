@@ -5,7 +5,7 @@ let map;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 51.05011, lng: -114.08529 },
-        zoom: 12,
+        zoom: 15,
     });
 
     google.maps.event.addListener(map, 'idle', showDumpsters);

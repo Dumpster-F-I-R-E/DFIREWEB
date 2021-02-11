@@ -30,7 +30,7 @@
           let k = $(this).parent().parent();
           let dumpsterid = k.children('.dumpsterid').first().html().trim();
           let req = {
-            DepotID: dumpsterid
+            DumpsterID: dumpsterid
           };
           $.post('/dumpster/delete', req, function(data){
             location.reload();
@@ -81,7 +81,7 @@
                   <td>
                     <input class="checks" type="checkbox">
                   </td>
-                  <td onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
+                  <td class='dumpsterid' onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterID %>
                   </td>
                   <td onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">

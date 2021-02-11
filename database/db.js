@@ -204,6 +204,10 @@ exports.addDumpster = async (dumpster) => {
 
 };
 
+exports.deleteDumpster = async (dumpsterId) => {
+    let sql = 'DELETE FROM Dumpsters WHERE DumpsterID=?';
+    await pool.query(sql, [dumpsterId]).catch(printErrors);
+};
 
 exports.storeDumpsterReport = async (report) => {
     let sql =

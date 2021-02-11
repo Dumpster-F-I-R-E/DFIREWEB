@@ -48,6 +48,24 @@ router.post(
     }
 );
 
+
+router.post(
+    '/delete',
+    auth.requireAuth,
+    auth.requireAdminOrManager,
+    async function (req, res) {
+        const data = req.body;
+        let u = await dumpster.deleteDumpster(data.DumpsterID);
+        let msg = '';
+        let s = true;
+        res.json({
+            success: s,
+            dumpster: u,
+            error: msg,
+        });
+    }
+);
+
 /* GET map. */
 router.get('/map', auth.requireAuth, function (req, res) {
     res.render('dumpsterMap');

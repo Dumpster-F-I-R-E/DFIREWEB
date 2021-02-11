@@ -13,6 +13,13 @@ exports.createDumpster = async (dumpster, data) => {
     return newDumpster;
 };
 
+exports.deleteDumpster = async (dumpsterId) => {
+    await db.deleteDumpster(dumpsterId);
+
+};
+
+
+
 exports.getDumpsters = async (DumpsterSerialNumber) => {
     let list = await db.getDumpstersSearch(DumpsterSerialNumber);
     if (!list) {
