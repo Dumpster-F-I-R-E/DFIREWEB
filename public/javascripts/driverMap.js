@@ -17,9 +17,27 @@ function initMap() {
     // init();
 }
 
+function storeLocation(position) {
+    let req = {
+        Latitude: position.coords.latitude,
+        Longitude: position.coords.longitude
+    };
+    $.post('/driver/update-location', req, function (data) {
+        if (data.success) {
+            console.log('success');
+        } else {
+            console.log(data.error);
+            showMessage('Error', data.error, 'Error');
+        }
+    });
+
+    showRoute(position);
+
+}
+
 function getLocation() {
     if (navigator.geolocation) {
-        return navigator.geolocation.getCurrentPosition(showRoute, permissionDenied);
+        return navigator.geolocation.getCurrentPosition(storeLocation, permissionDenied);
     } else {
         alert('Geolocation error');
         console.log("Geolocation is not supported");
@@ -184,6 +202,7 @@ function addMarker(dumpster) {
 }
 
 let depot = null;
+let drivers = {};
 
 function showDumpsters() {
     clear();
@@ -209,6 +228,8 @@ function showDumpsters() {
             });
         })
         .catch((err) => console.log(err));
+
+    
 }
 
 function clear() {
@@ -217,7 +238,7 @@ function clear() {
 }
 
 function draw() {
-    
+
     waypoints = dumpsters.map(s => {
         return {
             location: {

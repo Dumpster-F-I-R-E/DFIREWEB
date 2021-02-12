@@ -44,4 +44,5 @@ router.get('/my-route', auth.requireAuth, async function (req, res) {
     res.json(data);
 });
 
+
 module.exports = router;
