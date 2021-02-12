@@ -76,3 +76,10 @@ CREATE TABLE IF NOT EXISTS `resetPassword` (
 	`resetToken` VARCHAR(255) NOT NULL,
 	`resetExpired` DATE NOT NULL	
 );
+
+CREATE TABLE IF NOT EXISTS `Drivers` (
+	`UserID` INT NOT NULL,
+	`Longitude` DOUBLE NOT NULL,
+	`Latitude` DOUBLE NOT NULL,
+	PRIMARY KEY (`UserID`)
+);

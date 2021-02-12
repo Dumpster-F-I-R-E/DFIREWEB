@@ -1,7 +1,8 @@
 const db = require('../database/db');
+const model = require('../database/driver');
 
 exports.getDrivers = async () => {
-    let drivers = await db.getDrivers();
+    let drivers = await model.getDrivers();
     return drivers;
 };
 
@@ -86,4 +87,9 @@ exports.getRoute = async (driverId) => {
         Dumpsters: dumpsters,
         Depot: closestDepot
     };
+};
+
+exports.setLocation = async (driverId, lat, lng) => {
+    await model.setLocation(driverId, lat,lng);
+
 };
