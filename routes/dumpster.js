@@ -3,6 +3,7 @@ var router = express.Router();
 const auth = require('../controllers/authController');
 const dumpster = require('../controllers/dumpsterController');
 const driverController = require('../controllers/driverController');
+const config = require('../controllers/config');
 
 router.get(
     '/list',
@@ -68,7 +69,8 @@ router.post(
 
 /* GET map. */
 router.get('/map', auth.requireAuth, function (req, res) {
-    res.render('dumpsterMap');
+    let key = config.getAPIKey();
+    res.render('dumpsterMap', {API_KEY:key});
 });
 
 
