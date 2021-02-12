@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 function showMessage(title, msg, type) {
     $('.modal-title').text(title);
-    $('.modal-body').text(msg);
+    $('.modal-body').html(msg);
     $('.modal').modal('toggle');
     if (type == 'Error') {
         $('.modal-body').css('color', 'red');

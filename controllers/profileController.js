@@ -10,36 +10,34 @@ exports.getProfileInfo = async (authToken) => {
 
 exports.getProfileById = async (userId) => {
     let data = await db.getProfile(userId);
-
     return data;
 };
 
+const permissions = (user, profile) => {
+    if (user.Role == 'Admin')
+        return ['StaffID', 'FirstName', 'LastName', 'Address', 'Phone', 'Email', 'Role'];
+    if (user.Role == 'Manager')
+        return ['FirstName', 'LastName', 'Address', 'Phone', 'Email'];
+    if (user.UserID == profile.UserID)
+        return ['FirstName', 'LastName', 'Address', 'Phone', 'Email'];
+
+    return [];
+};
+
 exports.updateProfile = async (user, profile) => {
-    if (user.Role == 'Admin') {
-        let p = await db.getProfile(profile.UserID);
-        if (p) {
-            await db.updateProfile(profile);
+    let p = await db.getProfile(profile.UserID);
+    let perm = permissions(user, profile);
+    for (var field in perm) {
+        if (field == 'Role') {
             await db.changeRole(profile.UserID, profile.Role);
+        } else {
+            p[field] = profile[field];
         }
-    } else if (user.UserID == profile.UserID) {
-        user.FirstName = profile.FirstName;
-        user.LastName = profile.LastName;
-        user.Address = profile.Address;
-        user.Phone = profile.Phone;
-        user.Email = profile.Email;
-        await db.updateProfile(user);
-    } else if (user.Role == 'Manager') {
-        let p = await db.getProfile(profile.UserID);
-        if (!p) {
-            return;
-        }
-        p.FirstName = profile.FirstName;
-        p.LastName = profile.LastName;
-        p.Address = profile.Address;
-        p.Phone = profile.Phone;
-        p.Email = profile.Email;
-        await db.updateProfile(p);
+
     }
+    if (perm)
+        await db.updateProfile(profile);
+
 };
 
 const fs = require('fs');
@@ -50,7 +48,6 @@ const readFile = util.promisify(fs.readFile);
 
 exports.getImage = async (userid) => {
     let data = await db.getImage(userid);
-    // console.log("Data", data);
     if (!data || !data.Image) {
         data = await readFile('public/images/profile.png');
     } else {
@@ -67,8 +64,6 @@ exports.changePassword = async (user, userid, password) => {
 };
 
 exports.changeImage = async (user, userid, image) => {
-    // image = await readFile('public/images/profile.png');
-    console.log('Profile Controller');
 
     if (user.Role == 'Admin' || user.UserID == userid) {
         await db.changeImage(userid, image);
