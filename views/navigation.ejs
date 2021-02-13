@@ -42,10 +42,12 @@
         let base = 'https://www.google.com/maps/dir/?api=1';
         url = base + '&origin=' + position.coords.latitude + ',' + position.coords.longitude;
         url += '&destination=' + depot.Latitude + ',' + depot.Longitude;
-        url += '&waypoints='
+        url += '&waypoints=optimize:true|'
         for (let index = 0; index < dumpsters.length; index++) {
-            url += dumpsters[index].Latitude + ',' + dumpsters[index].Longitude + '|'
-
+            if(dumpsters[index].FullnessLevel > 70)
+            {
+                url += dumpsters[index].Latitude + ',' + dumpsters[index].Longitude + '|'
+            }
         }
         url += '&travelmode=driving'
         url = encodeURI(url);
@@ -58,6 +60,7 @@
     })
         .then(res => res.json())
         .then(data => {
+            console.log("navigation");
             dumpsters = data.Dumpsters;
             depot = data.Depot;
             geoLocation();
