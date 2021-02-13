@@ -12,7 +12,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
         p = {
             UserID: 'UserID',
             Role: res.locals.User.Role,
-            FirstName: 'Fist Name',
+            FirstName: 'First Name',
             LastName: 'Last Name',
             Address: '24 Ave Calgary, AB',
             Email: 'admin@abc.com',
@@ -49,7 +49,7 @@ router.get(
             p = {
                 UserID: id,
                 Role: role,
-                FirstName: 'Fist Name',
+                FirstName: 'First Name',
                 LastName: 'Last Name',
                 Address: '24 Ave Calgary, AB',
                 Email: 'admin@abc.com',
