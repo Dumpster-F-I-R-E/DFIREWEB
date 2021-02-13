@@ -64,7 +64,8 @@
               <div class="fields">
                 <form action="/dumpster/list" id="search_form">
                   <input type="text" name="dumpsterserialnumber" id="dumpsterserialnumber" placeholder="*"
-                    value="<%=dumpsterserialnumber%>">
+                    value="<%=dumpsterserialnumber%>" 
+                    required pattern="\d+">
                 </form>
               </div>
             </div>
