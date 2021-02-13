@@ -83,19 +83,19 @@
                   <td>
                     <input class="checks" type="checkbox">
                   </td>
-                  <td class='userid' onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <td data-title='UserID' class='userid' onclick="window.location='/profile/id/<%= user.UserID %>';">
                     <%= user.UserID %>
                   </td>
-                  <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <td data-title='First Name' onclick="window.location='/profile/id/<%= user.UserID %>';">
                     <%= user.FirstName %>
                   </td>
-                  <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <td data-title='Last Name' onclick="window.location='/profile/id/<%= user.UserID %>';">
                     <%= user.LastName %>
                   </td>
-                  <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <td data-title='Email' onclick="window.location='/profile/id/<%= user.UserID %>';">
                     <%= user.Email %>
                   </td>
-                  <td onclick="window.location='/profile/id/<%= user.UserID %>';">
+                  <td data-title='Role' onclick="window.location='/profile/id/<%= user.UserID %>';">
                     <%= user.Role %>
                   </td>
                 </tr>

@@ -1,12 +1,10 @@
 .nav {
     background-color: #1b2430;
-    padding-top: 50px;
-    padding-left: 15px;
-    text-align: left;
-    /* border: 1px solid gray; */
-    /* height: 100%;  */
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
         'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
 }
 
 .thumbnail {

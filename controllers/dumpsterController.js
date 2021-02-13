@@ -8,7 +8,7 @@ exports.getDumpsterInfo = (id) => {
     return db.getDumpsterById(id);
 };
 
-exports.createDumpster = async (dumpster, data) => {
+exports.createDumpster = async (data) => {
     let newDumpster = await db.addDumpster(data);
     return newDumpster;
 };

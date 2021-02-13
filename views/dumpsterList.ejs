@@ -6,15 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dumpster FIRE - Depot Management</title>
   <%- include('common.ejs') %>
-  <link rel='stylesheet' href='/stylesheets/userlist.css' />
-    
+    <link rel='stylesheet' href='/stylesheets/userlist.css' />
+
 </head>
 
 <style>
   td {
-    padding: 10px;
-}
-
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 </style>
 
 <script type="text/javascript">
@@ -23,76 +23,85 @@
       window.location = '/dumpster/list';
     });
 
-    $('a.delete-dumpster').click(function(){
+    $('a.delete-dumpster').click(function () {
       console.log("Click delete");
-      $('.checks').each(function(index){
-        if(this.checked){
+      $('.checks').each(function (index) {
+        if (this.checked) {
           let k = $(this).parent().parent();
           let dumpsterid = k.children('.dumpsterid').first().html().trim();
           let req = {
             DumpsterID: dumpsterid
           };
-          $.post('/dumpster/delete', req, function(data){
-            location.reload();
+          $.post('/dumpster/delete', req, function (data) {
+
+            if (data.success) {
+              location.reload();
+            }
+            else {
+              showMessage('Error', data.error);
+            }
           });
         }
-        
+
       });
     });
-    
+
   });
 </script>
+
 <body>
   <%- include('header.ejs') %>
-  <div class="wrapper">
-    <%- include('nav.ejs') %>
-      <div class="content">
-        <div class="col-1">
-          <h2 class="title">Search</h2>
+    <div class="wrapper">
+      <%- include('nav.ejs') %>
+        <div class="content">
+          <div class="col-1">
+            <h2 class="title">Search</h2>
 
-          <div class="form">
-            <div class="labels">
-              <label for="dumpsterserialnumber">DumpsterSerialNumber </label>
+            <div class="form">
+              <div class="labels">
+                <label for="dumpsterserialnumber">DumpsterSerialNumber </label>
+              </div>
+              <div class="fields">
+                <form action="/dumpster/list" id="search_form">
+                  <input type="text" name="dumpsterserialnumber" id="dumpsterserialnumber" placeholder="*"
+                    value="<%=dumpsterserialnumber%>">
+                </form>
+              </div>
             </div>
-            <div class="fields">
-              <form action="/dumpster/list" id="search_form">
-                <input type="text" name="dumpsterserialnumber" id="dumpsterserialnumber" placeholder="*" value="<%=dumpsterserialnumber%>">
-              </form>
+            <div class="btn-container">
+              <button class="btn search" form="search_form" value="Submit">Search</button>
+              <button class="btn reset">Reset</button>
             </div>
-          </div>
-          <div class="btn-container">
-            <button class="btn search" form="search_form" value="Submit">Search</button>
-            <button class="btn reset">Reset</button>
-          </div>
 
-        </div>
-        <div class="col-2">
-          <h2 class="title">Dumpster List</h2>
-          <a href="/dumpster/add" class="btn addDumpster">Add Dumpster </a>
-          <a class="btn delete-dumpster">Delete Dumpster </a><br><br>
-          <table style="width:100%">
-            <tr>
-              <th></th>
-              <th>DumpsterID</th>
-              <th>DumpsterSerialNumber</th>
-            </tr>
-            <% dumpsters.forEach(function(dumpster) { %>
-                <tr >
+          </div>
+          <div class="col-2">
+            <h2 class="title">Dumpster List</h2>
+            <a href="/dumpster/add" class="btn addDumpster">Add Dumpster </a>
+            <a class="btn delete-dumpster">Delete Dumpster </a><br><br>
+            <table style="width:100%">
+              <tr>
+                <th></th>
+                <th>DumpsterID</th>
+                <th>DumpsterSerialNumber</th>
+              </tr>
+              <% dumpsters.forEach(function(dumpster) { %>
+                <tr>
                   <td>
                     <input class="checks" type="checkbox">
                   </td>
-                  <td class='dumpsterid' onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
+                  <td data-title="Dumpster ID" class='dumpsterid'
+                    onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterID %>
                   </td>
-                  <td onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
+                  <td data-title="Serial No." onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterSerialNumber %>
                   </td>
                 </tr>
                 <%}); %>
-          </table>
+            </table>
+          </div>
         </div>
-      </div>
-  </div>
+    </div>
 </body>
 
 </html>

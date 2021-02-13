@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `ProfileImages` (
 	`Image` MEDIUMBLOB,
 	PRIMARY KEY (`UserID`),
     FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
+	ON DELETE CASCADE
 );
 
 
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `Depots` (
 	`CompanyID` INT NOT NULL,
 	PRIMARY KEY (`DepotID`),
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
+	
 );
 
 CREATE TABLE IF NOT EXISTS `Dumpsters` (
@@ -46,7 +48,9 @@ CREATE TABLE IF NOT EXISTS `Dumpsters` (
 	`CompanyID` INT NOT NULL,
 	`DriverID` INT NULL,
 	PRIMARY KEY (`DumpsterID`),
-    FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
+    FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`),
+	FOREIGN KEY (`DriverID`) REFERENCES Users(`UserID`) ON DELETE SET NULL
+	
 );
 
 CREATE TABLE IF NOT EXISTS `DumpsterReports` (
@@ -60,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `DumpsterReports` (
 	`Time` DATETIME NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (`ReportID`),
     FOREIGN KEY (`DumpsterID`) REFERENCES Dumpsters(`DumpsterID`)
+	ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `Sessions` (
@@ -67,12 +72,23 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
 	`UserID` INT NOT NULL,
 	`Token` VARCHAR(120) NOT NULL,
 	`ExpireDate` DATETIME NOT NULL,
-	PRIMARY KEY (`SessionID`)
+	PRIMARY KEY (`SessionID`),
+	FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
+	ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `resetPassword` (
-	`userID` INT NOT NULL,
+	`UserID` INT NOT NULL,
 	`username` VARCHAR(255) NOT NULL,
 	`resetToken` VARCHAR(255) NOT NULL,
-	`resetExpired` DATE NOT NULL	
+	`resetExpired` DATE NOT NULL,
+	FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS `Drivers` (
+	`UserID` INT NOT NULL,
+	`Longitude` DOUBLE NOT NULL,
+	`Latitude` DOUBLE NOT NULL,
+	PRIMARY KEY (`UserID`)
 );

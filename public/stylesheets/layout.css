@@ -1,3 +1,7 @@
+* {
+    /* border: 1px solid gray !important; */
+}
+
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
         'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -18,7 +22,7 @@ body {
 .content {
     padding: 10px;
     border: 1px solid gray;
-
+    width: calc(100vw - 200px);
 }
 
 .header .top-bar{
@@ -40,7 +44,7 @@ body {
     margin: 10px;
     font-size: 30px;   
     display:none;
-    color:black;
+    color:white;
 }
 
 .header .main-title {    
@@ -66,6 +70,10 @@ body {
 
     .toggle-nav {
         display: block !important;
+    }
+
+    .content{
+        width: 100vw;
     }
 }
 

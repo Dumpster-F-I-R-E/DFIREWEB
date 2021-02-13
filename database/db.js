@@ -10,6 +10,10 @@ exports.setConnectionSettings = (settings) => {
 
 var pool = mysql.createPool(connectionSettings);
 
+exports.getPool = () => {
+    return pool;
+};
+
 exports.changeDatabase = (settings) => {
     pool = mysql.createPool(settings);
 };
@@ -390,13 +394,7 @@ exports.changeImage = async (userId, image) => {
     await pool.execute(sql, [userId, image]).catch(printErrors);
 };
 
-exports.getDrivers = async () => {
-    let sql = 'SELECT UserID,FirstName, LastName, Email, Role FROM Users  WHERE Role=\'Driver\'';
-    var results = await pool.query(sql).catch(printErrors);
-    if (results && results.length > 0 && results[0].length > 0) {
-        return results[0];
-    }
-};
+
 
 exports.getRoutes = async () => {
     let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID';
@@ -435,12 +433,12 @@ exports.setDriver = async (dumpsterId, driverId) => {
 exports.saveResetToken = async (user, token, expired) => {
     console.log(user.UserID, user.Username, token, expired);
     let sql =
-        'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
+        'INSERT INTO resetPassword (`UserID`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
     await pool.execute(sql, [user.UserID, user.Username, token, expired]).catch(printErrors);
 
 };
 exports.getUserFromResetToken = async (token) => {
-    let sql = mysql.format('SELECT userId, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
+    let sql = mysql.format('SELECT UserID, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];

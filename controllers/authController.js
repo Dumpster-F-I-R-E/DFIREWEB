@@ -89,7 +89,7 @@ exports.requireAdmin = (req, res, next) => {
     if (res.locals.User.Role === 'Admin') {
         next();
     } else {
-        res.render('mainMenu');
+        res.redirect('/mainMenu');
     }
 };
 
@@ -97,7 +97,7 @@ exports.requireManager = (req, res, next) => {
     if (res.locals.User.Role === 'Manager') {
         next();
     } else {
-        res.render('mainMenu');
+        res.redirect('/mainMenu');
     }
 };
 
@@ -108,6 +108,6 @@ exports.requireAdminOrManager = (req, res, next) => {
     ) {
         next();
     } else {
-        res.render('mainMenu');
+        res.redirect('/mainMenu');
     }
 };

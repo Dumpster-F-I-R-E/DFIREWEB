@@ -1,0 +1,42 @@
+<style>
+    svg.radial-progress {
+        height: auto;
+        max-width: 100px;
+        padding: 1em;
+        transform: rotate(-90deg);
+        width: 100%;
+    }
+
+    svg.radial-progress circle {
+        fill: rgba(0, 0, 0, 0);
+        stroke: #fff;
+        stroke-dashoffset: 219.91148575129;
+        stroke-width: 10;
+    }
+
+    svg.radial-progress circle.incomplete {
+        opacity: 0.25;
+    }
+
+    svg.radial-progress circle.complete {
+        stroke-dasharray: 219.91148575129;
+    }
+
+    svg.radial-progress text {
+        fill: black;
+        text-anchor: middle;
+    }
+
+</style>
+
+<svg class="radial-progress" data-percentage="<%= value %>" viewBox="0 0 80 80">
+
+    <circle class="incomplete" cx="40" cy="40" r="35"></circle>
+
+    <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 220.58406743523136;"></circle>
+
+    <text class="percentage" x="50%" y="57%" transform="matrix(0, 1, -1, 0, 80, 0)">
+        <%= value %>
+    </text>
+
+</svg>
