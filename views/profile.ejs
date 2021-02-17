@@ -200,13 +200,13 @@
                                 <select name="role" id="role">
                                 </select>
                                 <label for="">First Name </label>
-                                <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
+                                <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>" required pattern="\S+">
                                 <label for="">Last Name </label>
-                                <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
+                                <input type="text" name="" id="lastname" value="<%= profile.LastName %>" required pattern="\S+">
                                 <label for="">Phone </label>
-                                <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
+                                <input type="text" name="phone" id="phone" value="<%= profile.Phone %>" required pattern="\d{3}-\d{3}-\d{4}">
                                 <label for="">Email </label>
-                                <input type="text" name="email" id="email" value="<%= profile.Email %>">
+                                <input type="text" name="email" id="email" value="<%= profile.Email %>" required pattern="\S+@\S+\.\S+">
                                 <label for="">Address </label>
                                 <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
                                 <label for="" class="password" id="password-label">Password</label>
