@@ -16,6 +16,7 @@ router.get(
     ]),
     async function (req, res) {
         let DumpsterSerialNumber = req.query.dumpsterserialnumber;
+        console.log(DumpsterSerialNumber);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
@@ -181,6 +182,33 @@ router.get('/history/:dumpsterId', auth.requireAuth,
         res.json(data);
     });
 
+    router.get('/remove/:dumpsterId', auth.requireAuth,
+    [
+        check('dumpsterId').notEmpty().isNumeric(),
+    ],
+    async function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg + '<br>';
+            });
+            console.log(extractedErrors);
+            return res.status(422).json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        var dumpsterID = req.params.dumpsterId;
+        await dumpster.removeAssignedDriverFromDumpster(req.params.dumpsterId)
+        var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
+        let drv = await driverController.getDriver(req.params.dumpsterId);
+        if (!d) {
+            res.redirect('/dumpster/list');
+        } else {
+            res.redirect('/dumpster/'+dumpsterID);
+        }
 
+    });
 
 module.exports = router;

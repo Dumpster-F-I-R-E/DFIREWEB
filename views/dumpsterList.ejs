@@ -84,6 +84,7 @@
                 <th></th>
                 <th>DumpsterID</th>
                 <th>DumpsterSerialNumber</th>
+                <th>Driver</th>
               </tr>
               <% dumpsters.forEach(function(dumpster) { %>
                 <tr>
@@ -94,8 +95,11 @@
                     onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterID %>
                   </td>
-                  <td data-title="Serial No." onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
+                  <td data-title="Dumpster Serial Number" onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
                     <%= dumpster.DumpsterSerialNumber %>
+                  </td>
+                  <td data-title="Driver" onclick="window.location='/dumpster/<%= dumpster.DumpsterID %>';">
+                    <%= dumpster.FirstName %> <%= dumpster.LastName %> 
                   </td>
                 </tr>
                 <%}); %>
