@@ -449,3 +449,8 @@ exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
     let sql = 'UPDATE dumpsters SET DriverID = NULL WHERE DumpsterID = ?';
     await pool.execute(sql, [dumpsterId]).catch(printErrors);
 };
+
+exports.removeAllAssignedDumpstersFromDriver = async (driverId) => {
+    let sql = 'UPDATE dfireweb.dumpsters SET DriverID = NULL WHERE DriverID = ?';
+    await pool.execute(sql, [driverId]).catch(printErrors);
+};
