@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const auth = require('../controllers/authController');
 const depot = require('../controllers/depotController');
+const { body, validationResult } = require('express-validator');
+
 
 router.get(
     '/add',
@@ -16,8 +18,27 @@ router.post(
     '/add',
     auth.requireAuth,
     auth.requireAdminOrManager,
+    [
+        body('CompanyID').notEmpty().isNumeric(),
+        body('Name').notEmpty(),
+        body('Address').notEmpty(),
+        body('Latitude').notEmpty().isNumeric(),
+        body('Longitude').notEmpty().isNumeric(),
+    ],
     async function (req, res) {
         const data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg + '<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
         let u = await depot.createDepot(res.locals.Depot, data);
         let msg = '';
         let s = true;
@@ -37,8 +58,24 @@ router.post(
     '/delete',
     auth.requireAuth,
     auth.requireAdminOrManager,
+    [
+        body('DepotID').notEmpty().isNumeric(),
+    ],
     async function (req, res) {
+        
         const data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg + '<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
         await depot.deleteDepot(res.locals.Depot, data.DepotID);
         let msg = '';
         res.json({

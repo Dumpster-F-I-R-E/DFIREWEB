@@ -4,6 +4,8 @@ const dumpster = require('../controllers/dumpsterController');
 const auth = require('../controllers/authController');
 const driver = require('../controllers/driverController');
 const depot = require('../controllers/depotController');
+const { body, validationResult } = require('express-validator');
+
 /* GET dumpseter infor. */
 // router.get('/dumpster/:dumpsterId', auth.requireAuth, function(req, res, next) {
 
@@ -24,15 +26,32 @@ router.get('/depots', auth.requireAuth, async function (req, res) {
     res.json(data);
 });
 
-router.post('/assign-driver', async function (req, res) {
-    console.log(req.body);
-    let data = req.body;
-    await driver.setDumpsters(data.DriverID, data.Dumpsters);
-    res.json({
-        success:true,
-        error:'Error Message'
+router.post('/assign-driver',
+    [
+        body('DriverID').notEmpty().isNumeric(),
+        body('Dumpsters').isArray(),
+    ],
+    async function (req, res) {
+        console.log(req.body);
+        let data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg + '<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await driver.setDumpsters(data.DriverID, data.Dumpsters);
+        res.json({
+            success: true,
+            error: 'Error Message'
+        });
     });
-});
 
 router.get('/routes', auth.requireAuth, async function (req, res) {
     let data = await driver.getRoutes();
