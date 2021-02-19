@@ -57,12 +57,9 @@ router.post('/', auth.requireAuth,
         });
     });
 
-router.get(
-    '/id/:id',
-    auth.requireAuth,
-    auth.requireAdmin,
+router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
     [
-        check('id').isNumeric().withMessage('UseID should be a number'),
+        check('id').isNumeric().withMessage('UserID should be a number'),
     ],
     async function (req, res) {
         let id = req.params.id;
@@ -121,7 +118,7 @@ router.post('/change-password', auth.requireAuth,
 
 router.get('/image/:id', auth.requireAuth,
     [
-        check('id').isNumeric().withMessage('UseID should be a number'),
+        check('id').isNumeric().withMessage('UserID should be a number'),
     ],
     async function (req, res) {
         let userid = req.params.id;
@@ -168,5 +165,34 @@ router.post('/upload-photo', auth.requireAuth,
 
         res.json({ success: true });
     });
+
+    router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireAdminOrManager,
+    [
+        check('id').isNumeric().withMessage('UserID should be a number'),
+    ],
+    async function (req, res) {
+        let id = req.params.id;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.status(404).json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await profile.removeAllAssignedDumpstersFromDriver(id)
+        let p = await profile.getProfileById(id);
+        if (!p) {
+            return res.redirect('/user/list');
+        }
+        res.render('profile', {
+            profile: p,
+        });
+    }
+);
 
 module.exports = router;

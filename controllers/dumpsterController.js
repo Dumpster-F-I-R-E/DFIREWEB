@@ -18,12 +18,15 @@ exports.deleteDumpster = async (dumpsterId) => {
 
 };
 
-
-
 exports.getDumpsters = async (DumpsterSerialNumber) => {
     let list = await db.getDumpstersSearch(DumpsterSerialNumber);
     if (!list) {
         list = [];
     }
     return list;
+};
+
+exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
+    await db.removeAssignedDriverFromDumpster(dumpsterId);
+
 };

@@ -71,7 +71,6 @@
                     showMessage('Profile', 'Profile is updated.');
                 } else {
                     let err = data.error;
-
                     showMessage('Error', err);
                 }
             });
@@ -161,6 +160,10 @@
             }
         });
 
+        $("button#remove-all-dumpsters").click(function () {
+            console.log("Remove all dumpsters");
+            window.location.replace("/profile/id/<%= profile.UserID %>/remove-all-dumpsters/");
+        });
     });
 
 </script>
@@ -187,6 +190,7 @@
                                 </div>
 
                                 <button id="change-password" class="btn secondary-btn">Change Password</button>
+                                <button id="remove-all-dumpsters" class="btn secondary-btn">Delete Route</button>
 
                             </div>
 

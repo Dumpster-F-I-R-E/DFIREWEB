@@ -80,3 +80,7 @@ exports.getRole = async (userid) => {
     console.log('Role', role);
     return role.Role;
 };
+
+exports.removeAllAssignedDumpstersFromDriver = async (userid) => {
+    await db.removeAllAssignedDumpstersFromDriver(userid);
+}

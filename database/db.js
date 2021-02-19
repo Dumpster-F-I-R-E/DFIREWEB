@@ -363,7 +363,7 @@ exports.getUsersSearch = async (name, role) => {
 };
 
 exports.getDumpstersSearch = async (DumpsterSerialNumber) => {
-    let sql = 'SELECT DumpsterID, DumpsterSerialNumber' + ' FROM Dumpsters ';
+    let sql = `SELECT dumpsters.DumpsterID, dumpsters.DumpsterSerialNumber, users.UserID AS DriverID, users.FirstName, users.LastName FROM Dumpsters LEFT JOIN users ON dumpsters.DriverID = users.UserID`;
     if (DumpsterSerialNumber && DumpsterSerialNumber != '*') {
         sql += ' WHERE (DumpsterSerialNumber LIKE ?)';
         sql = mysql.format(sql, [DumpsterSerialNumber]);
@@ -443,5 +443,14 @@ exports.getUserFromResetToken = async (token) => {
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
+};
 
+exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
+    let sql = 'UPDATE dumpsters SET DriverID = NULL WHERE DumpsterID = ?';
+    await pool.execute(sql, [dumpsterId]).catch(printErrors);
+};
+
+exports.removeAllAssignedDumpstersFromDriver = async (driverId) => {
+    let sql = 'UPDATE dfireweb.dumpsters SET DriverID = NULL WHERE DriverID = ?';
+    await pool.execute(sql, [driverId]).catch(printErrors);
 };
