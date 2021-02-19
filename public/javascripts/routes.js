@@ -28,8 +28,8 @@ function calculateAndDisplayRoute(waypoints, driverId) {
         lat: depot.Latitude,
         lng: depot.Longitude
     };
-    for(var i in drivers){
-        if(drivers[i].UserID == driverId){
+    for (var i in drivers) {
+        if (drivers[i].UserID == driverId && drivers[i].Latitude) {
             origin.lat = drivers[i].Latitude;
             origin.lng = drivers[i].Longitude;
         }
@@ -207,11 +207,11 @@ function drawDriver(driver) {
     let lat = driver.Latitude;
     let lng = driver.Longitude;
     let paths = "M 13.75 0 L 8.25 0 C 6.792969 0 5.609375 1.621094 5.609375 3.078125 L 5.609375 19.359375 C 5.609375 20.816406 6.792969 22 8.25 22 L 13.75 22 C 15.207031 22 16.390625 20.816406 16.390625 19.359375 L 16.390625 3.078125 C 16.390625 1.621094 15.207031 0 13.75 0 Z M 15.925781 6.636719 L 15.925781 12.09375 L 14.652344 12.257812 L 14.652344 10.007812 Z M 15.257812 5.039062 C 14.78125 6.863281 14.21875 9.019531 14.21875 9.019531 L 7.78125 9.019531 L 6.738281 5.039062 C 6.742188 5.039062 10.894531 3.628906 15.257812 5.039062 Z M 7.363281 10.15625 L 7.363281 12.257812 L 6.085938 12.09375 L 6.085938 6.785156 Z M 6.085938 17.746094 L 6.085938 12.902344 L 7.363281 13.0625 L 7.363281 16.894531 Z M 6.8125 19.125 L 7.851562 17.5625 L 14.292969 17.5625 L 15.332031 19.125 Z M 14.652344 16.75 L 14.652344 13.066406 L 15.925781 12.898438 L 15.925781 17.601562 Z M 14.652344 16.75 ";
-    let color = stringToColour(driver.FirstName+' ' +driver.LastName);
+    let color = stringToColour(driver.FirstName + ' ' + driver.LastName);
     const icon = {
         // path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        path:paths,
-        fillColor:color,
+        path: paths,
+        fillColor: color,
         fillOpacity: 0.9,
         strokeWeight: 0,
         rotation: 0,
@@ -341,7 +341,28 @@ function showDumpsters() {
         .then(data => {
             dumpsters = data.Dumpsters;
             routes = data.Routes;
-            draw();
+            fetch('/api/drivers', {
+                method: 'get',
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((data) => {
+                    drivers = data;
+                    drawDrivers(drivers);
+                    $('#driver').html('');
+                    $.each(data, function (i, item) {
+                        $('#driver').append($('<option>', {
+                            value: item.UserID,
+                            text: item.FirstName + ' ' + item.LastName
+                        }));
+                    });
+                })
+                .then(() => {
+                    draw();
+                })
+                .catch((err) => console.log(err));
+
         });
 
     fetch('/api/depots', {
@@ -358,24 +379,7 @@ function showDumpsters() {
         })
         .catch((err) => console.log(err));
 
-    fetch('/api/drivers', {
-        method: 'get',
-    })
-        .then((res) => {
-            return res.json();
-        })
-        .then((data) => {
-            drivers = data;
-            drawDrivers(drivers);
-            $('#driver').html('');
-            $.each(data, function (i, item) {
-                $('#driver').append($('<option>', {
-                    value: item.UserID,
-                    text: item.FirstName + ' ' + item.LastName
-                }));
-            });
-        })
-        .catch((err) => console.log(err));
+
 
 }
 
@@ -455,6 +459,18 @@ function init() {
         let driverID = 0;
         $('.btn.assign-driver').click(function () {
             $('.background').toggle();
+        });
+
+        $('.btn.optimize-routes').click(function () {
+            $.get('/routes/optimize', function () {
+                window.location = '/routes';
+            });
+            
+        });
+        $('.btn.clear-routes').click(function () {
+            $.get('/routes/clear', function () {
+                window.location = '/routes';
+            });
         });
 
         $('.btn.next').click(function () {

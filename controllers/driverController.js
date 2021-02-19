@@ -93,3 +93,28 @@ exports.setLocation = async (driverId, lat, lng) => {
     await model.setLocation(driverId, lat,lng);
 
 };
+
+exports.optimizeRoutes = async () => {
+    const fullLevel = 70;
+    let dumpsters = await db.getDumpsterData();
+    let drivers = await model.getDrivers();
+    let full = dumpsters.filter(d => d.FullnessLevel > fullLevel);
+    let l = full.length / drivers.length;
+    let i = 0;
+    for (let index = 0; index < drivers.length; index++) {
+        for (let t = 0; t < l; t++) {
+            await db.setDriver(full[i].DumpsterID,drivers[index].UserID);
+            i++;
+            if(i >= full.length)
+                break;
+            
+        }
+        
+    }
+};
+
+exports.clearRoutes = async () => {
+
+    await model.clearRoutes();
+
+};

@@ -25,3 +25,12 @@ exports.getDrivers = async () => {
         return results[0];
     }
 };
+
+exports.clearRoutes = async () => {
+    let sql =
+        'UPDATE Dumpsters '+
+        'SET DriverID = NULL '+
+        'WHERE DriverID is not null; ';
+    
+    await pool.execute(sql).catch(printErrors);
+};
