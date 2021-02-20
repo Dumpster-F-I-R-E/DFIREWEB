@@ -1,12 +1,24 @@
+<!-- <script src="/javascripts/jquery-3.x-git.min.js"></script> -->
+<script>
+    window.onload = (event) => {
+        console.log("here");
+        $.get('/driver/unreadMessages', function(data) {
+            document.getElementById("badge").innerHTML = data.unread;
+        });
+    };
+</script>
 <div class="nav">
+   
     <a href="/profile">
         <div class="thumbnail">
             <img src="/profile/image/<%=User.UserID %>" alt="" class="profile-img">
         </div>
     </a>
+    
     <div class="nav-items">
         <a href="/mainMenu">
             <li>Home</li>
+            
         </a>
         <% if (User.Role == "Manager") { %>
         <a href="/dumpster/map">
@@ -43,7 +55,11 @@
                 <li>Navigation</li>
             </a>
         <% } %>
-        
+        <% if (User.Role == "Driver" || User.Role == "Manager") { %>
+            <a href="/driver/messages">
+                <li>Messages <span id="badge"></span> </li>
+            </a>
+        <% } %>
         <a href="/logout">
             <li>Logout</li>
         </a>

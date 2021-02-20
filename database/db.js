@@ -419,7 +419,27 @@ exports.getDriver = async (DumpsterId) => {
         return results[0][0];
     }
 };
+exports.getDriverByName = async(driverName) => {
+    // let sql = 'select * from users'
+};
+exports.getMessages = async(driverID) => {
+    let sql = 'Select * from driverMessages where UserID = ? order by MessageID desc';
 
+    var results = await pool.query(sql, [driverID]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.addMessage = async(userID, message) => {
+    let sql = mysql.format('insert into driverMessages(userID,Message,Time,Status) values (?,?,current_timestamp,"unread")',[userID,message]);
+    await pool.execute(sql).catch(printErrors);
+};
+exports.updateMessageStatus = async(driverId, status) => {
+    let sql = mysql.format('Update driverMessages SET Status = ? where userID = ?', [status,driverId]);
+    await pool.execute(sql).catch(printErrors);
+
+}
 exports.setDriver = async (dumpsterId, driverId) => {
     let sql =
         'UPDATE Dumpsters SET' +

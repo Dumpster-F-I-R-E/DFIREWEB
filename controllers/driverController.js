@@ -1,5 +1,6 @@
 const db = require('../database/db');
 const model = require('../database/driver');
+const message = require('../controllers/messageController');
 
 exports.getDrivers = async () => {
     let drivers = await model.getDrivers();
@@ -93,3 +94,4 @@ exports.setLocation = async (driverId, lat, lng) => {
     await model.setLocation(driverId, lat,lng);
 
 };
+

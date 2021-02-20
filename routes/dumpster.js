@@ -78,6 +78,9 @@ router.get('/map', auth.requireAuth, function (req, res) {
 /* GET dumpster . */
 router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
     console.log(req.params.dumpsterId);
+    console.log(req.params);
+    console.log(res.locals.User);
+    
     var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
     let drv = await driverController.getDriver(req.params.dumpsterId);
     if(!d){
@@ -85,7 +88,8 @@ router.get('/:dumpsterId', auth.requireAuth, async function (req, res) {
     }else{
         res.render('dumpster', {
             dumpster: d[0],
-            driver: drv
+            driver: drv,
+            
         });
     }
 });

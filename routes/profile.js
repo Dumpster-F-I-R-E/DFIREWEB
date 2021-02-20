@@ -40,7 +40,7 @@ router.post('/', auth.requireAuth, async function (req, res) {
 router.get(
     '/id/:id',
     auth.requireAuth,
-    auth.requireAdmin,
+    auth.requireAdminOrManager,
     async function (req, res) {
         let id = req.params.id;
         let p = await profile.getProfileById(id);
