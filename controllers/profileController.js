@@ -16,7 +16,7 @@ exports.getProfileById = async (userId) => {
 const permissions = (user, profile) => {
     if (user.Role == 'Admin')
         return ['StaffID', 'FirstName', 'LastName', 'Address', 'Phone', 'Email', 'Role'];
-    if (user.Role == 'Manager')
+    if (user.Role == 'Manager' && profile.Role == 'Driver')
         return ['FirstName', 'LastName', 'Address', 'Phone', 'Email'];
     if (user.UserID == profile.UserID)
         return ['FirstName', 'LastName', 'Address', 'Phone', 'Email'];
@@ -26,17 +26,20 @@ const permissions = (user, profile) => {
 
 exports.updateProfile = async (user, profile) => {
     let p = await db.getProfile(profile.UserID);
-    let perm = permissions(user, profile);
+    let perm = permissions(user, p);
+    
     for (var field in perm) {
         if (field == 'Role') {
             await db.changeRole(profile.UserID, profile.Role);
         } else {
-            p[field] = profile[field];
+            p[field] = profile[field].length;
         }
 
     }
     if (perm)
-        await db.updateProfile(profile);
+        await db.updateProfile(p);
+    
+    return perm.length;
 
 };
 
@@ -60,6 +63,9 @@ exports.getImage = async (userid) => {
 exports.changePassword = async (user, userid, password) => {
     if (user.Role == 'Admin' || user.UserID == userid) {
         await db.changePassword(userid, password);
+        return true;
+    }else {
+        return false;
     }
 };
 
@@ -77,10 +83,9 @@ exports.getUser = async (userid) => {
 
 exports.getRole = async (userid) => {
     let role = await db.getRole(userid);
-    console.log('Role', role);
     return role.Role;
 };
 
 exports.removeAllAssignedDumpstersFromDriver = async (userid) => {
     await db.removeAllAssignedDumpstersFromDriver(userid);
-}
+};

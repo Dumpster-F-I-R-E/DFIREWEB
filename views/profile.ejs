@@ -71,7 +71,7 @@
                     showMessage('Profile', 'Profile is updated.');
                 } else {
                     let err = data.error;
-                    showMessage('Error', err);
+                    showMessage('Error', err, 'Error');
                 }
             });
 
@@ -83,12 +83,12 @@
                 $.post("/profile/upload-photo", req, function (data) {
                     if (data.success) {
                         showMessage('Profile', 'Profile is updated.');
-                        location.reload(true);
+                        location.reload();
                     } else {
                         let err = data.error;
-
                         showMessage('Error', err);
-                    }
+                        location.reload();
+                    }   
                 });
 
 
@@ -150,7 +150,6 @@
                             showMessage('Password', 'Password is changed');
                         } else {
                             let err = data.error;
-
                             showMessage('Error', err);
                         }
                     });

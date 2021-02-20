@@ -4,6 +4,7 @@ const auth = require('../controllers/authController');
 const profile = require('../controllers/profileController');
 const notifications = require('../controllers/notifications');
 const { body, check, validationResult } = require('express-validator');
+const error = require('../controllers/error');
 
 
 /* GET profile page. */
@@ -42,7 +43,7 @@ router.post('/', auth.requireAuth,
         if (!errors.isEmpty()) {
             let extractedErrors = '';
             errors.array().map(err => {
-                extractedErrors += err.param + ':' + err.msg +'<br>';
+                extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
@@ -50,11 +51,19 @@ router.post('/', auth.requireAuth,
                 error: extractedErrors
             });
         }
-        await profile.updateProfile(res.locals.User, data);
-        notifications.notifyUpdateProfile(req.body.Email, req.body.FirstName);
-        return res.json({
-            success: true
-        });
+        let results = await profile.updateProfile(res.locals.User, data);
+        if (results) {
+            notifications.notifyUpdateProfile(req.body.Email, req.body.FirstName);
+            return res.json({
+                success: true
+            });
+        } else {
+            return res.json({
+                success: false,
+                error: 'Insufficient Permissions'
+            });
+        }
+
     });
 
 router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
@@ -67,18 +76,15 @@ router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
         if (!errors.isEmpty()) {
             let extractedErrors = '';
             errors.array().map(err => {
-                extractedErrors += err.param + ':' + err.msg +'<br>';
+                extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
-            return res.status(404).json({
-                success: false,
-                error: extractedErrors
-            });
+            return error.redirect(res, '/user/list', extractedErrors);
         }
 
         let p = await profile.getProfileById(id);
         if (!p) {
-            return res.redirect('/user/list');
+            return error.redirect(res, '/user/list', "Profile doesn't exist");
         }
         res.render('profile', {
             profile: p,
@@ -99,7 +105,7 @@ router.post('/change-password', auth.requireAuth,
 
             let extractedErrors = '';
             errors.array().map(err => {
-                extractedErrors += err.param + ':' + err.msg +'<br>';
+                extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
@@ -107,13 +113,21 @@ router.post('/change-password', auth.requireAuth,
                 error: extractedErrors
             });
         }
-        await profile.changePassword(res.locals.User, data.UserID, data.Password);
-        let result = await profile.getUser(data.UserID);
-        notifications.notifyChangePassword(result.Email, result.FirstName);
-        return res.json({
-            success: true,
-            error: []
-        });
+        let change = await profile.changePassword(res.locals.User, data.UserID, data.Password);
+        if (change) {
+            let result = await profile.getUser(data.UserID);
+            notifications.notifyChangePassword(result.Email, result.FirstName);
+            return res.json({
+                success: true,
+                error: []
+            });
+        } else {
+            return res.json({
+                success: false,
+                error: 'Insufficient permissions'
+            });
+        }
+
     });
 
 router.get('/image/:id', auth.requireAuth,
@@ -126,7 +140,7 @@ router.get('/image/:id', auth.requireAuth,
         if (!errors.isEmpty()) {
             let extractedErrors = '';
             errors.array().map(err => {
-                extractedErrors += err.param + ':' + err.msg +'<br>';
+                extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.status(404).json({
@@ -153,7 +167,7 @@ router.post('/upload-photo', auth.requireAuth,
         if (!errors.isEmpty()) {
             let extractedErrors = '';
             errors.array().map(err => {
-                extractedErrors += err.param + ':' + err.msg +'<br>';
+                extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
@@ -166,7 +180,7 @@ router.post('/upload-photo', auth.requireAuth,
         res.json({ success: true });
     });
 
-    router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireAdminOrManager,
+router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireAdminOrManager,
     [
         check('id').isNumeric().withMessage('UserID should be a number'),
     ],
@@ -176,7 +190,7 @@ router.post('/upload-photo', auth.requireAuth,
         if (!errors.isEmpty()) {
             let extractedErrors = '';
             errors.array().map(err => {
-                extractedErrors += err.param + ':' + err.msg +'<br>';
+                extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.status(404).json({

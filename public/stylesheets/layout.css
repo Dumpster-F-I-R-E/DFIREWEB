@@ -8,14 +8,14 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    width: 100vw;
+    width: 100vw
 }
 
 .wrapper {
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 200px auto;
-    height: calc(100vh - 44px);
+    height: calc(100vh - 48px);
     width: 100%;
 }
 

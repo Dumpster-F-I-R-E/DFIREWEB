@@ -5,6 +5,7 @@ const dumpster = require('../controllers/dumpsterController');
 const driverController = require('../controllers/driverController');
 const config = require('../controllers/config');
 const { body, check,oneOf, validationResult } = require('express-validator');
+const error = require('../controllers/error');
 
 router.get(
     '/list',
@@ -24,10 +25,7 @@ router.get(
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
-            return res.status(422).json({
-                success: false,
-                error: extractedErrors
-            });
+            return error.redirect(res, '/dumpster/list', extractedErrors);
         }
         let list = await dumpster.getDumpsters(DumpsterSerialNumber);
         res.render('dumpsterList', {
@@ -136,15 +134,12 @@ router.get('/:dumpsterId', auth.requireAuth,
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
-            return res.status(422).json({
-                success: false,
-                error: extractedErrors
-            });
+            return error.redirect(res, '/dumpster/list', extractedErrors);
         }
         var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
         let drv = await driverController.getDriver(req.params.dumpsterId);
         if (!d) {
-            res.redirect('/dumpster/list');
+            return error.redirect(res, '/dumpster/list', "Dumpster doesn't exist or is not activated");
         } else {
             res.render('dumpster', {
                 dumpster: d[0],

@@ -93,5 +93,8 @@ router.get('/my-route', auth.requireAuth, async function (req, res) {
     res.json(data);
 });
 
+router.get('/error', auth.requireAuth, async function (req, res) {
+    res.render('errorMessage');
+});
 
 module.exports = router;

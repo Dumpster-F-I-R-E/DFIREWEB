@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const db = require('../database/db');
+const error = require('../controllers/error');
 
 const tokenExpireDays = 30;
 
@@ -89,7 +90,7 @@ exports.requireAdmin = (req, res, next) => {
     if (res.locals.User.Role === 'Admin') {
         next();
     } else {
-        res.redirect('/mainMenu');
+        return error.redirect(res, '/mainMenu', "Insufficient Permissions(Admin)");
     }
 };
 
@@ -97,7 +98,7 @@ exports.requireManager = (req, res, next) => {
     if (res.locals.User.Role === 'Manager') {
         next();
     } else {
-        res.redirect('/mainMenu');
+        return error.redirect(res, '/mainMenu', "Insufficient Permissions(Manager)");
     }
 };
 
@@ -108,6 +109,6 @@ exports.requireAdminOrManager = (req, res, next) => {
     ) {
         next();
     } else {
-        res.redirect('/mainMenu');
+        return error.redirect(res, '/mainMenu', "Insufficient Permissions(Admin or Manager)");
     }
 };
