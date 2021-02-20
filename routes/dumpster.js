@@ -124,6 +124,7 @@ router.get('/map', auth.requireAuth, function (req, res) {
 
 
 /* GET dumpster . */
+
 router.get('/:dumpsterId', auth.requireAuth,
     [
         check('dumpsterId').notEmpty().isNumeric(),
@@ -152,6 +153,7 @@ router.get('/:dumpsterId', auth.requireAuth,
             });
         }
     });
+
 
 router.get('/history/:dumpsterId', auth.requireAuth,
     [

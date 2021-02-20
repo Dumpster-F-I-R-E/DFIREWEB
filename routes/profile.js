@@ -32,6 +32,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
 });
 
 
+
 router.post('/', auth.requireAuth,
     [
         body('UserID').notEmpty().isNumeric(),
@@ -63,7 +64,7 @@ router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
     [
         check('id').isNumeric().withMessage('UserID should be a number'),
     ],
-    async function (req, res) {
+async function (req, res) {
         let id = req.params.id;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
