@@ -16,6 +16,12 @@ exports.setDumpsters = async (driverId, dumpsters) => {
 
 };
 
+
+exports.clearDumpsters = async (driverId) => {
+    await model.clearDumpsters(driverId);
+
+};
+
 exports.getDriver = async (dumpsterId) => {
     let driver = await db.getDriver(dumpsterId);
     return driver;

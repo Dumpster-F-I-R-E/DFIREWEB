@@ -142,6 +142,8 @@ function drawDepot(depot) {
 
 }
 
+let allLines = [];
+
 function drawRoute(points, driverId) {
 
     let driver = routes[driverId].Driver;
@@ -167,7 +169,7 @@ function drawRoute(points, driverId) {
             map: map
         }
     );
-
+    allLines.push(line, line2);
     line.setMap(map);
     line.defaultColor = color;
 
@@ -386,6 +388,7 @@ function showDumpsters() {
 function clear() {
     Object.values(markers).forEach(i => i.setMap(null));
     Object.values(depots).forEach(i => i.marker.setMap(null));
+    Object.values(allLines).forEach(i => i.setMap(null));
 }
 
 function draw() {
@@ -454,10 +457,19 @@ var stringToColour = function (str) {
     return colour;
 };
 
+var driverSelect = 0;
 function init() {
     $(document).ready(function () {
         let driverID = 0;
         $('.btn.assign-driver').click(function () {
+            driverSelect = 0;
+            $('.background .title').text('Assign Driver');
+            $('.background').toggle();
+        });
+
+        $('.btn.clear-driver').click(function () {
+            driverSelect = 1;
+            $('.background .title').text('Clear Driver');
             $('.background').toggle();
         });
 
@@ -465,7 +477,7 @@ function init() {
             $.get('/routes/optimize', function () {
                 window.location = '/routes';
             });
-            
+
         });
         $('.btn.clear-routes').click(function () {
             $.get('/routes/clear', function () {
@@ -476,10 +488,27 @@ function init() {
         $('.btn.next').click(function () {
             driverID = $('#driver').val();
             $('.background').toggle();
-            console.log('Select Dumpsters');
-            $('.select-dumpsters').show();
-            $('#map').focus();
-            selection = true;
+            if (driverSelect == 0) {
+                
+                console.log('Select Dumpsters');
+                $('.select-dumpsters').show();
+                $('#map').focus();
+                selection = true;
+
+            } else if (driverSelect == 1) {
+                console.log('Clear Dumpsters');
+                let req = {
+                    DriverID: driverID,
+                };
+                $.post('/api/clear-driver', req, function (data) {
+                    if (data.success) {
+                        showDumpsters();
+                    } else {
+                        showMessage('Error', data.error);
+                    }
+                });
+            }
+
         });
 
         $('div.background').click(function (e) {

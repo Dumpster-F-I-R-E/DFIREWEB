@@ -53,6 +53,36 @@ router.post('/assign-driver',
         });
     });
 
+
+router.post('/clear-driver',
+    [
+        body('DriverID').notEmpty().isNumeric(),
+    ],
+    async function (req, res) {
+        console.log(req.body);
+        let data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg + '<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await driver.clearDumpsters(data.DriverID);
+        res.json({
+            success: true,
+            error: 'Error Message'
+        });
+    });
+
+
+
+
 router.get('/routes', auth.requireAuth, async function (req, res) {
     let data = await driver.getRoutes();
     res.json(data);
