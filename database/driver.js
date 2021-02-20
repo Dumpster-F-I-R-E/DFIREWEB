@@ -1,3 +1,4 @@
+const { PassThrough } = require('nodemailer/lib/xoauth2');
 const db = require('../database/db');
 
 let pool = db.getPool();
@@ -12,16 +13,34 @@ exports.setLocation = async (userId, lat, lng) => {
         'INSERT INTO Drivers(UserID, Latitude, Longitude)' +
         ' VALUES(?,?,?) ON DUPLICATE KEY' +
         ' UPDATE Latitude=Values(Latitude), Longitude=Values(Longitude) ';
-    
+
     await pool.execute(sql, [userId, lat, lng]).catch(printErrors);
 };
 
 exports.getDrivers = async () => {
-    let sql = 'Select drv.UserID, Role, FirstName, LastName, Email, Latitude,'+
-    'Longitude From Drivers RIGHT JOIN (SELECT * FROM Users '+
-    ' WHERE Role=\'Driver\') drv  ON Drivers.UserID=drv.UserID;';
+    let sql = 'Select drv.UserID, Role, FirstName, LastName, Email, Latitude,' +
+        'Longitude From Drivers RIGHT JOIN (SELECT * FROM Users ' +
+        ' WHERE Role=\'Driver\') drv  ON Drivers.UserID=drv.UserID;';
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
+};
+
+exports.clearRoutes = async () => {
+    let sql =
+        'UPDATE Dumpsters ' +
+        'SET DriverID = NULL ' +
+        'WHERE DriverID is not null; ';
+
+    await pool.execute(sql).catch(printErrors);
+};
+
+exports.clearDumpsters = async (driverId) => {
+    let sql =
+        'UPDATE Dumpsters ' +
+        'SET DriverID = NULL ' +
+        'WHERE DriverID=?; ';
+
+    await pool.execute(sql, [driverId]).catch(printErrors);
 };

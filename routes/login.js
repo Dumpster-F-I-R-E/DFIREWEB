@@ -16,21 +16,11 @@ router.post('/login', async function (req, res) {
     console.log(req.body);
     if (req.body.aboutUs === 'About Us') {
         res.redirect('/aboutUs');
-      }
-    else if(req.body.forgetPass === "Forget Password"){
+    }
+    else if (req.body.forgetPass === "Forget Password") {
         res.render('getEmail');
     }
     else {
-    const { valid, authToken } = await auth.authenticate(
-        req.body.username,
-        req.body.password
-    );
-    console.log('valid', valid);
-    if (valid) {
-        res.cookie('AuthToken', authToken);
-        res.redirect('/mainMenu');
-
-    } else {
         const { valid, authToken } = await auth.authenticate(
             req.body.username,
             req.body.password
@@ -39,10 +29,20 @@ router.post('/login', async function (req, res) {
         if (valid) {
             res.cookie('AuthToken', authToken);
             res.redirect('/mainMenu');
+
         } else {
-            res.render('login', { message: 'Please enter id and/or password' });
+            const { valid, authToken } = await auth.authenticate(
+                req.body.username,
+                req.body.password
+            );
+            console.log('valid', valid);
+            if (valid) {
+                res.cookie('AuthToken', authToken);
+                res.redirect('/mainMenu');
+            } else {
+                res.render('login', { message: 'Please enter id and/or password' });
+            }
         }
-    }
     }
 });
 

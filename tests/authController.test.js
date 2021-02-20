@@ -107,11 +107,18 @@ test('authentication with invalid credentials', async () => {
 });
 
 test('logout', async () => {
-    let userId = 21322;
+    var user = {
+        Username: 'username34',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    await addUser(user);
+    let u = await db.getUserByUsername(user.Username);
     var token = auth.generateAuthToken();
     let current = new Date();
     let expireDate = new Date(current.setDate(current.getDate() + 10));
-    db.storeAuthToken(userId, token, expireDate);
+    await db.storeAuthToken(u.UserID, token, expireDate);
     await auth.logout(token);
     let session = await db.getAuthToken(token);
     expect(session).toBe(undefined);

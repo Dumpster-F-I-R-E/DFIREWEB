@@ -28,7 +28,7 @@ exports.checkToken = async(token) => {
         console.log(date2);
         if(date1>date2) {
             status = {
-                uid: result.userId,
+                uid: result.UserID,
                 valid: true,
                 message: "Success"
             };

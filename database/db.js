@@ -123,6 +123,14 @@ exports.getProfile = async (id) => {
     }
 };
 
+exports.getNumberOfAssignedDumpsterForUserId = async (id) => {
+    let sql = mysql.format('SELECT COUNT(DriverID) AS DumpsterCount FROM dfireweb.dumpsters WHERE DriverID = ?', [id]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
+
 exports.getRole = async (id) => {
     let sql = mysql.format('SELECT Role FROM Users WHERE UserID = ?', [id]);
     var results = await pool.query(sql).catch(printErrors);
@@ -340,7 +348,10 @@ exports.getDepotsSearch = async (name, address) => {
 
 exports.getUsersSearch = async (name, role) => {
     let sql =
-        'SELECT Users.UserID, FirstName, LastName, Email, Role' + ' FROM Users';
+        'SELECT UserID, FirstName, LastName, Email, Role, DumpsterCount ' +
+        'FROM Users Drivers ' + 
+        'LEFT JOIN (SELECT DriverID, COUNT(DriverID) AS DumpsterCount FROM dumpsters GROUP BY DriverID) Dumpsters ' +
+        'ON Drivers.UserID = Dumpsters.DriverID ';
     if (name && name != '*') {
         sql += ' WHERE (FirstName LIKE ? OR LastName LIKE ?)';
         sql = mysql.format(sql, [name, name]);
@@ -363,7 +374,7 @@ exports.getUsersSearch = async (name, role) => {
 };
 
 exports.getDumpstersSearch = async (DumpsterSerialNumber) => {
-    let sql = 'SELECT DumpsterID, DumpsterSerialNumber' + ' FROM Dumpsters ';
+    let sql = `SELECT dumpsters.DumpsterID, dumpsters.DumpsterSerialNumber, users.UserID AS DriverID, users.FirstName, users.LastName FROM Dumpsters LEFT JOIN users ON dumpsters.DriverID = users.UserID`;
     if (DumpsterSerialNumber && DumpsterSerialNumber != '*') {
         sql += ' WHERE (DumpsterSerialNumber LIKE ?)';
         sql = mysql.format(sql, [DumpsterSerialNumber]);
@@ -453,15 +464,24 @@ exports.setDriver = async (dumpsterId, driverId) => {
 exports.saveResetToken = async (user, token, expired) => {
     console.log(user.UserID, user.Username, token, expired);
     let sql =
-        'INSERT INTO resetPassword (`userId`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
+        'INSERT INTO resetPassword (`UserID`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
     await pool.execute(sql, [user.UserID, user.Username, token, expired]).catch(printErrors);
 
 };
 exports.getUserFromResetToken = async (token) => {
-    let sql = mysql.format('SELECT userId, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
+    let sql = mysql.format('SELECT UserID, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
+};
 
+exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
+    let sql = 'UPDATE dumpsters SET DriverID = NULL WHERE DumpsterID = ?';
+    await pool.execute(sql, [dumpsterId]).catch(printErrors);
+};
+
+exports.removeAllAssignedDumpstersFromDriver = async (driverId) => {
+    let sql = 'UPDATE dfireweb.dumpsters SET DriverID = NULL WHERE DriverID = ?';
+    await pool.execute(sql, [driverId]).catch(printErrors);
 };

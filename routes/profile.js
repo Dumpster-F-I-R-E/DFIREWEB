@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 const auth = require('../controllers/authController');
 const profile = require('../controllers/profileController');
-const emailController = require('../controllers/emailController');
+const notifications = require('../controllers/notifications');
+const { body, check, validationResult } = require('express-validator');
+
 
 /* GET profile page. */
 router.get('/', auth.requireAuth, async function (req, res) {
@@ -12,7 +14,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
         p = {
             UserID: 'UserID',
             Role: res.locals.User.Role,
-            FirstName: 'Fist Name',
+            FirstName: 'First Name',
             LastName: 'Last Name',
             Address: '24 Ave Calgary, AB',
             Email: 'admin@abc.com',
@@ -21,75 +23,181 @@ router.get('/', auth.requireAuth, async function (req, res) {
         };
     }
     console.log('Staff ID', p.StaffID);
+    let num = await profile.getNumberOfAssignedDumpsterForUserId(p.UserID);
     res.render('profile', {
         profile: p,
         role: res.locals.User.Role,
+        DumpsterCount: num.DumpsterCount
     });
 });
 
-router.post('/', auth.requireAuth, async function (req, res) {
-    const data = req.body;
-    await profile.updateProfile(res.locals.User, data);
-    let subj = "Profile has been changed";
-    let text = "Dear " + req.body.FirstName + "," +"<br> Your information has been updated. <br> Thanks, <br> DFIRE Team";
-    let email = req.body.Email;
-    emailController.sendMail(email,subj,text);
-    res.redirect('/profile');
-});
 
-router.get(
-    '/id/:id',
-    auth.requireAuth,
-    auth.requireAdminOrManager,
+
+router.post('/', auth.requireAuth,
+    [
+        body('UserID').notEmpty().isNumeric(),
+        body('Email').isEmail(),
+        body('Phone').isMobilePhone(),
+    ],
     async function (req, res) {
+        const data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await profile.updateProfile(res.locals.User, data);
+        notifications.notifyUpdateProfile(req.body.Email, req.body.FirstName);
+        return res.json({
+            success: true
+        });
+    });
+
+router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
+    [
+        check('id').isNumeric().withMessage('UserID should be a number'),
+    ],
+async function (req, res) {
         let id = req.params.id;
-        let p = await profile.getProfileById(id);
-        let role = await profile.getRole(id);
-        if (!p) {
-            p = {
-                UserID: id,
-                Role: role,
-                FirstName: 'Fist Name',
-                LastName: 'Last Name',
-                Address: '24 Ave Calgary, AB',
-                Email: 'admin@abc.com',
-                Phone: '403-343-3434',
-                StaffID: 'Staff ID',
-            };
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.status(404).json({
+                success: false,
+                error: extractedErrors
+            });
         }
 
+        let p = await profile.getProfileById(id);
+        let num = await profile.getNumberOfAssignedDumpsterForUserId(id);
+        if (!p) {
+            return res.redirect('/user/list');
+        }
+        res.render('profile', {
+            profile: p,
+            DumpsterCount: num.DumpsterCount
+        });
+    }
+);
+
+
+router.post('/change-password', auth.requireAuth,
+    [
+        body('Password', 'Password is empty').notEmpty(),
+        body('UserID').notEmpty().isNumeric(),
+    ],
+    async function (req, res) {
+        const data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await profile.changePassword(res.locals.User, data.UserID, data.Password);
+        let result = await profile.getUser(data.UserID);
+        notifications.notifyChangePassword(result.Email, result.FirstName);
+        return res.json({
+            success: true,
+            error: []
+        });
+    });
+
+router.get('/image/:id', auth.requireAuth,
+    [
+        check('id').isNumeric().withMessage('UserID should be a number'),
+    ],
+    async function (req, res) {
+        let userid = req.params.id;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.status(404).json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+
+        let data = await profile.getImage(userid);
+        // console.log(data);
+        res.setHeader('Content-Length', data.length);
+        res.write(data, 'binary');
+        res.end();
+    });
+
+router.post('/upload-photo', auth.requireAuth,
+    [
+        body('UserID').notEmpty().isNumeric(),
+    ],
+    async function (req, res) {
+        const data = req.body;
+        console.log('Uploading Photo...', req.body.UserID);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await profile.changeImage(res.locals.User, data.UserID, data.Image);
+
+        res.json({ success: true });
+    });
+
+    router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireAdminOrManager,
+    [
+        check('id').isNumeric().withMessage('UserID should be a number'),
+    ],
+    async function (req, res) {
+        let id = req.params.id;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map(err => {
+                extractedErrors += err.param + ':' + err.msg +'<br>';
+            });
+            console.log(extractedErrors);
+            return res.status(404).json({
+                success: false,
+                error: extractedErrors
+            });
+        }
+        await profile.removeAllAssignedDumpstersFromDriver(id)
+        let p = await profile.getProfileById(id);
+        if (!p) {
+            return res.redirect('/user/list');
+        }
         res.render('profile', {
             profile: p,
         });
     }
 );
-
-router.post('/change-password', auth.requireAuth, async function (req, res) {
-    const data = req.body;
-    await profile.changePassword(res.locals.User, data.UserID, data.Password);
-    let result = await profile.getUser(data.UserID);
-    let subj = "Password has been changed";
-    let text = "Dear " + result.FirstName + "," +"<br> Your password has been updated. Please contact the admin for the new password.<br> Thanks, <br> DFIRE Team";
-    let email = result.Email;
-    emailController.sendMail(email,subj,text);
-    res.redirect('/profile');
-});
-
-router.get('/image/:id', auth.requireAuth, async function (req, res) {
-    let userid = req.params.id;
-    let data = await profile.getImage(userid);
-    // console.log(data);
-    res.setHeader('Content-Length', data.length);
-    res.write(data, 'binary');
-    res.end();
-});
-
-router.post('/upload-photo', auth.requireAuth, async function (req, res) {
-    const data = req.body;
-    console.log('Uploading Photo...', req.body.UserID);
-    await profile.changeImage(res.locals.User, data.UserID, data.Image);
-
-    res.json({ success: true });
-});
 
 module.exports = router;

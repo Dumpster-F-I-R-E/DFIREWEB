@@ -4,30 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dumpster FIRE - Profile</title>       
-    <link rel='stylesheet' href='/stylesheets/profile.css' />    
+    <title>Dumpster FIRE - Profile</title>
+    <link rel='stylesheet' href='/stylesheets/profile.css' />
     <%- include('common.ejs') %>
-    
+
 </head>
 
-<% var Role = User.Role %>
-<% var Profile_Role = profile.Role %>
 <script type="text/javascript">
     var imageUploaded = false;
     var image = null;
-    let role = "<%= Role %>";
-    let profile_role = "<%= Profile_Role %>"
+    let role = "<%= User.Role %>";
+    let profile_role = "<%= profile.Role %>"
     var permission = {
-        Admin : [],
+        Admin: [],
         Manager: ['staffid'],
         Driver: ['staffid', 'role']
     }
     $(document).ready(function () {
         let perm = permission[role];
-        console.log(perm);
-        if(perm){
-            perm.forEach(function(item){
-                $('#'+item).prop('disabled',true);
+        console.log('Permission', perm, role, profile_role);
+        if (perm) {
+            perm.forEach(function (item) {
+                $('#' + item).prop('disabled', true);
             });
         }
 
@@ -35,7 +33,7 @@
         /// jquerify the DOM object 'o' so we can use the html method
         $(o).html("Driver");
         $("#role").append(o)
-        if(role == 'Admin'){
+        if (role == 'Admin') {
             var o2 = new Option("Admin", "Admin");
             $(o2).html("Admin");
             $("#role").append(o2)
@@ -44,12 +42,12 @@
             $(o3).html("Manager");
             $("#role").append(o3)
         }
-        if (role == 'Manager'){
+        if (role == 'Manager') {
             var o3 = new Option("Manager", "Manager");
             $(o3).html("Manager");
             $("#role").append(o3)
         }
-        $('#role option[value='+profile_role+']').attr('selected','selected');
+        $('#role option[value=' + profile_role + ']').attr('selected', 'selected');
         // $("#role select").val('Admin');
     });
 
@@ -66,18 +64,33 @@
             profile.Email = $("#email").val();
             profile.Address = $("#address").val();
             profile.Role = $("#role").val();
-          
 
-            $.post("/profile", profile);
+
+            $.post("/profile", profile, function (data) {
+                if (data.success) {
+                    showMessage('Profile', 'Profile is updated.');
+                } else {
+                    let err = data.error;
+                    showMessage('Error', err);
+                }
+            });
 
             if (imageUploaded && image != null) {
                 let req = {
                     UserID: userid,
                     Image: image
                 }
-                $.post("/profile/upload-photo", req, function () {
-                    location.reload(true);
+                $.post("/profile/upload-photo", req, function (data) {
+                    if (data.success) {
+                        showMessage('Profile', 'Profile is updated.');
+                        location.reload(true);
+                    } else {
+                        let err = data.error;
+
+                        showMessage('Error', err);
+                    }
                 });
+
 
             }
 
@@ -114,14 +127,14 @@
 
         $("button#change-password").click(function () {
             $(".password").css("visibility", "initial");
-            
+
         });
 
-        $("button#update-password").click(function(){
+        $("button#update-password").click(function () {
             let v = $("#password").val();
             let v2 = $("#confirm-password").val();
             if (v != v2) {
-                showMessage("Error","Password doesn't match", "Error");
+                showMessage("Error", "Password doesn't match", "Error");
             } else {
                 console.log("password ", v, v2);
                 $(".error-message").text("");
@@ -132,75 +145,93 @@
                 };
 
                 if (v != "") {
-                    $.post("/profile/change-password", req);
-                    showMessage('Password', 'Password is changed');
+                    $.post("/profile/change-password", req, function (data) {
+                        if (data.success) {
+                            showMessage('Password', 'Password is changed');
+                        } else {
+                            let err = data.error;
+
+                            showMessage('Error', err);
+                        }
+                    });
+
                 }
 
             }
-        } );
+        });
 
+        $("button#remove-all-dumpsters").click(function () {
+            console.log("Remove all dumpsters");
+            window.location.replace("/profile/id/<%= profile.UserID %>/remove-all-dumpsters/");
+        });
     });
 
 </script>
 
 <body>
-    <%- include('messageBox.ejs') %>   
-    <%- include('header.ejs') %>
-    <div class="wrapper">
-        <%- include('nav.ejs') %>
-            <div class="content">
-                <h1 class="title">Profile </h1>
-                <div class="container">
-                    <div class="col-1">
-                        <div class="profile-img">
-                            <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
+    <%- include('messageBox.ejs') %>
+        <%- include('header.ejs') %>
+            <div class="wrapper">
+                <%- include('nav.ejs') %>
+                    <div class="content">
+                        <h1 class="title">Profile </h1>
+                        <div class="container">
+                            <div class="col-1">
+                                <div class="profile-img">
+                                    <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
+                                </div>
+                                <button class="btn secondary-btn upload">Upload photo</button>
+
+                                <div class="btn-container">
+
+                                    <input id="dialog" type="file" style="display: none" accept="image/*" />
+                                    <button class="btn apply">Apply</button>
+                                    <button class="btn cancel">Cancel</button>
+                                </div>
+
+                                <button id="change-password" class="btn secondary-btn">Change Password</button>
+                                <% if (User.Role=="Manager") { %>
+                                    <button id="remove-all-dumpsters" class="btn secondary-btn">Delete Route</button>
+                                <% } %>
+                            </div>
+
+                            <div class="form">
+                                <label for="userid">User ID </label>
+                                <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
+
+                                <label for="staffid">Staff ID </label>
+                                <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
+                                <label for="role">Role</label>
+                                <select name="role" id="role">
+                                </select>
+                                <label for="">First Name </label>
+                                <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>" required pattern="\S+">
+                                <label for="">Last Name </label>
+                                <input type="text" name="" id="lastname" value="<%= profile.LastName %>" required pattern="\S+">
+                                <label for="">Phone </label>
+                                <input type="text" name="phone" id="phone" value="<%= profile.Phone %>" required pattern="\d{3}-\d{3}-\d{4}">
+                                <label for="">Email </label>
+                                <input type="text" name="email" id="email" value="<%= profile.Email %>" required pattern="\S+@\S+\.\S+">
+                                <label for="">Address </label>
+                                <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
+                                <% if (profile.Role=="Driver") { %>
+                                <label for=""># Of Dumpsters Assigned </label>
+                                <input type="text" name="NumberOfDumpsters" id="NumberOfDumpsters" value="<%= DumpsterCount %>" disabled>
+                                <% } %>
+                                <label for="" class="password" id="password-label">Password</label>
+                                <input type="password" id="password" class="password" value="">
+                                <label for="" class="password">Confirm Password</label>
+                                <input type="password" id="confirm-password" class="password" value="">
+                                <label for="" class="password error-message"></label>
+                                <button id="update-password" class="btn secondary-btn password">Update Password</button>
+                            </div>
                         </div>
-                        <button class="btn secondary-btn upload">Upload photo</button>
-
-                        <div class="btn-container">
-
-                            <input id="dialog" type="file" style="display: none" accept="image/*" />
-                            <button class="btn apply">Apply</button>
-                            <button class="btn cancel">Cancel</button>
+                        <div class="col-4">
                         </div>
-
-                        <button id="change-password" class="btn secondary-btn">Change Password</button>
-
                     </div>
-
-                    <div class="form">
-                        <label for="userid">User ID </label>
-                        <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
-
-                        <label for="staffid">Staff ID </label>
-                        <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
-                        <label for="role">Role</label>
-                        <select name="role" id="role">
-                        </select>
-                        <label for="">First Name </label>
-                        <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>">
-                        <label for="">Last Name </label>
-                        <input type="text" name="" id="lastname" value="<%= profile.LastName %>">
-                        <label for="">Phone </label>
-                        <input type="text" name="phone" id="phone" value="<%= profile.Phone %>">
-                        <label for="">Email </label>
-                        <input type="text" name="email" id="email" value="<%= profile.Email %>">
-                        <label for="">Address </label>
-                        <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
-                        <label for="" class="password" id="password-label">Password</label>
-                        <input type="password" id="password" class="password" value="">
-                        <label for="" class="password">Confirm Password</label>
-                        <input type="password" id="confirm-password" class="password" value="">
-                        <label for="" class="password error-message"></label>
-                        <button id="update-password" class="btn secondary-btn password">Update Password</button>
-                    </div>
-                </div>
-                <div class="col-4">
-                </div>
             </div>
-    </div>
-    </div>
-    
+            </div>
+
 </body>
 
 
