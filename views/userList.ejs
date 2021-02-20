@@ -78,6 +78,7 @@
                 <th>Last Name</th>
                 <th>EMail</th>
                 <th>Role</th>
+                <th># Of Dumpsters Assigned</th>
               </tr>
               <% users.forEach(function(user) { %>
                 <tr>
@@ -98,6 +99,9 @@
                   </td>
                   <td data-title='Role' onclick="window.location='/profile/id/<%= user.UserID %>';">
                     <%= user.Role %>
+                  </td>
+                  <td data-title='NumberOfDumpsters' onclick="window.location='/profile/id/<%= user.UserID %>';">
+                    <%= user.DumpsterCount %>
                   </td>
                 </tr>
                 <%}); %>

@@ -24,9 +24,11 @@ router.get('/', auth.requireAuth, async function (req, res) {
         };
     }
     console.log('Staff ID', p.StaffID);
+    let num = await profile.getNumberOfAssignedDumpsterForUserId(p.UserID);
     res.render('profile', {
         profile: p,
         role: res.locals.User.Role,
+        DumpsterCount: num.DumpsterCount
     });
 });
 
@@ -83,11 +85,13 @@ router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
         }
 
         let p = await profile.getProfileById(id);
+        let num = await profile.getNumberOfAssignedDumpsterForUserId(id);
         if (!p) {
             return error.redirect(res, '/user/list', "Profile doesn't exist");
         }
         res.render('profile', {
             profile: p,
+            DumpsterCount: num.DumpsterCount
         });
     }
 );
