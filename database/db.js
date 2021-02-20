@@ -123,6 +123,14 @@ exports.getProfile = async (id) => {
     }
 };
 
+exports.getNumberOfAssignedDumpsterForUserId = async (id) => {
+    let sql = mysql.format('SELECT COUNT(DriverID) AS DumpsterCount FROM dfireweb.dumpsters WHERE DriverID = ?', [id]);
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0][0];
+    }
+};
+
 exports.getRole = async (id) => {
     let sql = mysql.format('SELECT Role FROM Users WHERE UserID = ?', [id]);
     var results = await pool.query(sql).catch(printErrors);
@@ -340,7 +348,10 @@ exports.getDepotsSearch = async (name, address) => {
 
 exports.getUsersSearch = async (name, role) => {
     let sql =
-        'SELECT Users.UserID, FirstName, LastName, Email, Role' + ' FROM Users';
+        'SELECT UserID, FirstName, LastName, Email, Role, DumpsterCount ' +
+        'FROM Users Drivers ' + 
+        'LEFT JOIN (SELECT DriverID, COUNT(DriverID) AS DumpsterCount FROM dumpsters GROUP BY DriverID) Dumpsters ' +
+        'ON Drivers.UserID = Dumpsters.DriverID ';
     if (name && name != '*') {
         sql += ' WHERE (FirstName LIKE ? OR LastName LIKE ?)';
         sql = mysql.format(sql, [name, name]);

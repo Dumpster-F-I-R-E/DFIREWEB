@@ -4,12 +4,17 @@ exports.getProfileInfo = async (authToken) => {
     let session = await db.getAuthToken(authToken);
     let userId = session.UserID;
     let data = await db.getProfile(userId);
-
+    let num = await db.getNumberOfAssignedDumpsterForUserId(userId);
     return data;
 };
 
 exports.getProfileById = async (userId) => {
     let data = await db.getProfile(userId);
+    return data;
+};
+
+exports.getNumberOfAssignedDumpsterForUserId = async (userId) => {
+    let data = await db.getNumberOfAssignedDumpsterForUserId(userId);
     return data;
 };
 

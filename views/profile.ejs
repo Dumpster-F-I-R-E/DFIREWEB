@@ -190,8 +190,9 @@
                                 </div>
 
                                 <button id="change-password" class="btn secondary-btn">Change Password</button>
-                                <button id="remove-all-dumpsters" class="btn secondary-btn">Delete Route</button>
-
+                                <% if (User.Role=="Manager") { %>
+                                    <button id="remove-all-dumpsters" class="btn secondary-btn">Delete Route</button>
+                                <% } %>
                             </div>
 
                             <div class="form">
@@ -213,6 +214,10 @@
                                 <input type="text" name="email" id="email" value="<%= profile.Email %>" required pattern="\S+@\S+\.\S+">
                                 <label for="">Address </label>
                                 <textarea name="address" id="address" rows="5"><%= profile.Address %></textarea>
+                                <% if (profile.Role=="Driver") { %>
+                                <label for=""># Of Dumpsters Assigned </label>
+                                <input type="text" name="NumberOfDumpsters" id="NumberOfDumpsters" value="<%= DumpsterCount %>" disabled>
+                                <% } %>
                                 <label for="" class="password" id="password-label">Password</label>
                                 <input type="password" id="password" class="password" value="">
                                 <label for="" class="password">Confirm Password</label>
