@@ -26,7 +26,7 @@ router.get('/depots', auth.requireAuth, async function (req, res) {
     res.json(data);
 });
 
-router.post('/assign-driver',
+router.post('/assign-driver', auth.requireAuth, auth.requireManager, 
     [
         body('DriverID').notEmpty().isNumeric(),
         body('Dumpsters').isArray(),
@@ -54,7 +54,7 @@ router.post('/assign-driver',
     });
 
 
-router.post('/clear-driver',
+router.post('/clear-driver', auth.requireAuth, auth.requireManager,
     [
         body('DriverID').notEmpty().isNumeric(),
     ],
@@ -83,7 +83,7 @@ router.post('/clear-driver',
 
 
 
-router.get('/routes', auth.requireAuth, async function (req, res) {
+router.get('/routes', auth.requireAuth, auth.requireManager, async function (req, res) {
     let data = await driver.getRoutes();
     res.json(data);
 });

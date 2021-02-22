@@ -111,3 +111,14 @@ exports.requireAdminOrManager = (req, res, next) => {
         res.redirect('/mainMenu');
     }
 };
+
+exports.requireManagerOrDriver = (req, res, next) => {
+    if (
+        res.locals.User.Role === 'Manager' ||
+        res.locals.User.Role === 'Driver'
+    ) {
+        next();
+    } else {
+        res.redirect('/mainMenu');
+    }
+};

@@ -33,22 +33,24 @@
         /// jquerify the DOM object 'o' so we can use the html method
         $(o).html("Driver");
         $("#role").append(o)
-        if (role == 'Admin') {
-            var o2 = new Option("Admin", "Admin");
-            $(o2).html("Admin");
-            $("#role").append(o2)
-
-            var o3 = new Option("Manager", "Manager");
-            $(o3).html("Manager");
-            $("#role").append(o3)
-        }
-        if (role == 'Manager') {
-            var o3 = new Option("Manager", "Manager");
-            $(o3).html("Manager");
-            $("#role").append(o3)
-        }
+        console.log(role);
+        console.log(profile_role);
+        var o2 = new Option("Admin", "Admin");
+        $(o2).html("Admin");
+        $("#role").append(o2)
+        var o3 = new Option("Manager", "Manager");
+        $(o3).html("Manager");
+        $("#role").append(o3)
         $('#role option[value=' + profile_role + ']').attr('selected', 'selected');
-        // $("#role select").val('Admin');
+        if(profile_role == 'Admin' && role != 'Admin'){
+            console.log("asdads");
+            $("#role").attr('disabled', 'disabled');
+            $("#firstname").attr('disabled', 'disabled');
+            $("#lastname").attr('disabled', 'disabled');
+            $("#phone").attr('disabled', 'disabled');
+            $("#email").attr('disabled', 'disabled');
+            $("#address").attr('disabled', 'disabled');
+        }
     });
 
 
@@ -180,6 +182,7 @@
                                 <div class="profile-img">
                                     <img src="/profile/image/<%= profile.UserID %>" alt="" class="my-profile-img">
                                 </div>
+                                <% if (profile.Role!="Admin" || User.Role=="Admin") { %>
                                 <button class="btn secondary-btn upload">Upload photo</button>
 
                                 <div class="btn-container">
@@ -190,22 +193,23 @@
                                 </div>
 
                                 <button id="change-password" class="btn secondary-btn">Change Password</button>
-                                <% if (User.Role=="Manager") { %>
-                                    <button id="remove-all-dumpsters" class="btn secondary-btn">Delete Route</button>
+                                    <% if (User.Role=="Manager" && profile.Role=="Driver") { %>
+                                        <button id="remove-all-dumpsters" class="btn secondary-btn">Delete Route</button>
+                                    <% } %>
                                 <% } %>
                             </div>
 
                             <div class="form">
                                 <label for="userid">User ID </label>
-                                <input type="text" name="userid" id="userid" disabled value="<%= profile.UserID %>">
+                                <input type="text" name="userid" id="userid" value="<%= profile.UserID %>" disabled="disabled">
 
                                 <label for="staffid">Staff ID </label>
-                                <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>">
+                                <input type="text" name="staffid" id="staffid" value="<%= profile.StaffID %>" >
                                 <label for="role">Role</label>
                                 <select name="role" id="role">
                                 </select>
                                 <label for="">First Name </label>
-                                <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>" required pattern="\S+">
+                                <input type="text" name="firstname" id="firstname" value="<%= profile.FirstName %>" required pattern="\S+" >
                                 <label for="">Last Name </label>
                                 <input type="text" name="" id="lastname" value="<%= profile.LastName %>" required pattern="\S+">
                                 <label for="">Phone </label>

@@ -116,7 +116,7 @@ router.post(
 );
 
 /* GET map. */
-router.get('/map', auth.requireAuth, function (req, res) {
+router.get('/map', auth.requireAuth, auth.requireManagerOrDriver, function (req, res) {
     let key = config.getAPIKey();
     res.render('dumpsterMap', { API_KEY: key });
 });
@@ -184,7 +184,7 @@ router.get('/history/:dumpsterId', auth.requireAuth,
         res.json(data);
     });
 
-    router.get('/remove/:dumpsterId', auth.requireAuth,
+    router.get('/remove/:dumpsterId', auth.requireAuth, auth.requireManager,
     [
         check('dumpsterId').notEmpty().isNumeric(),
     ],

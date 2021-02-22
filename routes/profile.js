@@ -53,11 +53,29 @@ router.post('/', auth.requireAuth,
                 error: extractedErrors
             });
         }
-        await profile.updateProfile(res.locals.User, data);
-        notifications.notifyUpdateProfile(req.body.Email, req.body.FirstName);
-        return res.json({
-            success: true
-        });
+        if(res.locals.User.Role == 'Manager' && req.body.Role == 'Driver'){
+            console.log("a");
+            await profile.updateProfile(res.locals.User, data);
+            notifications.notifyUpdateProfile(req.body.Email, req.body.FirstName);
+            return res.json({
+                success: true
+            });
+        }
+        else if(res.locals.User.UserID == req.body.UserID){
+            console.log("b");
+            await profile.updateProfile(res.locals.User, data);
+            notifications.notifyUpdateProfile(req.body.Email, req.body.FirstName);
+            return res.json({
+                success: true
+            });
+        }
+        else{
+            console.log("c");
+            return res.json({
+                success: false,
+                error: "No permission. Profile not updated."
+            });
+        }
     });
 
 router.get('/id/:id', auth.requireAuth, auth.requireAdminOrManager,
@@ -171,7 +189,7 @@ router.post('/upload-photo', auth.requireAuth,
         res.json({ success: true });
     });
 
-    router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireAdminOrManager,
+    router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireManager,
     [
         check('id').isNumeric().withMessage('UserID should be a number'),
     ],
