@@ -112,3 +112,14 @@ exports.requireAdminOrManager = (req, res, next) => {
         return error.redirect(res, '/mainMenu', "Insufficient Permissions(Admin or Manager)");
     }
 };
+
+exports.requireManagerOrDriver = (req, res, next) => {
+    if (
+        res.locals.User.Role === 'Manager' ||
+        res.locals.User.Role === 'Driver'
+    ) {
+        next();
+    } else {
+        res.redirect('/mainMenu');
+    }
+};

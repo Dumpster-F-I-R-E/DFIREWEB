@@ -33,6 +33,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
 });
 
 
+
 router.post('/', auth.requireAuth,
     [
         body('UserID').notEmpty().isNumeric(),
@@ -184,7 +185,7 @@ router.post('/upload-photo', auth.requireAuth,
         res.json({ success: true });
     });
 
-router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireAdminOrManager,
+router.get('/id/:id/remove-all-dumpsters/', auth.requireAuth, auth.requireManager,
     [
         check('id').isNumeric().withMessage('UserID should be a number'),
     ],

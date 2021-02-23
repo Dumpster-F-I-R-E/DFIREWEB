@@ -92,3 +92,13 @@ CREATE TABLE IF NOT EXISTS `Drivers` (
 	`Latitude` DOUBLE NOT NULL,
 	PRIMARY KEY (`UserID`)
 );
+
+CREATE TABLE IF NOT EXISTS `drivermessages` (
+	`MessageID` int not null,
+	`userID` int not null,
+	`Message` varchar(255) not null,
+	`Time` timestamp,
+	`Status` varchar(255) not null,
+	primary key (`MessageID`),
+	FOREIGN Key (`userID`) REFERENCES Users(`UserID`)
+);

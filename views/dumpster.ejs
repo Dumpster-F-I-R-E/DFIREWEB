@@ -54,6 +54,7 @@
         function init() {
             $(document).ready(function () {
                 let driverID = 0;
+               
                 $('.btn.assign-driver').click(function () {
                     $('.background').toggle();
                     console.log("Assign driver");
@@ -96,10 +97,39 @@
                 });
 
                 $('.btn.cancel').click(function () {
-                    selection = false;
-                    selected = {};
-                    $('.select-dumpsters').hide();
-                    updateMarkers();
+                    // selection = false;
+                    // selected = {};
+                    // $('.select-dumpsters').hide();
+                    // updateMarkers();
+                    console.log("alert driver is pressed");
+                    let desDriver = $('#desDriver').text().trim();
+                    let desID = $('#dID').text().trim();
+                    console.log(desDriver);
+                    console.log(desID);
+                    console.log(DumpsterID);
+                    if(desDriver === "None") {
+                        showMessage('Error','No driver is assigned');
+                    }
+                    else {
+                        let req = {
+                        DriverID: desID,
+                        Driver: desDriver,
+                        Dumpster: DumpsterID
+                    };
+                        console.log(req);
+                    $.post('/driver/sendAlert', req, function(data) {
+                        if (data.success) {
+                            console.log('success');
+                            showMessage('Message', 'Alert has been sent');
+                            // location.href = "/dumpster/" + data.sensor.DumpsterID;
+                            location.reload();
+                        } else {
+                            console.log(data.error);
+                            showMessage('Error', data.error, 'Error occured');
+                        }
+                    });
+
+                }
                 });
 
 
@@ -207,9 +237,16 @@
                                         <label for="">Location: </label>
                                         <label for="">Calgary </label>
                                         <label for="">Designated Driver: </label>
-                                        <label for="">
+                                        <label for="desDriver" id = "desDriver">
                                             <% if(driver){ %>
                                                 <%= driver.FirstName + ' ' + driver.LastName %>
+                                                    <% } else { %>
+                                                        None
+                                                        <% } %>
+                                        </label>
+                                        <label class="hidden" id = "dID" for="dID">
+                                            <% if(driver){ %>
+                                                <%= driver.DriverID %>
                                                     <% } else { %>
                                                         None
                                                         <% } %>

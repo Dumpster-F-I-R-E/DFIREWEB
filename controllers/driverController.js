@@ -1,5 +1,6 @@
 const db = require('../database/db');
 const model = require('../database/driver');
+const message = require('../controllers/messageController');
 
 exports.getDrivers = async () => {
     let drivers = await model.getDrivers();
@@ -100,6 +101,7 @@ exports.setLocation = async (driverId, lat, lng) => {
 
 };
 
+
 exports.optimizeRoutes = async () => {
     const fullLevel = 70;
     let dumpsters = await db.getDumpsterData();
@@ -124,3 +126,4 @@ exports.clearRoutes = async () => {
     await model.clearRoutes();
 
 };
+

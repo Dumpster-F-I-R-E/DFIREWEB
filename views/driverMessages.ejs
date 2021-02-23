@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE - Profile</title>
+    <%- include('common.ejs') %>
+        <link rel='stylesheet' href='/stylesheets/driverMessage.css' />
+        <script src="/javascripts/radialProgress.js"></script>
+
+</head>
+
+
+
+
+<body>
+    <%- include('header.ejs') %>
+        <div class="wrapper">
+            <%- include('nav.ejs') %>
+                <div class="content">
+                    <h1>Recent Messages %></h1>
+                    <p>You have <%= unread %> unread messages. The unread messages are bolded for you.</p>
+                    <div class="dumpsterMainMenu">
+
+
+                        <% if(messages && messages.length !=0){ %>
+
+                            <table id="driverMessages">
+                                <tr class='headers'>
+                                   
+                                    <th>Messages</th>
+                                </tr>
+ 
+                                <% var i=1; %>
+                                    <% messages.forEach(function(data){ %>
+                                        <% if(data.Status === "unread" || data.Status === "Unread" ){ %>
+                                                <tr>
+                                                <td data-title= "unread">
+                                                    <%= data.Time.toLocaleTimeString('en-US') %><br>
+                                                    <%= data.Message %></td>
+                                                </tr>
+                                        <% } else{ %>
+                                                 <tr>
+                                                <td data-title= "read">
+                                                    <%= data.Time.toLocaleTimeString('en-US') %><br>
+                                                    <%= data.Message %></td>
+                                                </tr>
+                                        <% } %>
+                                        <% i++; }) %>
+                                    <% } else{ %>
+                                        <p>No recent message is found.</p>
+                                    <% } %>
+
+                            </table>
+
+
+                    </div>
+                </div>
+
+
+
+
+        </div>
+</body>
+
+</html>

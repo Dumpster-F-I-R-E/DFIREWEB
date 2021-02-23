@@ -114,7 +114,7 @@ router.post(
 );
 
 /* GET map. */
-router.get('/map', auth.requireAuth, function (req, res) {
+router.get('/map', auth.requireAuth, auth.requireManagerOrDriver, function (req, res) {
     let key = config.getAPIKey();
     res.render('dumpsterMap', { API_KEY: key });
 });
@@ -122,6 +122,7 @@ router.get('/map', auth.requireAuth, function (req, res) {
 
 
 /* GET dumpster . */
+
 router.get('/:dumpsterId', auth.requireAuth,
     [
         check('dumpsterId').notEmpty().isNumeric(),
@@ -147,6 +148,7 @@ router.get('/:dumpsterId', auth.requireAuth,
             });
         }
     });
+
 
 router.get('/history/:dumpsterId', auth.requireAuth,
     [
@@ -181,7 +183,7 @@ router.get('/history/:dumpsterId', auth.requireAuth,
         });
     });
 
-    router.get('/remove/:dumpsterId', auth.requireAuth,
+    router.get('/remove/:dumpsterId', auth.requireAuth, auth.requireManager,
     [
         check('dumpsterId').notEmpty().isNumeric(),
     ],
