@@ -95,8 +95,16 @@ function findLineByLeastSquares(values_x, values_y) {
 }
 
 exports.forcast = (dumpsterData) => {
-
-    let data = dumpsterData.map((i) => {
+    
+    let i = -1;
+    for(let j in dumpsterData){
+        if(dumpsterData[j].FullnessLevel < 1.0){
+            i = j;
+            break;
+        }
+    }
+    let slice  = dumpsterData.slice(0,i);
+    let data = slice.map((i) => {
         return {
             y: i.FullnessLevel,
             x: Date.parse(i.Time)
@@ -106,6 +114,11 @@ exports.forcast = (dumpsterData) => {
     let y = data.map(i => i.y);
 
     let [m,b] = findLineByLeastSquares(x, y);
+    // if(m < 0){
+    //     let c = (-b) / m;
+    //     m = -m;
+    //     b = -m * c;
+    // }
     let date = (100-b) / m;
     return new Date(date);
 };
