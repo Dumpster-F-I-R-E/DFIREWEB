@@ -166,6 +166,7 @@ router.get('/history/:dumpsterId', auth.requireAuth,
             });
         }
         var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
+        let forcast = dumpster.forcast(d);
         d.reverse();
         let data = d.map((i) => {
             return {
@@ -174,7 +175,10 @@ router.get('/history/:dumpsterId', auth.requireAuth,
                 label: new Date(i.Time),
             };
         });
-        res.json(data);
+        res.json({
+            data: data,
+            forcast:forcast
+        });
     });
 
     router.get('/remove/:dumpsterId', auth.requireAuth,

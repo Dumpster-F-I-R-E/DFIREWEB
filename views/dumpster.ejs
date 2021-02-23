@@ -7,7 +7,9 @@
     <title>Dumpster FIRE - Profile</title>
     <link rel='stylesheet' href='/stylesheets/dumpster.css' />
     <script src="/javascripts/jquery-3.x-git.min.js"></script>
-    <script src="/javascripts/chart/Chart.js"></script>
+    <!-- <script src="/javascripts/chart/Chart.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <%- include('common.ejs') %>
 
 
@@ -39,6 +41,12 @@
         margin: 5px;
     }
 </style>
+
+<script type="text/javascript">
+
+
+</script>
+
 
 <% var dumpsterid=dumpster.DumpsterID %>
     <script type="text/javascript">
@@ -121,85 +129,63 @@
         var DumpsterID = "<%= dumpsterid %>";
         console.log(DumpsterID);
         $(document).ready(function () {
-            var ctx = document.getElementById('myChart').getContext('2d');
+
             $.get('/dumpster/history/' + DumpsterID, function (d) {
                 console.log(d);
-                var scatterChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: d.map(i => new Date(i.label).toLocaleDateString()), //changing this for testng
-                        datasets: [{
-                            label: 'Fullness Level',
-                            data: d,
-                            backgroundColor: '#000',
-                            fill: false,
-                            borderColor: 'rgba(100, 0, 0, 1.0)',
-                            pointRadius: 10,
-                        }]
-                    },
+                let forcast = new Date(d.forcast);
+                $('#forcast').text(forcast.toDateString());
+                var data;
+                var chart;
 
-                    options: {
-                        title: {
-                            text: "The fullness levels of the selected dumpster",
-                            fontSize: 40,
-                            fontColor: '#000',
-                            display: false
-                        },
-                        legend: { labels: { fontColor: `rgb(255,0,0)`, fontSize: 24 } },
-                        tooltips: {
-                            bodyFontSize: 18,
-                            titleFontSize: 18
-                        },
-                        scales: {
-                            yAxes: [{
-                                ticks: {
+                // Load the Visualization API and the piechart package.
+                google.charts.load('current', { 'packages': ['corechart'] });
 
-                                    fontStyle: 'Bold',
-                                    fontSize: 20,
-                                    fontColor: '#fff',
+                // Set a callback to run when the Google Visualization API is loaded.
+                google.charts.setOnLoadCallback(drawChart);
 
-                                    callback: function (label, index, labels) {
-                                        return index % 2 === 0 ? label : '';
-                                    }
-                                },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Fullness',
-                                    fontColor: '#ff0000',
-                                    fontSize: 24,
-                                    fontStyle: 'Bold'
-                                }
-                            }],
-                            xAxes: [{
 
-                                ticks: {
+                // Callback that creates and populates a data table,
+                // instantiates the pie chart, passes in the data and
+                // draws it.
+                function drawChart() {
 
-                                    fontStyle: 'Bold',
-                                    fontSize: 20,
-                                    fontColor: '#fff',
+                    // Create our data table.
+                    data = new google.visualization.DataTable();
+                    data.addColumn('datetime', 'Date');
+                    data.addColumn('number', 'Fullness');
+                    l = d.data.map(r => [new Date(r.label), r.y]);
+                    console.log("Map", l);
+                    data.addRows(l);
 
-                                    callback: function (label, index, labels) {
-                                        console.log("here");
-                                        console.log(labels);
-                                        return index % 2 === 0 ? label : '';
-                                    }
-                                },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Date',
-                                    fontColor: '#ff0000',
-                                    fontSize: 24,
-                                    fontStyle: 'Bold'
-                                }
-                            }]
+                    // Set chart options
+                    var options = {
+                        'title': 'Dumpster Fullness Level',
+                        'width': 600,
+                        'height': 500,
+                        'lineWidth': 2,
+                        legend: 'none',
+                        backgroundColor: 'rgb(180, 200, 216)',
+                        trendlines: {
+                            0: {
+                                type: 'exponential',
+                                pointSize: 20,
+                                opacity: 0.6,
+                                pointsVisible: false
+                            }
                         }
-                    }
+                    };
 
+                    // Instantiate and draw our chart, passing in some options.
+                    chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+                    google.visualization.events.addListener(chart, 'select', selectHandler);
+                    chart.draw(data, options);
+                }
 
-
-
-                });
-
+                function selectHandler() {
+                    var selectedItem = chart.getSelection()[0];
+                    var value = data.getValue(selectedItem.row, 0);
+                    alert('The user selected ' + value);
+                }
             });
         });
 
@@ -237,7 +223,7 @@
                                             <%= dumpster.BatteryLevel %>%
                                         </label>
                                         <label for="">Estimated fill up date: </label>
-                                        <label for="">2020/11/20</label>
+                                        <label id='forcast' for="">2020/11/20</label>
 
                                     </div>
                                     <div class="btn-container">
@@ -246,7 +232,7 @@
                                         <button class="btn remove-driver">Remove Driver</button>
                                     </div>
                                 </div>
-                                <canvas id="myChart" width="400" height="400"></canvas>
+                                <div id="chart_div" style="width:400; height:300"></div>
 
                             </div>
 
