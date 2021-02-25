@@ -7,4 +7,5 @@ DROP TABLE IF EXISTS `Dumpsters` ;
 DROP TABLE IF EXISTS `Companies` ;
 DROP TABLE IF EXISTS `Sessions`;
 DROP TABLE IF EXISTS `Drivers` ;
+DROP TABLE IF EXISTS `Driversdrivermessages` ;
 SET FOREIGN_KEY_CHECKS = 1;

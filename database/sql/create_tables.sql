@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `Drivers` (
 );
 
 CREATE TABLE IF NOT EXISTS `drivermessages` (
-	`MessageID` int not null,
+	`MessageID` INT NOT NULL AUTO_INCREMENT,
 	`userID` int not null,
 	`Message` varchar(255) not null,
 	`Time` timestamp,
