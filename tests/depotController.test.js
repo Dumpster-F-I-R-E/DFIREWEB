@@ -9,10 +9,16 @@ const initializeDatabase = async () => {
         Address: 'Calgary, AB',
         Longitude: '-114.08529',
         Latitude: '51.05011',
-        CompanyID: '1',
+        CompanyID: 1,
     };
-    await db.dropTables();
+    let company = {
+        CompanyID: 1,
+        Name: 'General',
+        Address: 'Calgary,AB',
+        Phone: '345-343-3432',
+    };
     await db.createTables();
+    await db.addCompany(company);
     await db.addDepot(depot);
 };
 
@@ -47,12 +53,9 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('delete dumpster with id 1', async () => {
-    await db.deleteDepot(1);
-    let sql = mysql.format('SELECT * FROM Depots');
-    var results = await pool.query(sql).catch(printErrors);
-    expect(results.length).toBe(0);
-
+test('check if only one depot exists', async () => {
+    var results = await db.getNumberOfDepots();
+    expect(results.Count).toBe(1);
 });
 
 

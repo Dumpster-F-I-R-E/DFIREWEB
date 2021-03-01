@@ -482,6 +482,12 @@ exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
 };
 
 exports.removeAllAssignedDumpstersFromDriver = async (driverId) => {
-    let sql = 'UPDATE dfireweb.dumpsters SET DriverID = NULL WHERE DriverID = ?';
+    let sql = 'UPDATE dumpsters SET DriverID = NULL WHERE DriverID = ?';
     await pool.execute(sql, [driverId]).catch(printErrors);
+};
+
+exports.getNumberOfDepots = async () => {
+    let sql = 'SELECT COUNT(DepotID) AS Count FROM depots';
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
 };

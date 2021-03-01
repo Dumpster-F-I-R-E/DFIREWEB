@@ -1,79 +1,65 @@
-// /* eslint-disable no-undef */
+/* eslint-disable no-undef */
 
-// const driver = require('../controllers/driverController');
-// const db = require('../database/db');
+const depot = require('../controllers/depotController');
+const db = require('../database/db');
 
-// const initializeDatabase = async () => {
-//     let company = {
-//         CompanyID: 1,
-//         Name: 'General',
-//         Address: 'Calgary,AB',
-//         Phone: '345-343-3432',
-//     };
-//     await db.dropTables();
-//     await db.createTables();
-//     await db.addCompany(company);
-// };
+const initializeDatabase = async () => {
+    let depot = {
+        Name: 'SW Dumpster',
+        Address: 'Calgary, AB',
+        Longitude: '-114.08529',
+        Latitude: '51.05011',
+        CompanyID: 1,
+    };
+    let company = {
+        CompanyID: 1,
+        Name: 'General',
+        Address: 'Calgary,AB',
+        Phone: '345-343-3432',
+    };
+    await db.createTables();
+    await db.addCompany(company);
+    await db.addDepot(depot);
+};
 
-// const clearDatabase = async () => {
-//     await db.dropTables();
-// };
+const clearDatabase = async () => {
+    await db.dropTables();
+};
 
-// beforeAll(async () => {
-//     var settings = {
-//         host: 'localhost',
-//         user: 'dfireweb',
-//         password: 'password',
-//         database: 'dfireweb_test',
-//         multipleStatements: true,
-//         waitForConnections: true,
-//         connectionLimit: 10,
-//         queueLimit: 0,
-//     };
+beforeAll(async () => {
+    var settings = {
+        host: 'localhost',
+        user: 'dfireweb',
+        password: 'password',
+        database: 'dfireweb_test',
+        multipleStatements: true,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+    };
 
-//     await db.changeDatabase(settings);
-// });
+    await db.changeDatabase(settings);
+});
 
-// afterAll(async () => {
-//     await db.closePool();
-// });
+afterAll(async () => {
+    await db.closePool();
+});
 
-// beforeEach(async () => {
-//     await initializeDatabase();
-// });
+beforeEach(async () => {
+    await initializeDatabase();
+});
 
-// afterEach(async () => {
-//     await clearDatabase();
-// });
+afterEach(async () => {
+    await clearDatabase();
+});
 
-// function initUser(user) {
-//     user.FirstName = 'John';
-//     user.LastName = 'Doe';
-//     user.Address = 'Calgary,AB';
-//     user.Email = 'admin@abc.com';
-//     user.Phone = '403-233-3333';
-//     user.StaffID = '1';
-//     return user;
-// }
+test('check if only one depot exists', async () => {
+    var results = await db.getNumberOfDepots();
+    expect(results.Count).toBe(1);
+});
 
-// async function addUser(user) {
-//     let u = initUser(user);
-//     await db.addUser(u);
-// }
 
-// async function addDriver(user) {
-//     let u = initUser(user);
-//     await db.addDriver(u);
-// }
 
-// // test('authentication with valid credentials', async () => {
-// //     var user = {
-// //         UserID: '234',
-// //         Username: 'u234',
-// //         Password: '12324sd',
-// //         Role: 'Admin',
-// //         CompanyID: 1,
-// //     };
-// //     await addUser(user);
 
-// // });
+
+

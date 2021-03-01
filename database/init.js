@@ -144,10 +144,11 @@ var init = async () => {
         console.log(sql);
         console.log('Error Initilizing database');
     } else {
+        console.log('Dropping Tables..');
         await db.dropTables();
-        console.log('Initializing Tables..');
+        console.log('Creating Tables..');
         await db.createTables();
-        console.log('Creating user account root password=root');
+        console.log('Seeding the database..');
         await seedCompanies();
         await seedUsers();
         await seedDepots();

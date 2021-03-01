@@ -10,7 +10,6 @@ const initializeDatabase = async () => {
         Address: 'Calgary,AB',
         Phone: '345-343-3432',
     };
-    await db.dropTables();
     await db.createTables();
     await db.addCompany(company);
 };
