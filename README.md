@@ -35,7 +35,7 @@ https://nodejs.org/en/ - Version 15.1.0 Current
 
 ## Run tests
 
-     npm run test
+     npm test -- --runInBand
 
 ## Run server
 
