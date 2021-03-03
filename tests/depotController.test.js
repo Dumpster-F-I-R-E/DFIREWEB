@@ -81,7 +81,7 @@ test('test createDepot with valid input', async () => {
     };
     let nothing = "";
     var results = await depotController.createDepot(nothing, depot);
-    expect(results).toBeDefined()
+    expect(results).toBeDefined();
 });
 
 test('test createDepot with invalid input', async () => {
@@ -99,31 +99,31 @@ test('test createDepot with invalid input', async () => {
         expect(error)
     }
 
-    expect(results).toBeDefined()
+    expect(results).toBeDefined();
 });
 
 test('test getDepots input name only', async () => {
     let name = "SW";
     let address = "";
     let results = await depotController.getDepots(name, address);
-    expect(results).toBeDefined()
+    expect(results).toBeDefined();
 });
 
 test('test getDepots input address only', async () => {
     let name = "";
     let address = "Calgary";
     let results = await depotController.getDepots(name, address);
-    expect(results).toBeDefined()
+    expect(results).toBeDefined();
 });
 
 test('test getDepots input name and address', async () => {
     let name = "SW";
     let address = "Calgary";
     let results = await depotController.getDepots(name, address);
-    expect(results).toBeDefined()
+    expect(results).toBeDefined();
 });
 
 test('test getAllDepots', async () => {
     var results = depotController.getAllDepots();
-    expect(results).toBeDefined()
+    expect(results).toBeDefined();
 });

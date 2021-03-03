@@ -1,25 +1,22 @@
 /* eslint-disable no-undef */
 
-const depot = require('../controllers/depotController');
+const dumpsterController = require('../controllers/dumpsterController');
 const db = require('../database/db');
 
 const initializeDatabase = async () => {
-    let depot = {
-        Name: 'SW Dumpster',
-        Address: 'Calgary, AB',
-        Longitude: '-114.08529',
-        Latitude: '51.05011',
-        CompanyID: 1,
-    };
     let company = {
         CompanyID: 1,
         Name: 'General',
         Address: 'Calgary,AB',
         Phone: '345-343-3432',
     };
+    let dumpster1 = {
+        DumpsterSerialNumber: 0,
+        CompanyID: 1,
+    };
     await db.createTables();
     await db.addCompany(company);
-    await db.addDepot(depot);
+    await db.addDumpster(dumpster1);
 };
 
 const clearDatabase = async () => {
@@ -53,13 +50,64 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('check if only one depot exists', async () => {
-    var results = await db.getNumberOfDepots();
-    expect(results.Count).toBe(1);
+test('test getDumpstersInfo', async () => {
+
 });
 
+test('test getDumpsterInfo with valid data', async () => {
 
+});
 
+test('test getDumpsterInfo with invalid data', async () => {
 
+});
 
+test('test createDumpster with valid data', async () => {
+    let dumpster = {
+        DumpsterSerialNumber: 0,
+        CompanyID: 1,
+    };
+    var results = dumpsterController.createDumpster(dumpster);
+    expect(results).toBeDefined();
+});
 
+test('test createDumpster with invalid data', async () => {
+    let dumpster = {
+        DumpsterSerialNumber: 'a',
+        CompanyID: 1,
+    };
+    var results = dumpsterController.createDumpster(dumpster);
+    expect(results).toBeDefined();
+});
+
+test('test deleteDumpster ', async () => {
+
+});
+
+test('test createDumpster with valid data', async () => {
+
+});
+
+test('test getDumpsters with valid data', async () => {
+
+});
+
+test('test getDumpsters with invalid data', async () => {
+
+});
+
+test('test removeAssignedDriverFromDumpster with valid data', async () => {
+
+});
+
+test('test removeAssignedDriverFromDumpster with invalid data', async () => {
+
+});
+
+test('test forcast with valid data', async () => {
+
+});
+
+test('test forcast with invalid data', async () => {
+    
+});
