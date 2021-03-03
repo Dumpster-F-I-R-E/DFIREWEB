@@ -9,8 +9,8 @@ exports.deleteDepot = async (user, depotid) => {
         await db.deleteDepot(depotid);
 };
 
-exports.getDepots = async (name, role) => {
-        let list = await db.getDepotsSearch(name, role);
+exports.getDepots = async (name, address) => {
+        let list = await db.getDepotsSearch(name, address);
         if (!list) {
                 list = [];
         }
