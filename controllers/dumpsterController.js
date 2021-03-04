@@ -15,7 +15,6 @@ exports.createDumpster = async (data) => {
 
 exports.deleteDumpster = async (dumpsterId) => {
     await db.deleteDumpster(dumpsterId);
-
 };
 
 exports.getDumpsters = async (DumpsterSerialNumber) => {

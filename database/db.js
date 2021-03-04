@@ -328,7 +328,7 @@ exports.getDepots = async () => {
 exports.getDepotsSearch = async (name, address) => {
     let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
     if (name && name != '*') {
-        sql += ' WHERE (Name LIKE ?)';
+        sql += 'WHERE Name LIKE ?';
         sql = mysql.format(sql, [name]);
     }
 
@@ -336,7 +336,6 @@ exports.getDepotsSearch = async (name, address) => {
         if (name && name != '*') {
             sql += ' AND Address Like ?';
         }
-        sql += ' WHERE Address Like ?';
         sql = mysql.format(sql, [address]);
     }
     console.log(sql);
@@ -488,6 +487,21 @@ exports.removeAllAssignedDumpstersFromDriver = async (driverId) => {
 
 exports.getNumberOfDepots = async () => {
     let sql = 'SELECT COUNT(DepotID) AS Count FROM depots';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getNumberOfDepots = async () => {
+    let sql = 'SELECT COUNT(DumpsterID) AS Count FROM dumpsters';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getNumberOfDumpstersWithDrivers = async () => {
+    let sql = 'SELECT COUNT(DriverID) AS Count FROM dfireweb.dumpsters';
+    console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
     return results[0][0];
 };

@@ -1,64 +1,37 @@
 /* eslint-disable no-undef */
 
-const depot = require('../controllers/depotController');
-const db = require('../database/db');
-
-const initializeDatabase = async () => {
-    let depot = {
-        Name: 'SW Dumpster',
-        Address: 'Calgary, AB',
-        Longitude: '-114.08529',
-        Latitude: '51.05011',
-        CompanyID: 1,
-    };
-    let company = {
-        CompanyID: 1,
-        Name: 'General',
-        Address: 'Calgary,AB',
-        Phone: '345-343-3432',
-    };
-    await db.createTables();
-    await db.addCompany(company);
-    await db.addDepot(depot);
-};
-
-const clearDatabase = async () => {
-    await db.dropTables();
-};
+const emailController = require('../controllers/emailController');
 
 beforeAll(async () => {
-    var settings = {
-        host: 'localhost',
-        user: 'dfireweb',
-        password: 'password',
-        database: 'dfireweb_test',
-        multipleStatements: true,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-    };
 
-    await db.changeDatabase(settings);
 });
 
 afterAll(async () => {
-    await db.closePool();
+
 });
 
 beforeEach(async () => {
-    await initializeDatabase();
+
 });
 
 afterEach(async () => {
-    await clearDatabase();
+
 });
 
 test('test sendMail with valid data', async () => {
-    
+    email = "dfirecapstone+1@gmail.com";
+    subj = "test";
+    text = "test";
+    var result = await emailController.sendMail(email, subj, text);
+    expect(result.status).toBe(true);
 });
 
 test('test sendMail with invalid data', async () => {
-    
+    email = "q";
+    subj = "test";
+    text = "test";
+    var result = await emailController.sendMail(email, subj, text);
+    expect(result.status).toBe(false);
 });
 
 

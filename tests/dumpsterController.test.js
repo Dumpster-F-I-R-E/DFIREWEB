@@ -51,15 +51,48 @@ afterEach(async () => {
 });
 
 test('test getDumpstersInfo', async () => {
-
+    let dumpsterreport={
+        DumpsterID: 1,	
+        Longitude: -114.08529,	
+        Latitude: 51.04886973630907,	
+        BatteryLevel: 38,	
+        FullnessLevel: 100,	
+        ErrorCode: 0,	
+        Time: "2020-12-19 17:00:00",
+    };
+    await db.storeDumpsterReport(dumpsterreport);
+    let results = await dumpsterController.getDumpstersInfo();
+    expect(results).toBeDefined();
 });
 
 test('test getDumpsterInfo with valid data', async () => {
-
+    let dumpsterreport={
+        DumpsterID: 1,	
+        Longitude: -114.08529,	
+        Latitude: 51.04886973630907,	
+        BatteryLevel: 38,	
+        FullnessLevel: 100,	
+        ErrorCode: 0,	
+        Time: "2020-12-19 17:00:00",
+    };
+    await db.storeDumpsterReport(dumpsterreport);
+    let results = await dumpsterController.getDumpsterInfo(1);
+    expect(results).toBeDefined();
 });
 
 test('test getDumpsterInfo with invalid data', async () => {
-
+    let dumpsterreport={
+        DumpsterID: 1,	
+        Longitude: -114.08529,	
+        Latitude: 51.04886973630907,	
+        BatteryLevel: 38,	
+        FullnessLevel: 100,	
+        ErrorCode: 0,	
+        Time: "2020-12-19 17:00:00",
+    };
+    await db.storeDumpsterReport(dumpsterreport);
+    let results = await dumpsterController.getDumpsterInfo("a");
+    expect(results).toBeUndefined();
 });
 
 test('test createDumpster with valid data', async () => {
@@ -77,37 +110,73 @@ test('test createDumpster with invalid data', async () => {
         CompanyID: 1,
     };
     var results = dumpsterController.createDumpster(dumpster);
-    expect(results).toBeDefined();
+    expect(results).toBeUndefined();
 });
 
-test('test deleteDumpster ', async () => {
-
+test('test deleteDumpster with valid id', async () => {
+    await dumpsterController.deleteDumpster(1);
+    var results = db.getNumberOfDepots();
+    expect(results).toBe(0);
 });
 
-test('test createDumpster with valid data', async () => {
-
+test('test deleteDumpster with invalid id', async () => {
+    await dumpsterController.deleteDumpster(2);
+    var results = db.getNumberOfDepots();
+    expect(results).toBe(1);
 });
 
 test('test getDumpsters with valid data', async () => {
-
+    var results = dumpsterController.getDumpsters(0);
+    expect(results).toBeDefined();
 });
 
 test('test getDumpsters with invalid data', async () => {
-
+    var results = dumpsterController.getDumpsters("a");
+    expect(results).toBeUndefined();
 });
 
 test('test removeAssignedDriverFromDumpster with valid data', async () => {
-
+    let user={
+        Username: "driver",
+        Password: "driver",
+        Role: "Driver",
+        CompanyID:	1,
+        FirstName:	"John",
+        LastName:	"Doe",
+        Address:	"Calgary,AB",
+        Email:	"admin@abc.com",
+        Phone:	"403-233-3333",
+    }
+    await db.addUser(user);
+    await db.setDriver(1, 1);
+    await dumpsterController.removeAssignedDriverFromDumpster(1);
+    var results = db.getNumberOfDumpstersWithDrivers();
+    expect(results).toBe(0);
 });
 
 test('test removeAssignedDriverFromDumpster with invalid data', async () => {
-
+    let user={
+        Username: "driver",
+        Password: "driver",
+        Role: "Driver",
+        CompanyID:	1,
+        FirstName:	"John",
+        LastName:	"Doe",
+        Address:	"Calgary,AB",
+        Email:	"admin@abc.com",
+        Phone:	"403-233-3333",
+    }
+    await db.addUser(user);
+    await db.setDriver(1, 1);
+    await dumpsterController.removeAssignedDriverFromDumpster("a");
+    var results = db.getNumberOfDumpstersWithDrivers();
+    expect(results).toBe(1);
 });
 
-test('test forcast with valid data', async () => {
+// test('test forcast with valid data', async () => {
 
-});
+// });
 
-test('test forcast with invalid data', async () => {
+// test('test forcast with invalid data', async () => {
     
-});
+// });

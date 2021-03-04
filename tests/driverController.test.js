@@ -53,9 +53,8 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('check if only one depot exists', async () => {
-    var results = await db.getNumberOfDepots();
-    expect(results.Count).toBe(1);
+test('test', async () => {
+
 });
 
 
