@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-const depot = require('../controllers/depotController');
+const forgetPasswordController = require('../controllers/forgetPasswordController');
 const db = require('../database/db');
 
 const initializeDatabase = async () => {
@@ -10,8 +10,22 @@ const initializeDatabase = async () => {
         Address: 'Calgary,AB',
         Phone: '345-343-3432',
     };
+    let profile = {
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '234',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
     await db.createTables();
     await db.addCompany(company);
+    await db.addUser(profile);
 };
 
 const clearDatabase = async () => {
@@ -45,7 +59,12 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('test getMessages with valid data', async () => {});
+test('test getUser with valid data', async () => {
+    var results = await forgetPasswordController.getUser('admin@abc.com');
+    expect(results).toBeDefined();
+});
 
-test('test getMessages with invalid data', async () => {});
-
+test('test getUser with valid data', async () => {
+    var results = await forgetPasswordController.getUser(3);
+    expect(results).toBeUndefined();
+});
