@@ -26,67 +26,71 @@ router.get('/depots', auth.requireAuth, async function (req, res) {
     res.json(data);
 });
 
-router.post('/assign-driver', auth.requireAuth, auth.requireManager, 
-    [
-        body('DriverID').notEmpty().isNumeric(),
-        body('Dumpsters').isArray(),
-    ],
+router.post(
+    '/assign-driver',
+    auth.requireAuth,
+    auth.requireManager,
+    [body('DriverID').notEmpty().isNumeric(), body('Dumpsters').isArray()],
     async function (req, res) {
         console.log(req.body);
         let data = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
-            errors.array().map(err => {
+            errors.array().map((err) => {
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
                 success: false,
-                error: extractedErrors
+                error: extractedErrors,
             });
         }
         await driver.setDumpsters(data.DriverID, data.Dumpsters);
         res.json({
             success: true,
-            error: 'Error Message'
+            error: 'Error Message',
         });
-    });
+    }
+);
 
-
-router.post('/clear-driver', auth.requireAuth, auth.requireManager,
-    [
-        body('DriverID').notEmpty().isNumeric(),
-    ],
+router.post(
+    '/clear-driver',
+    auth.requireAuth,
+    auth.requireManager,
+    [body('DriverID').notEmpty().isNumeric()],
     async function (req, res) {
         console.log(req.body);
         let data = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
-            errors.array().map(err => {
+            errors.array().map((err) => {
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
                 success: false,
-                error: extractedErrors
+                error: extractedErrors,
             });
         }
         await driver.clearDumpsters(data.DriverID);
         res.json({
             success: true,
-            error: 'Error Message'
+            error: 'Error Message',
         });
-    });
+    }
+);
 
-
-
-
-router.get('/routes', auth.requireAuth, auth.requireManager, async function (req, res) {
-    let data = await driver.getRoutes();
-    res.json(data);
-});
+router.get(
+    '/routes',
+    auth.requireAuth,
+    auth.requireManager,
+    async function (req, res) {
+        let data = await driver.getRoutes();
+        res.json(data);
+    }
+);
 
 router.get('/my-route', auth.requireAuth, async function (req, res) {
     let data = await driver.getRoute(res.locals.User.UserID);

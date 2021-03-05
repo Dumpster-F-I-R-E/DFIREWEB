@@ -90,7 +90,7 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function getRandomBoolean(){
+function getRandomBoolean() {
     return Math.random() > 0.5;
 }
 
@@ -110,19 +110,19 @@ var seedDumpsterReports = async (numberOfDumpsters, num = 20) => {
         report.Time.setHours(report.Time.getHours() + index);
         report.DumpsterID = getRandomInt(1, numberOfDumpsters);
         report.FullnessLevel = report.FullnessLevel + getRandomInt(0, 100);
-        
+
         report.BatteryLevel = getRandomInt(0, 100);
-        if(getRandomBoolean()){
+        if (getRandomBoolean()) {
             report.Latitude += getRandomArbitrary(-distance, distance);
-        }else{
+        } else {
             report.Longitude += getRandomArbitrary(-distance, distance);
-        }        
-        
-        if(report.FullnessLevel > 100){
+        }
+
+        if (report.FullnessLevel > 100) {
             report.FullnessLevel = 100;
             await db.storeDumpsterReport(report);
             report.FullnessLevel = 0;
-        }else{
+        } else {
             await db.storeDumpsterReport(report);
         }
     }
@@ -153,7 +153,7 @@ var init = async () => {
         await seedUsers();
         await seedDepots();
         await seedDumpsters(20);
-        await seedDumpsterReports(20,100);
+        await seedDumpsterReports(20, 100);
         console.log('Closing connection');
         await db.closePool();
     }

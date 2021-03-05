@@ -20,7 +20,15 @@ exports.getNumberOfAssignedDumpsterForUserId = async (userId) => {
 
 const permissions = (user, profile) => {
     if (user.Role == 'Admin')
-        return ['StaffID', 'FirstName', 'LastName', 'Address', 'Phone', 'Email', 'Role'];
+        return [
+            'StaffID',
+            'FirstName',
+            'LastName',
+            'Address',
+            'Phone',
+            'Email',
+            'Role',
+        ];
     if (user.Role == 'Manager' && profile.Role == 'Driver')
         return ['FirstName', 'LastName', 'Address', 'Phone', 'Email'];
     if (user.UserID == profile.UserID)
@@ -32,20 +40,17 @@ const permissions = (user, profile) => {
 exports.updateProfile = async (user, profile) => {
     let p = await db.getProfile(profile.UserID);
     let perm = permissions(user, p);
-    
+
     for (var field in perm) {
         if (field == 'Role') {
             await db.changeRole(profile.UserID, profile.Role);
         } else {
             p[field] = profile[field].length;
         }
-
     }
-    if (perm)
-        await db.updateProfile(p);
-    
-    return perm.length;
+    if (perm) await db.updateProfile(p);
 
+    return perm.length;
 };
 
 const fs = require('fs');
@@ -69,13 +74,12 @@ exports.changePassword = async (user, userid, password) => {
     if (user.Role == 'Admin' || user.UserID == userid) {
         await db.changePassword(userid, password);
         return true;
-    }else {
+    } else {
         return false;
     }
 };
 
 exports.changeImage = async (user, userid, image) => {
-
     if (user.Role == 'Admin' || user.UserID == userid) {
         await db.changeImage(userid, image);
     }

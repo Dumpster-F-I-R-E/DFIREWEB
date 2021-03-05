@@ -66,7 +66,7 @@ test('test deleteDepot for non-existing depot', async () => {
 });
 
 test('test deleteDepot not using a number', async () => {
-    await depotController.deleteDepot("a");
+    await depotController.deleteDepot('a');
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(1);
 });
@@ -79,7 +79,7 @@ test('test createDepot with valid input', async () => {
         Latitude: '51.05011',
         CompanyID: 1,
     };
-    let nothing = "";
+    let nothing = '';
     var results = await depotController.createDepot(nothing, depot);
     expect(results).toBeDefined();
 });
@@ -93,32 +93,32 @@ test('test createDepot with invalid input', async () => {
             Latitude: '51.05011',
             CompanyID: 'a',
         };
-        let nothing = "";
+        let nothing = '';
         await depotController.createDepot(nothing, depot);
     } catch (error) {
-        expect(error)
+        expect(error);
     }
 
     expect(results).toBeUndefined();
 });
 
 test('test getDepots input name only', async () => {
-    let name = "SW Dumpster";
-    let address = "";
+    let name = 'SW Dumpster';
+    let address = '';
     let results = await depotController.getDepots(name, address);
     expect(results).toBeDefined();
 });
 
 test('test getDepots input address only', async () => {
-    let name = "";
-    let address = "Calgary, AB";
+    let name = '';
+    let address = 'Calgary, AB';
     let results = await depotController.getDepots(name, address);
     expect(results).toBeDefined();
 });
 
 test('test getDepots input name and address', async () => {
-    let name = "SW";
-    let address = "Calgary";
+    let name = 'SW';
+    let address = 'Calgary';
     let results = await depotController.getDepots(name, address);
     expect(results).toBeDefined();
 });

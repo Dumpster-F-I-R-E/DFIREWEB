@@ -5,12 +5,13 @@
     padding: 20px;
     margin: 0 auto;
     width: 100%;
-
 }
 
-#getEmail, #resetForm {
+#getEmail,
+#resetForm {
     text-align: center;
 }
-#getEmailH1, #resetPageH1 {
+#getEmailH1,
+#resetPageH1 {
     text-align: center;
 }

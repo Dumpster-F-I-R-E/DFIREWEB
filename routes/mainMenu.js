@@ -7,9 +7,9 @@ const driver = require('../controllers/driverController');
 router.get('/', auth.requireAuth, async function (req, res) {
     console.log('Username is ' + res.locals.User.Role);
     let report = await mainMenuController.getReports();
-    if(res.locals.User.Role == 'Driver'){
+    if (res.locals.User.Role == 'Driver') {
         report = await driver.getRoute(res.locals.User.UserID);
-        console.log("Main Menu Controller", report);    
+        console.log('Main Menu Controller', report);
         report = report.Dumpsters;
     }
     console.log(report);
@@ -20,7 +20,7 @@ router.get('/', auth.requireAuth, async function (req, res) {
     res.render('mainMenu', {
         user: res.locals.User.Username,
         role: res.locals.User.Role,
-        dumpsterData: report
+        dumpsterData: report,
     });
 });
 

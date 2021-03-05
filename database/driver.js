@@ -18,9 +18,10 @@ exports.setLocation = async (userId, lat, lng) => {
 };
 
 exports.getDrivers = async () => {
-    let sql = 'Select drv.UserID, Role, FirstName, LastName, Email, Latitude,' +
+    let sql =
+        'Select drv.UserID, Role, FirstName, LastName, Email, Latitude,' +
         'Longitude From Drivers RIGHT JOIN (SELECT * FROM Users ' +
-        ' WHERE Role=\'Driver\') drv  ON Drivers.UserID=drv.UserID;';
+        " WHERE Role='Driver') drv  ON Drivers.UserID=drv.UserID;";
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
@@ -38,9 +39,7 @@ exports.clearRoutes = async () => {
 
 exports.clearDumpsters = async (driverId) => {
     let sql =
-        'UPDATE Dumpsters ' +
-        'SET DriverID = NULL ' +
-        'WHERE DriverID=?; ';
+        'UPDATE Dumpsters ' + 'SET DriverID = NULL ' + 'WHERE DriverID=?; ';
 
     await pool.execute(sql, [driverId]).catch(printErrors);
 };

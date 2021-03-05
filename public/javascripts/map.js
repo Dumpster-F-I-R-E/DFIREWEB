@@ -16,9 +16,7 @@ let selectedIcon = '/icons/trash_blue.png';
 let fullIcon = '/icons/trash_red.png';
 let depoIcon = '/icons/depot.png';
 
-
 function drawDepot(depot) {
-
     let lat = depot.Latitude;
     let lng = depot.Longitude;
     const marker = new google.maps.Marker({
@@ -30,14 +28,17 @@ function drawDepot(depot) {
 
     const contentString =
         '<div id="body">' +
-        '<p>' + depot.Name + '<br>' + depot.Address + '</p>' +
+        '<p>' +
+        depot.Name +
+        '<br>' +
+        depot.Address +
+        '</p>' +
         '</div>';
 
     const infowindow = new google.maps.InfoWindow({
         content: contentString,
     });
-  
-    
+
     marker.addListener('mouseover', () => {
         infowindow.open(map, marker);
     });
@@ -46,10 +47,6 @@ function drawDepot(depot) {
         infowindow.close();
     });
 }
-
-
-
-
 
 function addMarker(dumpster, map) {
     // The marker, positioned at Uluru
@@ -73,7 +70,7 @@ function addMarker(dumpster, map) {
 
     if (dumpster.FullnessLevel == 100) {
         marker.setIcon(fullIcon);
-    };
+    }
     const infowindow = new google.maps.InfoWindow({
         content: contentString,
     });
@@ -112,7 +109,7 @@ function showDumpsters() {
         .then((res) => {
             return res.json();
         })
-        .then((data) => {          
+        .then((data) => {
             data.forEach((depot) => {
                 drawDepot(depot);
             });

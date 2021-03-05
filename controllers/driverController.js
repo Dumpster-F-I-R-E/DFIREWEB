@@ -10,17 +10,14 @@ exports.getDrivers = async () => {
 exports.setDumpsters = async (driverId, dumpsters) => {
     if (dumpsters) {
         for (var i in dumpsters) {
-            console.log("Assign Driver", driverId, dumpsters[i]);
+            console.log('Assign Driver', driverId, dumpsters[i]);
             await db.setDriver(dumpsters[i], driverId);
         }
     }
-
 };
-
 
 exports.clearDumpsters = async (driverId) => {
     await model.clearDumpsters(driverId);
-
 };
 
 exports.getDriver = async (dumpsterId) => {
@@ -30,50 +27,51 @@ exports.getDriver = async (dumpsterId) => {
 
 exports.getRoutes = async () => {
     let result = {
-        Routes : {},
-        Dumpsters: {}
-    }; 
+        Routes: {},
+        Dumpsters: {},
+    };
     let dumpsters = await db.getDumpsterData();
-    for(var i in dumpsters){
+    for (var i in dumpsters) {
         result.Dumpsters[dumpsters[i].DumpsterID] = dumpsters[i];
     }
 
     let driverData = await db.getRoutes();
     console.log(driverData);
-    for(let i in driverData){
+    for (let i in driverData) {
         let driver = driverData[i];
-        if(driver.DriverID){
+        if (driver.DriverID) {
             result.Routes[driver.DriverID] = {
-                Driver: driver
+                Driver: driver,
             };
-            result.Routes[driver.DriverID]['Route'] = await exports.getRoute(driver.DriverID);
+            result.Routes[driver.DriverID]['Route'] = await exports.getRoute(
+                driver.DriverID
+            );
         }
     }
-    
-    return result;
 
+    return result;
 };
 
 const getDistance = (l1, l2) => {
-    let distance = Math.sqrt((l1.Latitude - l2.Latitude) ** 2 + (l1.Longitude - l2.Longitude) ** 2);
+    let distance = Math.sqrt(
+        (l1.Latitude - l2.Latitude) ** 2 + (l1.Longitude - l2.Longitude) ** 2
+    );
     return distance;
 };
 
 const getClosestDepot = async (dumpsters) => {
-    
     let depots = await db.getDepots();
     let distances = new Array(depots.length).fill(0);
     for (let index = 0; index < dumpsters.length; index++) {
         for (let i in depots) {
             distances[i] += getDistance(depots[i], dumpsters[index]);
         }
-    };
+    }
 
     let minIndex = 0;
     for (let i in depots) {
-        if (distances[i] < distances[minIndex])
-            minIndex = i;
-    };
+        if (distances[i] < distances[minIndex]) minIndex = i;
+    }
 
     return depots[minIndex];
 };
@@ -89,41 +87,33 @@ exports.getRoute = async (driverId) => {
     }
 
     let closestDepot = await getClosestDepot(dumpsters);
-    
+
     return {
         Dumpsters: dumpsters,
-        Depot: closestDepot
+        Depot: closestDepot,
     };
 };
 
 exports.setLocation = async (driverId, lat, lng) => {
-    await model.setLocation(driverId, lat,lng);
-
+    await model.setLocation(driverId, lat, lng);
 };
-
 
 exports.optimizeRoutes = async () => {
     const fullLevel = 70;
     let dumpsters = await db.getDumpsterData();
     let drivers = await model.getDrivers();
-    let full = dumpsters.filter(d => d.FullnessLevel > fullLevel);
+    let full = dumpsters.filter((d) => d.FullnessLevel > fullLevel);
     let l = full.length / drivers.length;
     let i = 0;
     for (let index = 0; index < drivers.length; index++) {
         for (let t = 0; t < l; t++) {
-            await db.setDriver(full[i].DumpsterID,drivers[index].UserID);
+            await db.setDriver(full[i].DumpsterID, drivers[index].UserID);
             i++;
-            if(i >= full.length)
-                break;
-            
+            if (i >= full.length) break;
         }
-        
     }
 };
 
 exports.clearRoutes = async () => {
-
     await model.clearRoutes();
-
 };
-

@@ -12,7 +12,7 @@ const salt = 'dEnELfire';
 
 exports.hashPassword = (password) => {
     const hash = crypto.createHash('sha256');
-    hash.update(salt+password);
+    hash.update(salt + password);
     return hash.digest('utf8');
 };
 
@@ -66,7 +66,7 @@ exports.requireAuth = async (req, res, next) => {
             // Session is still valid
             let user = await db.getUserByUserID(session.UserID);
             res.locals = {
-                User:user,
+                User: user,
             };
             next();
         } else {
@@ -90,7 +90,11 @@ exports.requireAdmin = (req, res, next) => {
     if (res.locals.User.Role === 'Admin') {
         next();
     } else {
-        return error.redirect(res, '/mainMenu', "Insufficient Permissions(Admin)");
+        return error.redirect(
+            res,
+            '/mainMenu',
+            'Insufficient Permissions(Admin)'
+        );
     }
 };
 
@@ -98,7 +102,11 @@ exports.requireManager = (req, res, next) => {
     if (res.locals.User.Role === 'Manager') {
         next();
     } else {
-        return error.redirect(res, '/mainMenu', "Insufficient Permissions(Manager)");
+        return error.redirect(
+            res,
+            '/mainMenu',
+            'Insufficient Permissions(Manager)'
+        );
     }
 };
 
@@ -109,7 +117,11 @@ exports.requireAdminOrManager = (req, res, next) => {
     ) {
         next();
     } else {
-        return error.redirect(res, '/mainMenu', "Insufficient Permissions(Admin or Manager)");
+        return error.redirect(
+            res,
+            '/mainMenu',
+            'Insufficient Permissions(Admin or Manager)'
+        );
     }
 };
 
