@@ -1,7 +1,4 @@
 /* eslint-disable no-undef */
-
-const { ExpectationFailed } = require('http-errors');
-const { requireAdmin } = require('../controllers/authController');
 const profileController = require('../controllers/profileController');
 const db = require('../database/db');
 
