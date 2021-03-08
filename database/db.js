@@ -152,6 +152,7 @@ exports.addCompany = async (company) => {
 
 exports.deleteUser = async (userid) => {
     let sql = 'DELETE FROM Users WHERE UserID=?';
+    console.log(sql);
     await pool.query(sql, [userid]).catch(printErrors);
 };
 
