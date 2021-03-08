@@ -109,7 +109,7 @@ test('test createUser with invalid data', async () => {
     expect(results).toBeUndefined();
 });
 
-test('test deleteUser as Admin of an existing user', async () => {
+test('test deleteUser as Admin for an existing user', async () => {
     let user = {
         Role: 'Admin',
     };
@@ -118,27 +118,23 @@ test('test deleteUser as Admin of an existing user', async () => {
     expect(results.Count).toBe(0);
 });
 
-test('test deleteUser with invalid data', async () => {
+test('test deleteUser as Manager for an existing user', async () => {
+    let user = {
+        Role: 'Manager',
+    };
+    await userController.deleteUser(user, 1);
+    var results = await db.getNumberOfUsers();
+    expect(results.Count).toBe(1);
+});
+
+
+test('test deleteUser Admin for an nonexisting user', async () => {
     let user = {
         Role: 'Admin',
     };
-    let profile = {
-        FirstName: 'John',
-        LastName: 'Doe',
-        Address: 'Calgary,AB',
-        Email: 'admin@abc.com',
-        Phone: '403-233-3333',
-        StaffID: '1',
-        UserID: '234',
-        Username: 'u234',
-        Password: '12324sd',
-        Role: 'Admin',
-        CompanyID: 1,
-    };
-    await db.addUser(profile);
-    await userController.deleteUser(user, 3);
+    await userController.deleteUser(user, 2);
     var results = await db.getNumberOfUsers();
-    expect(results.Count).toBe(0);
+    expect(results.Count).toBe(1);
 });
 
 test('test getUser with valid data', async () => {

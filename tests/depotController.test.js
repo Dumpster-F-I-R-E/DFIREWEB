@@ -4,12 +4,12 @@ const depotController = require('../controllers/depotController');
 const db = require('../database/db');
 
 const initializeDatabase = async () => {
-    let depot = {
+    var depot1 = {
         Name: 'SW Dumpster',
         Address: 'Calgary, AB',
         Longitude: '-114.08529',
         Latitude: '51.05011',
-        CompanyID: 1,
+        CompanyID: '1',
     };
     let company = {
         CompanyID: 1,
@@ -19,7 +19,7 @@ const initializeDatabase = async () => {
     };
     await db.createTables();
     await db.addCompany(company);
-    await db.addDepot(depot);
+    await db.addDepot(depot1);
 };
 
 const clearDatabase = async () => {
@@ -53,6 +53,10 @@ afterEach(async () => {
     await clearDatabase();
 });
 
+test('test 1', async () => {
+    var results = await db.getNumberOfDepots();
+    expect(results.Count).toBe(1);
+});
 test('test deleteDepot for existing depot', async () => {
     await depotController.deleteDepot(1);
     var results = await db.getNumberOfDepots();
@@ -60,7 +64,7 @@ test('test deleteDepot for existing depot', async () => {
 });
 
 test('test deleteDepot for non-existing depot', async () => {
-    await depotController.deleteDepot(2);
+    await depotController.deleteDepot(4);
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(1);
 });
