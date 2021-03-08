@@ -73,24 +73,30 @@ test('test getProfileById with invalid data', async () => {
 });
 
 test('test getNumberOfAssignedDumpsterForUserId with existing user', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId(1);
+    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
+        1
+    );
     expect(result.DumpsterCount).toBe(0);
 });
 
 test('test getNumberOfAssignedDumpsterForUserId with non existing user', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId(2);
+    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
+        2
+    );
     expect(result.DumpsterCount).toBe(0);
 });
 
 test('test getNumberOfAssignedDumpsterForUserId with invalid data', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId('a');
+    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
+        'a'
+    );
     expect(result.DumpsterCount).toBe(0);
 });
 
 test('test updateProfile with valid data', async () => {
     let user = {
         Role: 'Admin',
-    }
+    };
     let profile = {
         FirstName: 'John',
         LastName: 'Doe',
@@ -126,7 +132,7 @@ test('test getImage with invalid data', async () => {
 test('test changePassword as Admin', async () => {
     let user = {
         Role: 'Admin',
-    }
+    };
     let profile = {
         FirstName: 'John',
         LastName: 'Doe',
@@ -140,14 +146,18 @@ test('test changePassword as Admin', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = await profileController.changePassword(user,2, "testpassword");
+    var result = await profileController.changePassword(
+        user,
+        2,
+        'testpassword'
+    );
     expect(result).toBeTruthy();
 });
 
 test('test changePassword as Manager', async () => {
     let user = {
         Role: 'Manager',
-    }
+    };
     let profile = {
         FirstName: 'John',
         LastName: 'Doe',
@@ -161,7 +171,11 @@ test('test changePassword as Manager', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = await profileController.changePassword(user,2, "testpassword");
+    var result = await profileController.changePassword(
+        user,
+        2,
+        'testpassword'
+    );
     expect(result).toBeTruthy();
 });
 

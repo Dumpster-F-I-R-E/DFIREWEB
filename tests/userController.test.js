@@ -69,8 +69,8 @@ afterEach(async () => {
 
 test('test createUser with valid data', async () => {
     let user = {
-        Role: "Admin",
-    }
+        Role: 'Admin',
+    };
     let profile = {
         FirstName: 'John',
         LastName: 'Doe',
@@ -91,7 +91,7 @@ test('test createUser with valid data', async () => {
 test('test createUser with invalid data', async () => {
     let user = {
         Role: 1,
-    }
+    };
     let profile = {
         FirstName: 'John',
         LastName: 'Doe',
@@ -112,7 +112,7 @@ test('test createUser with invalid data', async () => {
 test('test deleteUser as Admin of an existing user', async () => {
     let user = {
         Role: 'Admin',
-    }
+    };
     await userController.deleteUser(user, 1);
     var results = db.getNumberOfUsers();
     expect(results.Count).toBe(0);
@@ -121,7 +121,7 @@ test('test deleteUser as Admin of an existing user', async () => {
 test('test deleteUser with invalid data', async () => {
     let user = {
         Role: 'Admin',
-    }
+    };
     let profile = {
         FirstName: 'John',
         LastName: 'Doe',
@@ -193,7 +193,7 @@ test('test getUsers with valid name', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('u234','');
+    var result = userController.getUsers('u234', '');
     expect(result).toBeDefined();
 });
 
@@ -212,7 +212,7 @@ test('test getUsers with valid role', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('','Admin');
+    var result = userController.getUsers('', 'Admin');
     expect(result).toBeDefined();
 });
 
@@ -231,7 +231,7 @@ test('test getUsers with valid name and role', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('u234','Admin');
+    var result = userController.getUsers('u234', 'Admin');
     expect(result).toBeDefined();
 });
 
@@ -250,6 +250,6 @@ test('test getUsers with invalid data', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers(1,'');
+    var result = userController.getUsers(1, '');
     expect(result).toBeDefined();
 });
