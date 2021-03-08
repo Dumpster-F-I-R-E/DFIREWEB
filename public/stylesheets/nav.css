@@ -15,14 +15,13 @@
     border-radius: 50%;
     border: 4px solid black;
     background-color: white;
-    display: inline-block; 
-    
+    display: inline-block;
 }
 .thumbnail img {
     position: absolute;
     left: 50%;
     top: 50%;
-    
+
     height: 100%;
     width: auto;
     -webkit-transform: translate(-50%, -50%);
@@ -33,9 +32,9 @@
     width: 100%;
     height: auto;
 }
-#badge{
-    color:#000;
-    background:rgb(255, 208, 0);
+#badge {
+    color: #000;
+    background: rgb(255, 208, 0);
     text-align: center;
     border: 2px;
 }
@@ -55,7 +54,7 @@
 
 .nav-items li:hover {
     background-color: #34465d;
-    color:white;
+    color: white;
 }
 
 .nav-items a {
@@ -65,11 +64,11 @@
 
 @media only screen and (max-width: 600px) {
     .nav {
-        display:none;
+        display: none;
         height: 100vh;
     }
 
-    .nav-items{
+    .nav-items {
         text-align: center;
     }
 
@@ -79,6 +78,6 @@
 }
 @media only screen and (min-width: 600px) {
     .nav {
-        display:block;
+        display: block;
     }
 }

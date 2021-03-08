@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-
 var indexRouter = require('./routes/index');
 var routesRouter = require('./routes/routes');
 var loginRouter = require('./routes/login');
@@ -32,7 +31,6 @@ app.use(express.urlencoded({ limit: '25mb', extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/', indexRouter);
 app.use('/', loginRouter);
 app.use('/profile', profileRouter);
@@ -40,8 +38,8 @@ app.use('/dumpster', dumpsterRouter);
 app.use('/mainMenu', mainMenuRouter);
 app.use('/user', userRouter);
 app.use('/aboutUs', aboutUsRouter);
-app.use('/forgetPassword',forgetPassRouter);
-app.use('/reset',forgetPassRouter);
+app.use('/forgetPassword', forgetPassRouter);
+app.use('/reset', forgetPassRouter);
 app.use('/api', apiRouter);
 app.use('/routes', routesRouter);
 app.use('/depot', depotRouter);

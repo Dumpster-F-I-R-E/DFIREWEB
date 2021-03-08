@@ -50,15 +50,13 @@ body {
 }
 
 @media only screen and (max-width: 600px) {
-
-    .wrapper{
-        margin:100px auto;
+    .wrapper {
+        margin: 100px auto;
         height: 100%;
     }
 
-    body{
+    body {
         max-height: 100vh;
         background-image: none;
     }
-
 }

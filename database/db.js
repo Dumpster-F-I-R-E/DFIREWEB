@@ -124,7 +124,10 @@ exports.getProfile = async (id) => {
 };
 
 exports.getNumberOfAssignedDumpsterForUserId = async (id) => {
-    let sql = mysql.format('SELECT COUNT(DriverID) AS DumpsterCount FROM dfireweb.dumpsters WHERE DriverID = ?', [id]);
+    let sql = mysql.format(
+        'SELECT COUNT(DriverID) AS DumpsterCount FROM dfireweb.dumpsters WHERE DriverID = ?',
+        [id]
+    );
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
@@ -149,6 +152,7 @@ exports.addCompany = async (company) => {
 
 exports.deleteUser = async (userid) => {
     let sql = 'DELETE FROM Users WHERE UserID=?';
+    console.log(sql);
     await pool.query(sql, [userid]).catch(printErrors);
 };
 
@@ -190,15 +194,21 @@ exports.addDepot = async (depot) => {
         'INSERT INTO Depots (`Name`, `Address`, `Latitude`, `Longitude`, `CompanyID`) VALUES(?, ?, ?, ? ,?)';
 
     await pool
-        .execute(sql, [depot.Name, depot.Address, depot.Latitude, depot.Longitude, depot.CompanyID])
+        .execute(sql, [
+            depot.Name,
+            depot.Address,
+            depot.Latitude,
+            depot.Longitude,
+            depot.CompanyID,
+        ])
         .catch(printErrors);
 
-    let sql2 = 'SELECT * FROM `Depots` WHERE DepotID=(SELECT MAX(DepotID) FROM `Depots`);';
+    let sql2 =
+        'SELECT * FROM `Depots` WHERE DepotID=(SELECT MAX(DepotID) FROM `Depots`);';
     var results = await pool.query(sql2).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
-
 };
 
 exports.addDumpster = async (dumpster) => {
@@ -208,12 +218,12 @@ exports.addDumpster = async (dumpster) => {
         .execute(sql, [dumpster.DumpsterSerialNumber, dumpster.CompanyID])
         .catch(printErrors);
 
-    let sql2 = 'SELECT * FROM `Dumpsters` WHERE DumpsterID=(SELECT MAX(DumpsterID) FROM `Dumpsters`);';
+    let sql2 =
+        'SELECT * FROM `Dumpsters` WHERE DumpsterID=(SELECT MAX(DumpsterID) FROM `Dumpsters`);';
     var results = await pool.query(sql2).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
-
 };
 
 exports.deleteDumpster = async (dumpsterId) => {
@@ -266,19 +276,20 @@ exports.getDumpsterById = async (id) => {
 };
 
 exports.getDumpsterReports = async () => {
-    let sql =
-        mysql.format('SELECT DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM dumpsterReports ORDER BY ReportID DESC limit 5');
+    let sql = mysql.format(
+        'SELECT DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time FROM dumpsterReports ORDER BY ReportID DESC limit 5'
+    );
 
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
 };
-exports.getLastHourReports = async() => {
-    let sql = 'Select DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time' +
-                ' From dumpsterreports'+
-                ' where time>=date_sub((select max(time) from dumpsterreports),interval 6 hour) order by reportID desc;';
-    
+exports.getLastHourReports = async () => {
+    let sql =
+        'Select DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time' +
+        ' From dumpsterreports' +
+        ' where time>=date_sub((select max(time) from dumpsterreports),interval 6 hour) order by reportID desc;';
 
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
@@ -328,7 +339,7 @@ exports.getDepots = async () => {
 exports.getDepotsSearch = async (name, address) => {
     let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
     if (name && name != '*') {
-        sql += ' WHERE (Name LIKE ?)';
+        sql += 'WHERE Name LIKE ?';
         sql = mysql.format(sql, [name]);
     }
 
@@ -336,7 +347,6 @@ exports.getDepotsSearch = async (name, address) => {
         if (name && name != '*') {
             sql += ' AND Address Like ?';
         }
-        sql += ' WHERE Address Like ?';
         sql = mysql.format(sql, [address]);
     }
     console.log(sql);
@@ -349,7 +359,7 @@ exports.getDepotsSearch = async (name, address) => {
 exports.getUsersSearch = async (name, role) => {
     let sql =
         'SELECT UserID, FirstName, LastName, Email, Role, DumpsterCount ' +
-        'FROM Users Drivers ' + 
+        'FROM Users Drivers ' +
         'LEFT JOIN (SELECT DriverID, COUNT(DriverID) AS DumpsterCount FROM dumpsters GROUP BY DriverID) Dumpsters ' +
         'ON Drivers.UserID = Dumpsters.DriverID ';
     if (name && name != '*') {
@@ -360,10 +370,10 @@ exports.getUsersSearch = async (name, role) => {
     if (role && role != '*') {
         if (name && name != '*') {
             sql += ' AND Role Like ?';
-        }else{
+        } else {
             sql += ' WHERE Role Like ?';
         }
-        
+
         sql = mysql.format(sql, [role]);
     }
     console.log(sql);
@@ -405,10 +415,9 @@ exports.changeImage = async (userId, image) => {
     await pool.execute(sql, [userId, image]).catch(printErrors);
 };
 
-
-
 exports.getRoutes = async () => {
-    let sql = 'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID';
+    let sql =
+        'SELECT DumpsterID,DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID';
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
@@ -424,17 +433,19 @@ exports.getRoute = async (driverId) => {
 };
 
 exports.getDriver = async (DumpsterId) => {
-    let sql = 'SELECT DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID WHERE DumpsterID=?';
+    let sql =
+        'SELECT DriverID,FirstName,LastName FROM Dumpsters JOIN Users ON DriverID=UserID WHERE DumpsterID=?';
     var results = await pool.query(sql, [DumpsterId]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
     }
 };
-exports.getDriverByName = async(driverName) => {
+exports.getDriverByName = async (driverName) => {
     // let sql = 'select * from users'
 };
-exports.getMessages = async(driverID) => {
-    let sql = 'Select * from driverMessages where UserID = ? order by MessageID desc';
+exports.getMessages = async (driverID) => {
+    let sql =
+        'Select * from driverMessages where UserID = ? order by MessageID desc';
 
     var results = await pool.query(sql, [driverID]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
@@ -442,34 +453,40 @@ exports.getMessages = async(driverID) => {
     }
 };
 
-exports.addMessage = async(userID, message) => {
-    let sql = mysql.format('insert into driverMessages(userID,Message,Time,Status) values (?,?,current_timestamp,"unread")',[userID,message]);
+exports.addMessage = async (userID, message) => {
+    let sql = mysql.format(
+        'insert into driverMessages(userID,Message,Time,Status) values (?,?,current_timestamp,"unread")',
+        [userID, message]
+    );
     await pool.execute(sql).catch(printErrors);
 };
-exports.updateMessageStatus = async(driverId, status) => {
-    let sql = mysql.format('Update driverMessages SET Status = ? where userID = ?', [status,driverId]);
+exports.updateMessageStatus = async (driverId, status) => {
+    let sql = mysql.format(
+        'Update driverMessages SET Status = ? where userID = ?',
+        [status, driverId]
+    );
     await pool.execute(sql).catch(printErrors);
-
-}
+};
 exports.setDriver = async (dumpsterId, driverId) => {
     let sql =
-        'UPDATE Dumpsters SET' +
-        ' DriverID = ? ' +
-        ' WHERE DumpsterID=?;';
+        'UPDATE Dumpsters SET' + ' DriverID = ? ' + ' WHERE DumpsterID=?;';
 
-    await pool
-        .execute(sql, [driverId, dumpsterId]).catch(printErrors);
+    await pool.execute(sql, [driverId, dumpsterId]).catch(printErrors);
 };
 
 exports.saveResetToken = async (user, token, expired) => {
     console.log(user.UserID, user.Username, token, expired);
     let sql =
         'INSERT INTO resetPassword (`UserID`,`username`, `resetToken`, `resetExpired`) VALUES(?,?, ?, ?)';
-    await pool.execute(sql, [user.UserID, user.Username, token, expired]).catch(printErrors);
-
+    await pool
+        .execute(sql, [user.UserID, user.Username, token, expired])
+        .catch(printErrors);
 };
 exports.getUserFromResetToken = async (token) => {
-    let sql = mysql.format('SELECT UserID, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?', [token]);
+    let sql = mysql.format(
+        'SELECT UserID, resetToken, resetExpired FROM resetPassword WHERE resetToken = ?',
+        [token]
+    );
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
@@ -482,6 +499,48 @@ exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
 };
 
 exports.removeAllAssignedDumpstersFromDriver = async (driverId) => {
-    let sql = 'UPDATE dfireweb.dumpsters SET DriverID = NULL WHERE DriverID = ?';
+    let sql = 'UPDATE dumpsters SET DriverID = NULL WHERE DriverID = ?';
     await pool.execute(sql, [driverId]).catch(printErrors);
+};
+
+exports.getNumberOfDepots = async () => {
+    let sql = 'SELECT COUNT(DepotID) AS Count FROM depots';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getNumberOfDepots = async () => {
+    let sql = 'SELECT COUNT(DumpsterID) AS Count FROM dumpsters';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getNumberOfDumpstersWithDrivers = async () => {
+    let sql = 'SELECT COUNT(DriverID) AS Count FROM dumpsters';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getNumberOfDriverMessages = async () => {
+    let sql = 'SELECT COUNT(MessageID) AS Count FROM drivermessages';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getDriverMessageByID = async (messageID) => {
+    let sql = 'SELECT * FROM dfireweb.drivermessages WHERE MessageID = ?';
+    console.log(sql);
+    var results = await pool.query(sql, [messageID]).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getNumberOfUsers = async () => {
+    let sql = 'SELECT COUNT(UserID) AS Count FROM users';
+    console.log(sql);
+    var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
 };

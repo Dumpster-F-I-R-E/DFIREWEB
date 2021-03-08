@@ -10,8 +10,9 @@ function initMap() {
         zoom: 12,
     });
 
-    map.controls[google.maps.ControlPosition.LEFT_TOP].push
-        (document.getElementById('legend'));
+    map.controls[google.maps.ControlPosition.LEFT_TOP].push(
+        document.getElementById('legend')
+    );
 
     showDumpsters();
     // init();
@@ -20,7 +21,7 @@ function initMap() {
 function storeLocation(position) {
     let req = {
         Latitude: position.coords.latitude,
-        Longitude: position.coords.longitude
+        Longitude: position.coords.longitude,
     };
     $.post('/driver/update-location', req, function (data) {
         if (data.success) {
@@ -32,27 +33,33 @@ function storeLocation(position) {
     });
 
     showRoute(position);
-
 }
 
 function getLocation() {
     if (navigator.geolocation) {
-        return navigator.geolocation.getCurrentPosition(storeLocation, permissionDenied);
+        return navigator.geolocation.getCurrentPosition(
+            storeLocation,
+            permissionDenied
+        );
     } else {
         alert('Geolocation error');
-        console.log("Geolocation is not supported");
-        showMessage('Error', "Geolocation is not supported by this browser.", 'Error');
+        console.log('Geolocation is not supported');
+        showMessage(
+            'Error',
+            'Geolocation is not supported by this browser.',
+            'Error'
+        );
     }
 }
 
 function permissionDenied() {
-    showMessage("GPS", "Geolocation is not enabled");
+    showMessage('GPS', 'Geolocation is not enabled');
     let coords = {
         latitude: depot.Latitude,
-        longitude: depot.Longitude
+        longitude: depot.Longitude,
     };
     let position = {
-        coords: coords
+        coords: coords,
     };
     showRoute(position);
 }
@@ -60,7 +67,7 @@ function permissionDenied() {
 function showRoute(position) {
     let coord = {
         lat: position.coords.latitude,
-        lng: position.coords.longitude
+        lng: position.coords.longitude,
     };
     console.log(coord);
     drawPin(coord);
@@ -80,7 +87,6 @@ let depoIcon = '/icons/depot.png';
 depots = {};
 
 function drawDepot(depot) {
-
     let lat = depot.Latitude;
     let lng = depot.Longitude;
     const marker = new google.maps.Marker({
@@ -93,7 +99,11 @@ function drawDepot(depot) {
 
     const contentString =
         '<div id="body">' +
-        '<p>' + depot.Name + '<br>' + depot.Address + '</p>' +
+        '<p>' +
+        depot.Name +
+        '<br>' +
+        depot.Address +
+        '</p>' +
         '</div>';
 
     const infowindow = new google.maps.InfoWindow({
@@ -101,31 +111,28 @@ function drawDepot(depot) {
     });
 
     google.maps.event.addListener(marker, 'mouseover', (e) => {
-
         infowindow.open(map);
     });
 
     marker.addListener('mouseout', () => {
-
         infowindow.close();
     });
-
-
-
 }
 
 function calculateAndDisplayRoute(position) {
     let renderOptions = {
-        suppressMarkers: true
+        suppressMarkers: true,
     };
-    const directionsRenderer = new google.maps.DirectionsRenderer(renderOptions);
+    const directionsRenderer = new google.maps.DirectionsRenderer(
+        renderOptions
+    );
     directionsRenderer.setMap(map);
 
     let destination = position;
     if (depot) {
         destination = {
             lat: depot.Latitude,
-            lng: depot.Longitude
+            lng: depot.Longitude,
         };
     }
     directionsService.route(
@@ -134,10 +141,10 @@ function calculateAndDisplayRoute(position) {
             destination: destination,
             travelMode: google.maps.TravelMode.DRIVING,
             optimizeWaypoints: true,
-            waypoints: waypoints
+            waypoints: waypoints,
         },
         (response, status) => {
-            if (status === "OK") {
+            if (status === 'OK') {
                 console.log(response);
                 directionsRenderer.setDirections(response);
 
@@ -145,7 +152,7 @@ function calculateAndDisplayRoute(position) {
                 map.setCenter(position);
                 // render(response);
             } else {
-                window.alert("Directions request failed due to " + status);
+                window.alert('Directions request failed due to ' + status);
             }
         }
     );
@@ -156,9 +163,7 @@ let defaultIcon = '/icons/trash.png';
 let selectedIcon = '/icons/trash_blue.png';
 let fullIcon = '/icons/trash_red.png';
 
-
 function addMarker(dumpster) {
-
     let lat = dumpster.Latitude;
     let lng = dumpster.Longitude;
     let opacity = 1.0;
@@ -166,14 +171,14 @@ function addMarker(dumpster) {
         position: { lat: lat, lng: lng },
         map: map,
         icon: defaultIcon,
-        opacity: opacity
+        opacity: opacity,
     });
     marker.defaultOpacity = opacity;
     marker.SensorID = dumpster.SensorID;
     markers[dumpster.SensorID] = marker;
     if (dumpster.FullnessLevel == 100) {
         marker.setIcon(fullIcon);
-    };
+    }
     const contentString =
         '<div id="body">' +
         '<p>Fullness: ' +
@@ -188,15 +193,11 @@ function addMarker(dumpster) {
         content: contentString,
     });
 
-
     marker.addListener('mouseover', () => {
-
         infowindow.open(map, marker);
-
     });
 
     marker.addListener('mouseout', () => {
-
         infowindow.close();
     });
 }
@@ -209,8 +210,8 @@ function showDumpsters() {
     fetch('/api/my-route', {
         method: 'get',
     })
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
             dumpsters = data.Dumpsters;
             depot = data.Depot;
             draw();
@@ -228,31 +229,26 @@ function showDumpsters() {
             });
         })
         .catch((err) => console.log(err));
-
-    
 }
 
 function clear() {
-    Object.values(markers).forEach(i => i.setMap(null));
-    Object.values(depots).forEach(i => i.marker.setMap(null));
+    Object.values(markers).forEach((i) => i.setMap(null));
+    Object.values(depots).forEach((i) => i.marker.setMap(null));
 }
 
 function draw() {
-
-    waypoints = dumpsters.map(s => {
+    waypoints = dumpsters.map((s) => {
         return {
             location: {
                 lat: s.Latitude,
-                lng: s.Longitude
+                lng: s.Longitude,
             },
             stopover: true,
         };
     });
     // calculateAndDisplayRoute(waypoints);
-    dumpsters.forEach(element => {
+    dumpsters.forEach((element) => {
         addMarker(element);
     });
     getLocation();
 }
-
-

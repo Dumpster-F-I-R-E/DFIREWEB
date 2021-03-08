@@ -4,7 +4,6 @@ const auth = require('../controllers/authController');
 const user = require('../controllers/userController');
 const { body, validationResult } = require('express-validator');
 
-
 router.get(
     '/list',
     auth.requireAuth,
@@ -36,20 +35,23 @@ router.post(
     auth.requireAdminOrManager,
     [
         body('Username', 'Username is empty').notEmpty(),
-        body('Email', 'Email is empty').notEmpty().isEmail().withMessage('Invalid Format'),
+        body('Email', 'Email is empty')
+            .notEmpty()
+            .isEmail()
+            .withMessage('Invalid Format'),
     ],
     async function (req, res) {
         const data = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
-            errors.array().map(err => {
+            errors.array().map((err) => {
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
                 success: false,
-                error: extractedErrors
+                error: extractedErrors,
             });
         }
         let prevUser = await user.getUser(data.Username);
@@ -60,7 +62,6 @@ router.post(
                 user: null,
                 error: 'Username is not available. Please choose another!.',
             });
-            
         }
         let u = await user.createUser(res.locals.User, data);
         let msg = '';
@@ -81,21 +82,19 @@ router.post(
     '/delete',
     auth.requireAuth,
     auth.requireAdminOrManager,
-    [
-        body('UserID').notEmpty().isNumeric(),
-    ],
+    [body('UserID').notEmpty().isNumeric()],
     async function (req, res) {
         const data = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
-            errors.array().map(err => {
+            errors.array().map((err) => {
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
                 success: false,
-                error: extractedErrors
+                error: extractedErrors,
             });
         }
         await user.deleteUser(res.locals.User, data.UserID);

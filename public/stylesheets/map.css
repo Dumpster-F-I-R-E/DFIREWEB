@@ -6,7 +6,7 @@
 #map {
     height: 100vh;
 }
-.input{
+.input {
     padding: 10px;
 }
 
@@ -14,21 +14,21 @@
     margin: 5px;
 }
 
-#autocomplete{
+#autocomplete {
     width: 100%;
 }
 
-div.background{
+div.background {
     z-index: 1;
     position: absolute;
     top: 50px;
     height: 100vh;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     width: 80%;
-    display:none;    
+    display: none;
 }
 
-div.input{
+div.input {
     margin: 200px auto;
     width: max-content;
     background-color: white;
@@ -58,7 +58,7 @@ div.input{
         border: none;
     }
 
-    div.input{
+    div.input {
         margin: 20px auto;
     }
 }

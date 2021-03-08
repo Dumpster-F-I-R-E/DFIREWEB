@@ -34,27 +34,24 @@ th {
     padding: 20px;
 }
 
-tr:nth-child(even){
-    background-color: rgb(180, 200, 216 , 0.7) ;
-    
+tr:nth-child(even) {
+    background-color: rgb(180, 200, 216, 0.7);
 }
 
 td {
     padding: 20px;
 }
 
-tr:nth-child(odd){
-    background-color: rgb(180, 200, 216 ,0.3) ;
+tr:nth-child(odd) {
+    background-color: rgb(180, 200, 216, 0.3);
 }
 
-
-tr:hover {   
-    background-color: rgb(180, 200, 216 , 1.0) ;
+tr:hover {
+    background-color: rgb(180, 200, 216, 1);
 }
 
-
-tr:nth-child(1){
-    background-color: rgb(180, 200, 216 ,0.3) ;
+tr:nth-child(1) {
+    background-color: rgb(180, 200, 216, 0.3);
 }
 
 .form {
@@ -82,56 +79,60 @@ a.btn {
 }
 
 @media only screen and (max-width: 900px) {
-
-    .content{
+    .content {
         display: block;
         /* width: 100%; */
     }
 }
 
 @media only screen and (max-width: 400px) {
-
-    .content{
+    .content {
         display: block;
-        
     }
 
-    table, thead, tbody, th, td, tr { 
-		display: block; 
-	}
-	
-	/* Hide table headers (but not display: none;, for accessibility) */
-	thead tr { 
-		position: absolute;
-		top: -9999px;
-		left: -9999px;
-	}
-	
-	tr { border: 1px solid #ccc; }
-	
-	td { 
-		/* Behave  like a "row" */
-		border: none;
-		border-bottom: 1px solid #eee; 
-		position: relative;
-		padding-left: 40%; 
-	}
-	
-	td:before { 
-		/* Now like a table header */
-		position: absolute;
-		/* Top/left values mimic padding */
-		top: 6px;
-		left: 6px;
-		width: 45%; 
-		padding-right: 10px; 
-		white-space: nowrap;
-	}
-	
-	/*
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        border: 1px solid #ccc;
+    }
+
+    td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 40%;
+    }
+
+    td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+
+    /*
 	Label the data
 	*/
-	td:before { content: attr(data-title); }
-
-
+    td:before {
+        content: attr(data-title);
+    }
 }

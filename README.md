@@ -35,7 +35,7 @@ https://nodejs.org/en/ - Version 15.1.0 Current
 
 ## Run tests
 
-     npm run test
+     npm test -- --runInBand
 
 ## Run server
 
@@ -49,6 +49,6 @@ open [http://localhost:3000/](http://localhost:3000/)
 
 ## Commiting
 
-Run `npm run check` before commmiting to git.
+Run `npm run check -- --runInBand` before commmiting to git.
 
 Check STYLEGUIDE.md for more information.

@@ -4,7 +4,6 @@ const auth = require('../controllers/authController');
 const depot = require('../controllers/depotController');
 const { body, validationResult } = require('express-validator');
 
-
 router.get(
     '/add',
     auth.requireAuth,
@@ -30,13 +29,13 @@ router.post(
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
-            errors.array().map(err => {
+            errors.array().map((err) => {
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
                 success: false,
-                error: extractedErrors
+                error: extractedErrors,
             });
         }
         let u = await depot.createDepot(res.locals.Depot, data);
@@ -58,22 +57,19 @@ router.post(
     '/delete',
     auth.requireAuth,
     auth.requireAdminOrManager,
-    [
-        body('DepotID').notEmpty().isNumeric(),
-    ],
+    [body('DepotID').notEmpty().isNumeric()],
     async function (req, res) {
-        
         const data = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
-            errors.array().map(err => {
+            errors.array().map((err) => {
                 extractedErrors += err.param + ':' + err.msg + '<br>';
             });
             console.log(extractedErrors);
             return res.json({
                 success: false,
-                error: extractedErrors
+                error: extractedErrors,
             });
         }
         await depot.deleteDepot(res.locals.Depot, data.DepotID);

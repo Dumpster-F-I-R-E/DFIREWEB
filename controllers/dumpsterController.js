@@ -15,7 +15,6 @@ exports.createDumpster = async (data) => {
 
 exports.deleteDumpster = async (dumpsterId) => {
     await db.deleteDumpster(dumpsterId);
-
 };
 
 exports.getDumpsters = async (DumpsterSerialNumber) => {
@@ -28,9 +27,7 @@ exports.getDumpsters = async (DumpsterSerialNumber) => {
 
 exports.removeAssignedDriverFromDumpster = async (dumpsterId) => {
     await db.removeAssignedDriverFromDumpster(dumpsterId);
-
 };
-
 
 function findLineByLeastSquares(values_x, values_y) {
     var sum_x = 0;
@@ -47,7 +44,9 @@ function findLineByLeastSquares(values_x, values_y) {
     var values_length = values_x.length;
 
     if (values_length != values_y.length) {
-        throw new Error('The parameters values_x and values_y need to have same size!');
+        throw new Error(
+            'The parameters values_x and values_y need to have same size!'
+        );
     }
 
     /*
@@ -75,7 +74,7 @@ function findLineByLeastSquares(values_x, values_y) {
      * y = x * m + b
      */
     var m = (count * sum_xy - sum_x * sum_y) / (count * sum_xx - sum_x * sum_x);
-    var b = (sum_y / count) - (m * sum_x) / count;
+    var b = sum_y / count - (m * sum_x) / count;
 
     return [m, b];
     // /*
@@ -95,30 +94,29 @@ function findLineByLeastSquares(values_x, values_y) {
 }
 
 exports.forcast = (dumpsterData) => {
-    
     let i = -1;
-    for(let j in dumpsterData){
-        if(dumpsterData[j].FullnessLevel < 1.0){
+    for (let j in dumpsterData) {
+        if (dumpsterData[j].FullnessLevel < 1.0) {
             i = j;
             break;
         }
     }
-    let slice  = dumpsterData.slice(0,i);
+    let slice = dumpsterData.slice(0, i);
     let data = slice.map((i) => {
         return {
             y: i.FullnessLevel,
-            x: Date.parse(i.Time)
+            x: Date.parse(i.Time),
         };
     });
-    let x = data.map(i => i.x);
-    let y = data.map(i => i.y);
+    let x = data.map((i) => i.x);
+    let y = data.map((i) => i.y);
 
-    let [m,b] = findLineByLeastSquares(x, y);
+    let [m, b] = findLineByLeastSquares(x, y);
     // if(m < 0){
     //     let c = (-b) / m;
     //     m = -m;
     //     b = -m * c;
     // }
-    let date = (100-b) / m;
+    let date = (100 - b) / m;
     return new Date(date);
 };
