@@ -100,5 +100,5 @@ CREATE TABLE IF NOT EXISTS `drivermessages` (
 	`Time` timestamp,
 	`Status` varchar(255) not null,
 	primary key (`MessageID`),
-	FOREIGN Key (`userID`) REFERENCES Users(`UserID`)
+	FOREIGN Key (`userID`) REFERENCES Users(`UserID`) ON DELETE CASCADE
 );

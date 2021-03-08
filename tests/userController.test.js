@@ -114,7 +114,7 @@ test('test deleteUser as Admin of an existing user', async () => {
         Role: 'Admin',
     };
     await userController.deleteUser(user, 1);
-    var results = db.getNumberOfUsers();
+    var results = await db.getNumberOfUsers();
     expect(results.Count).toBe(0);
 });
 
@@ -137,7 +137,7 @@ test('test deleteUser with invalid data', async () => {
     };
     await db.addUser(profile);
     await userController.deleteUser(user, 3);
-    var results = db.getNumberOfUsers();
+    var results = await db.getNumberOfUsers();
     expect(results.Count).toBe(0);
 });
 
@@ -156,7 +156,7 @@ test('test getUser with valid data', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUser('u234');
+    var result = await userController.getUser('u234');
     expect(result).toBeDefined();
 });
 test('test getUser with invalid data', async () => {
@@ -174,7 +174,7 @@ test('test getUser with invalid data', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUser(1);
+    var result = await userController.getUser(1);
     expect(result).toBeUndefined();
 });
 
@@ -193,7 +193,7 @@ test('test getUsers with valid name', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('u234', '');
+    var result = await userController.getUsers('u234', '');
     expect(result).toBeDefined();
 });
 
@@ -212,7 +212,7 @@ test('test getUsers with valid role', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('', 'Admin');
+    var result = await userController.getUsers('', 'Admin');
     expect(result).toBeDefined();
 });
 
@@ -231,7 +231,7 @@ test('test getUsers with valid name and role', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('u234', 'Admin');
+    var result = await userController.getUsers('u234', 'Admin');
     expect(result).toBeDefined();
 });
 
@@ -250,6 +250,6 @@ test('test getUsers with invalid data', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers(1, '');
+    var result = await userController.getUsers(1, '');
     expect(result).toBeDefined();
 });
