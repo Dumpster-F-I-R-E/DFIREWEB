@@ -43,3 +43,10 @@ exports.clearDumpsters = async (driverId) => {
 
     await pool.execute(sql, [driverId]).catch(printErrors);
 };
+
+exports.pickup = async (driverId, dumpsterId) => {
+    let sql =
+        'INSERT INTO Pickups(DriverID,DumpsterID) VALUES(?,?); ';
+
+    await pool.execute(sql, [driverId, dumpsterId]).catch(printErrors);
+};

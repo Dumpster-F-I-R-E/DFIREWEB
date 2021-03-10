@@ -102,3 +102,15 @@ CREATE TABLE IF NOT EXISTS `drivermessages` (
 	primary key (`MessageID`),
 	FOREIGN Key (`userID`) REFERENCES Users(`UserID`)
 );
+
+CREATE TABLE IF NOT EXISTS `Pickups` (
+	`ID` INT NOT NULL AUTO_INCREMENT,
+	`DriverID` INT NOT NULL,
+	`DumpsterID` INT NOT NULL,
+	`Time` DATETIME NOT NULL DEFAULT NOW(),
+	PRIMARY KEY (`ID`),
+	FOREIGN KEY (`DriverID`) REFERENCES Users(`UserID`)
+	ON DELETE CASCADE,
+	FOREIGN KEY (`DumpsterID`) REFERENCES Dumpsters(`DumpsterID`)
+	ON DELETE CASCADE
+);

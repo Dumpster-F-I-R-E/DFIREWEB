@@ -14,8 +14,45 @@ function initMap() {
         document.getElementById('legend')
     );
 
+    // Create the initial InfoWindow.
+    let infoWindow = new google.maps.InfoWindow({
+        content: "Click the map to get Lat/Lng!",
+        position: map.center,
+    });
+    infoWindow.open(map);
+    // Configure the click listener.
+    map.addListener("click", (mapsMouseEvent) => {
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Create a new InfoWindow.
+        infoWindow = new google.maps.InfoWindow({
+            position: mapsMouseEvent.latLng,
+        });
+        infoWindow.setContent(
+            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+        );
+        infoWindow.open(map);
+    });
+
     showDumpsters();
     // init();
+}
+
+function findDistance(lat1, lon1, lat2, lon2) {
+
+    const R = 6371e3; // metres
+    const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const d = R * c; // in metres
+    return d;
 }
 
 function storeLocation(position) {
@@ -32,7 +69,34 @@ function storeLocation(position) {
         }
     });
 
+    for (let d in dumpsters) {
+        let k = findDistance(req.Latitude, req.Longitude, dumpsters[d].Latitude, dumpsters[d].Longitude);
+        if(k < 300){
+            showPopup(d);
+        }
+    }
+
     showRoute(position);
+}
+
+function showPopup(dumpsterId){
+    $('.modal.popup').modal('toggle');
+    $('.modal.popup .modal-title').text("Pickup");
+    $('.modal.popup .modal-body').html('Did you pick up Dumpster ID:' + dumpsterId+ ' ?');
+    $('.modal .btn-success').click(function(){
+        $('.modal.popup').modal('toggle');
+        let req = {
+            DumpsterID: dumpsterId
+        };
+        $.post('/driver/update-pickup', req, function (data) {
+            if (data.success) {
+                console.log('success');
+            } else {
+                console.log(data.error);
+                showMessage('Error', data.error, 'Error');
+            }
+        });
+    });
 }
 
 function getLocation() {
@@ -202,11 +266,11 @@ function addMarker(dumpster) {
         infowindow.close();
     });
 
-    
+
     var longpress = false;
 
     google.maps.event.addListener(marker, 'click', function (event) {
-        if(longpress){
+        if (longpress) {
             infowindow.open(map, marker);
         }
     });

@@ -117,3 +117,7 @@ exports.optimizeRoutes = async () => {
 exports.clearRoutes = async () => {
     await model.clearRoutes();
 };
+
+exports.updatePickup = async (driverID, dumpsterId) => {
+    await model.pickup(driverID, dumpsterId);
+};  

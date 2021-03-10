@@ -45,7 +45,7 @@ exports.updateProfile = async (user, profile) => {
         if (field == 'Role') {
             await db.changeRole(profile.UserID, profile.Role);
         } else {
-            p[field] = profile[field].length;
+            p[field] = profile[field];
         }
     }
     if (perm) await db.updateProfile(p);
