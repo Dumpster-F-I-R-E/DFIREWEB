@@ -117,6 +117,7 @@ function drawDepot(depot) {
     marker.addListener('mouseout', () => {
         infowindow.close();
     });
+
 }
 
 function calculateAndDisplayRoute(position) {
@@ -199,6 +200,24 @@ function addMarker(dumpster) {
 
     marker.addListener('mouseout', () => {
         infowindow.close();
+    });
+
+    
+    var longpress = false;
+
+    google.maps.event.addListener(marker, 'click', function (event) {
+        if(longpress){
+            infowindow.open(map, marker);
+        }
+    });
+
+    google.maps.event.addListener(marker, 'mousedown', function (event) {
+        start = new Date().getTime();
+    });
+
+    google.maps.event.addListener(marker, 'mouseup', function (event) {
+        end = new Date().getTime();
+        longpress = (end - start < 500) ? false : true;
     });
 }
 

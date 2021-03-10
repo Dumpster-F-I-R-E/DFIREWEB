@@ -46,6 +46,8 @@ function drawDepot(depot) {
     marker.addListener('mouseout', () => {
         infowindow.close();
     });
+    
+
 }
 
 function addMarker(dumpster, map) {
