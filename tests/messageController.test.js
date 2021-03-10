@@ -64,19 +64,9 @@ test('test getMessages with valid data', async () => {
     expect(results).toBeUndefined();
 });
 
-test('test getMessages with invalid data', async () => {
-    var results = await messageController.getMessages('a');
-    expect(results).toBeUndefined();
-});
-
 test('test getUnreadMessages with valid data', async () => {
     var results = await messageController.getUnreadMessages(1);
     expect(results).toBe(0);
-});
-
-test('test getUnreadMessages with invalid data', async () => {
-    var results = await messageController.getUnreadMessages('a');
-    expect(results).toBeUndefined();
 });
 
 test('test updateMessage with valid data', async () => {

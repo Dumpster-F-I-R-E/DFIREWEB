@@ -67,11 +67,6 @@ test('test getProfileById with non existing user', async () => {
     expect(result).toBeUndefined();
 });
 
-test('test getProfileById with invalid data', async () => {
-    var result = await profileController.getProfileById('a');
-    expect(result).toBeUndefined();
-});
-
 test('test getNumberOfAssignedDumpsterForUserId with existing user', async () => {
     var result = await profileController.getNumberOfAssignedDumpsterForUserId(
         1
@@ -82,13 +77,6 @@ test('test getNumberOfAssignedDumpsterForUserId with existing user', async () =>
 test('test getNumberOfAssignedDumpsterForUserId with non existing user', async () => {
     var result = await profileController.getNumberOfAssignedDumpsterForUserId(
         2
-    );
-    expect(result.DumpsterCount).toBe(0);
-});
-
-test('test getNumberOfAssignedDumpsterForUserId with invalid data', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
-        'a'
     );
     expect(result.DumpsterCount).toBe(0);
 });
@@ -121,11 +109,6 @@ test('test getImage for existing user', async () => {
 
 test('test getImage for non existing user', async () => {
     var result = await profileController.getImage(2);
-    expect(result).toBeDefined();
-});
-
-test('test getImage with invalid data', async () => {
-    var result = await profileController.getImage('a');
     expect(result).toBeDefined();
 });
 
@@ -189,11 +172,6 @@ test('test getUser for non existing user', async () => {
     expect(result).toBeUndefined();
 });
 
-test('test getUser with invalid data', async () => {
-    var result = await profileController.getUser('a');
-    expect(result).toBeUndefined();
-});
-
 test('test getRole for existing user', async () => {
     var result = await profileController.getRole(1);
     expect(result).toBe('Admin');
@@ -201,10 +179,5 @@ test('test getRole for existing user', async () => {
 
 test('test getRole for non existing user', async () => {
     var result = await profileController.getRole(2);
-    expect(result).toBeUndefined();
-});
-
-test('test getRole with invalid data', async () => {
-    var result = await profileController.getRole('a');
     expect(result).toBeUndefined();
 });

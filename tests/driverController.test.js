@@ -1,16 +1,9 @@
 /* eslint-disable no-undef */
 
-const depot = require('../controllers/depotController');
+const driverController = require('../controllers/driverController');
 const db = require('../database/db');
 
 const initializeDatabase = async () => {
-    let depot = {
-        Name: 'SW Dumpster',
-        Address: 'Calgary, AB',
-        Longitude: '-114.08529',
-        Latitude: '51.05011',
-        CompanyID: 1,
-    };
     let company = {
         CompanyID: 1,
         Name: 'General',
@@ -19,7 +12,6 @@ const initializeDatabase = async () => {
     };
     await db.createTables();
     await db.addCompany(company);
-    await db.addDepot(depot);
 };
 
 const clearDatabase = async () => {
@@ -53,4 +45,7 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('test', async () => {});
+test('test getDrivers', async () => {
+    var results = await driverController.getDrivers();
+    expect(results).toBeUndefined();
+});
