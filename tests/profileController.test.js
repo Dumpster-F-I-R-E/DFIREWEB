@@ -62,21 +62,9 @@ test('test getProfileById with existing user', async () => {
     expect(result).toBeDefined();
 });
 
-test('test getProfileById with non existing user', async () => {
-    var result = await profileController.getProfileById(2);
-    expect(result).toBeUndefined();
-});
-
 test('test getNumberOfAssignedDumpsterForUserId with existing user', async () => {
     var result = await profileController.getNumberOfAssignedDumpsterForUserId(
         1
-    );
-    expect(result.DumpsterCount).toBe(0);
-});
-
-test('test getNumberOfAssignedDumpsterForUserId with non existing user', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
-        2
     );
     expect(result.DumpsterCount).toBe(0);
 });
@@ -104,11 +92,6 @@ test('test updateProfile with valid data', async () => {
 
 test('test getImage for existing user', async () => {
     var result = await profileController.getImage(1);
-    expect(result).toBeDefined();
-});
-
-test('test getImage for non existing user', async () => {
-    var result = await profileController.getImage(2);
     expect(result).toBeDefined();
 });
 
@@ -167,17 +150,7 @@ test('test getUser for existing user', async () => {
     expect(result).toBeDefined();
 });
 
-test('test getUser for non existing user', async () => {
-    var result = await profileController.getUser(2);
-    expect(result).toBeUndefined();
-});
-
 test('test getRole for existing user', async () => {
     var result = await profileController.getRole(1);
     expect(result).toBe('Admin');
-});
-
-test('test getRole for non existing user', async () => {
-    var result = await profileController.getRole(2);
-    expect(result).toBeUndefined();
 });

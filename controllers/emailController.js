@@ -23,13 +23,13 @@ exports.sendMail = async (email, subj, text) => {
 
     transporter.sendMail(mailOptions, function (err, data) {
         if (err) {
-            console.log('error occured');
+            //console.log('error occured');
             result = {
                 status: false,
                 message: 'An error occured',
             };
         } else {
-            console.log('Email sent');
+            //console.log('Email sent');
             result = {
                 status: true,
                 message: 'Email sent',

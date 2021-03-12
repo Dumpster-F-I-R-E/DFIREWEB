@@ -65,6 +65,6 @@ test('test getUser with valid data', async () => {
 });
 
 test('test getUser with valid data', async () => {
-    var results = await forgetPasswordController.getUser(3);
+    var results = await forgetPasswordController.getUser('test@abc.com');
     expect(results).toBeUndefined();
 });

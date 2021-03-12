@@ -73,7 +73,7 @@ test('test updateMessage with valid data', async () => {
     await messageController.sendAlerts(1, 'test');
     await messageController.updateMessage(1);
     var results = await db.getDriverMessageByID(1);
-    expect(results.Status).toBe('read');
+    expect(results).toBe('read');
 });
 
 test('test updateMessage with invalid data', async () => {

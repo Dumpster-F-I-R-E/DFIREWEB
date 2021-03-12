@@ -167,6 +167,7 @@ exports.addUser = async (user) => {
         'INSERT INTO Users' +
         '(Username, Password, Role, CompanyID, FirstName, LastName, Address, Email, Phone, StaffID)' +
         ' VALUES(?, ?, ?, ?, ?,?,?,?,?,?)';
+    console.log(sql);
     let hash = auth.hashPassword(user.Password);
     await pool
         .execute(sql, [
@@ -510,10 +511,11 @@ exports.getNumberOfDepots = async () => {
     return results[0][0];
 };
 
-exports.getNumberOfDepots = async () => {
+exports.getNumberOfDumpsters = async () => {
     let sql = 'SELECT COUNT(DumpsterID) AS Count FROM dumpsters';
     console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
+    console.log(results[0][0]);
     return results[0][0];
 };
 
@@ -535,6 +537,7 @@ exports.getDriverMessageByID = async (messageID) => {
     let sql = 'SELECT * FROM dfireweb.drivermessages WHERE MessageID = ?';
     console.log(sql);
     var results = await pool.query(sql, [messageID]).catch(printErrors);
+    console.log(results[0][0]);
     return results[0][0];
 };
 

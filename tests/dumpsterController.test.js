@@ -85,24 +85,24 @@ test('test createDumpster with valid data', async () => {
         DumpsterSerialNumber: 0,
         CompanyID: 1,
     };
-    var results = dumpsterController.createDumpster(dumpster);
+    var results = await dumpsterController.createDumpster(dumpster);
     expect(results).toBeDefined();
 });
 
 test('test deleteDumpster with valid id', async () => {
     await dumpsterController.deleteDumpster(1);
-    var results = db.getNumberOfDepots();
-    expect(results).toBe(0);
+    var results = await db.getNumberOfDumpsters();
+    expect(results.Count).toBe(0);
 });
 
 test('test deleteDumpster with invalid id', async () => {
     await dumpsterController.deleteDumpster(2);
-    var results = db.getNumberOfDepots();
-    expect(results).toBe(1);
+    var results = await db.getNumberOfDumpsters();
+    expect(results.Count).toBe(1);
 });
 
 test('test getDumpsters with valid data', async () => {
-    var results = dumpsterController.getDumpsters(0);
+    var results = await dumpsterController.getDumpsters(0);
     expect(results).toBeDefined();
 });
 
@@ -117,10 +117,12 @@ test('test removeAssignedDriverFromDumpster with valid data', async () => {
         Address: 'Calgary,AB',
         Email: 'admin@abc.com',
         Phone: '403-233-3333',
+        StaffID: 1,
     };
+    console.log(user);
     await db.addUser(user);
     await db.setDriver(1, 1);
     await dumpsterController.removeAssignedDriverFromDumpster(1);
-    var results = db.getNumberOfDumpstersWithDrivers();
-    expect(results).toBe(0);
+    var results = await db.getNumberOfDumpstersWithDrivers();
+    expect(results.Count).toBe(0);
 });

@@ -9,7 +9,7 @@ const initializeDatabase = async () => {
         Address: 'Calgary, AB',
         Longitude: '-114.08529',
         Latitude: '51.05011',
-        CompanyID: '1',
+        CompanyID: 1,
     };
     let company = {
         CompanyID: 1,
@@ -54,6 +54,14 @@ afterEach(async () => {
 });
 
 test('test 1', async () => {
+    var depot1 = {
+        Name: 'SW Dumpster',
+        Address: 'Calgary, AB',
+        Longitude: '-114.08529',
+        Latitude: '51.05011',
+        CompanyID: 1,
+    };
+    await db.addDepot(depot1);
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(1);
 });
