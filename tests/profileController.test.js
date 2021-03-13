@@ -120,6 +120,32 @@ test('test changePassword as Admin', async () => {
     expect(result).toBeTruthy();
 });
 
+test('test changePassword as authorized driver', async () => {
+    let user = {
+        Role: 'Driver',
+        UserID: 2,
+    };
+    let profile = {
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Manager',
+        CompanyID: 1,
+    };
+    await db.addUser(profile);
+    var result = await profileController.changePassword(
+        user,
+        2,
+        'testpassword'
+    );
+    expect(result).toBeTruthy();
+});
+
 test('test changePassword as Manager', async () => {
     let user = {
         Role: 'Manager',
@@ -142,7 +168,7 @@ test('test changePassword as Manager', async () => {
         2,
         'testpassword'
     );
-    expect(result).toBeTruthy();
+    expect(result).toBeFalsy();
 });
 
 test('test getUser for existing user', async () => {

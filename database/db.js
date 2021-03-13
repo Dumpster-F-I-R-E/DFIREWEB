@@ -3,6 +3,7 @@ let fs = require('fs');
 var path = require('path');
 var auth = require('../controllers/authController');
 var connectionSettings = require('./db.conf.json');
+const { PassThrough } = require('nodemailer/lib/xoauth2');
 
 exports.setConnectionSettings = (settings) => {
     connectionSettings = settings;
@@ -187,13 +188,14 @@ exports.addUser = async (user) => {
 
 exports.deleteDepot = async (depotid) => {
     let sql = 'DELETE FROM Depots WHERE DepotID=?';
+    console.log(sql);
     await pool.query(sql, [depotid]).catch(printErrors);
 };
 
 exports.addDepot = async (depot) => {
     let sql =
         'INSERT INTO Depots (`Name`, `Address`, `Latitude`, `Longitude`, `CompanyID`) VALUES(?, ?, ?, ? ,?)';
-
+    console.log(sql);
     await pool
         .execute(sql, [
             depot.Name,
@@ -206,6 +208,7 @@ exports.addDepot = async (depot) => {
 
     let sql2 =
         'SELECT * FROM `Depots` WHERE DepotID=(SELECT MAX(DepotID) FROM `Depots`);';
+    console.log(sql);
     var results = await pool.query(sql2).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0][0];
@@ -471,8 +474,7 @@ exports.updateMessageStatus = async (driverId, status) => {
     await pool.execute(sql).catch(printErrors);
 };
 exports.setDriver = async (dumpsterId, driverId) => {
-    let sql =
-        'UPDATE Dumpsters SET DriverID = ? WHERE DumpsterID=?;';
+    let sql = 'UPDATE Dumpsters SET DriverID = ? WHERE DumpsterID=?;';
 
     await pool.execute(sql, [driverId, dumpsterId]).catch(printErrors);
 };
@@ -550,10 +552,45 @@ exports.getNumberOfUsers = async () => {
     return results[0][0];
 };
 
-exports.getDriverFromDriversWithUserID = async (UserID) => {
-    let sql = 'SELECT * FROM drivers WHERE UserID=?';
+exports.getDriverLongitudeFromDriversWithUserID = async (UserID) => {
+    let sql = 'SELECT Longitude FROM drivers WHERE UserID=?';
     console.log(sql);
     var results = await pool.query(sql, [UserID]).catch(printErrors);
-    console.log(results);
     return results[0][0];
+};
+
+exports.setLocation = async (userId, lat, lng) => {
+    let sql =
+        'INSERT INTO drivers(UserID, Latitude, Longitude)' +
+        ' VALUES(?,?,?) ON DUPLICATE KEY' +
+        ' UPDATE Latitude=Values(Latitude), Longitude=Values(Longitude) ';
+    console.log(sql);
+    await pool.execute(sql, [userId, lat, lng]).catch(printErrors);
+};
+
+exports.getDrivers = async () => {
+    let sql =
+        'Select drv.UserID, Role, FirstName, LastName, Email, Latitude,' +
+        'Longitude From Drivers RIGHT JOIN (SELECT * FROM Users ' +
+        " WHERE Role='Driver') drv  ON Drivers.UserID=drv.UserID;";
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.clearRoutes = async () => {
+    let sql =
+        'UPDATE Dumpsters ' +
+        'SET DriverID = NULL ' +
+        'WHERE DriverID is not null; ';
+
+    await pool.execute(sql).catch(printErrors);
+};
+
+exports.clearDumpsters = async (driverId) => {
+    let sql =
+        'UPDATE Dumpsters ' + 'SET DriverID = NULL ' + 'WHERE DriverID=?; ';
+
+    await pool.execute(sql, [driverId]).catch(printErrors);
 };

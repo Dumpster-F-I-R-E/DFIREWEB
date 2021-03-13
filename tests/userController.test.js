@@ -106,7 +106,6 @@ test('test deleteUser as Manager for an existing user', async () => {
     expect(results.Count).toBe(1);
 });
 
-
 test('test deleteUser Admin for an nonexisting user', async () => {
     let user = {
         Role: 'Admin',

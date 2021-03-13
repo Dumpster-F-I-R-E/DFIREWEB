@@ -53,26 +53,14 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('test 1', async () => {
-    var depot1 = {
-        Name: 'SW Dumpster',
-        Address: 'Calgary, AB',
-        Longitude: '-114.08529',
-        Latitude: '51.05011',
-        CompanyID: 1,
-    };
-    await db.addDepot(depot1);
-    var results = await db.getNumberOfDepots();
-    expect(results.Count).toBe(1);
-});
 test('test deleteDepot for existing depot', async () => {
-    await depotController.deleteDepot(1);
+    await depotController.deleteDepot(null, 1);
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(0);
 });
 
 test('test deleteDepot for non-existing depot', async () => {
-    await depotController.deleteDepot(4);
+    await depotController.deleteDepot(null, 4);
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(1);
 });
