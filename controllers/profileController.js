@@ -71,6 +71,7 @@ exports.getImage = async (userid) => {
 };
 
 exports.changePassword = async (user, userid, password) => {
+    console.log(user);
     if (user.Role == 'Admin' || user.UserID == userid) {
         await db.changePassword(userid, password);
         return true;

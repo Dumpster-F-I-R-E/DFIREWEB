@@ -10,8 +10,27 @@ const initializeDatabase = async () => {
         Address: 'Calgary,AB',
         Phone: '345-343-3432',
     };
+    let dumpster1 = {
+        DumpsterSerialNumber: 0,
+        CompanyID: 1,
+    };
+    let user = {
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '234',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'driver',
+        CompanyID: 1,
+    };
     await db.createTables();
     await db.addCompany(company);
+    await db.addDumpster(dumpster1);
+    await db.addUser(user);
 };
 
 const clearDatabase = async () => {
@@ -45,17 +64,8 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-// test('test getDrivers', async () => {
-//     var results = await driverController.getDrivers();
-//     expect(results).toBeUndefined();
-// });
-
-// test('test getRoutes', async () => {
-//     var results = await driverController.getDrivers();
-//     expect(results).toBeUndefined();
-// });
-
-test('test', async () => {
-    var results = 1
+test('test setLocation', async () => {
+    await driverController.setLocation(1, 1,1);
+    var results = db.getDriverFromDriversWithUserID(1);
     expect(results).toBe(1);
 });

@@ -125,7 +125,7 @@ exports.getProfile = async (id) => {
 
 exports.getNumberOfAssignedDumpsterForUserId = async (id) => {
     let sql = mysql.format(
-        'SELECT COUNT(DriverID) AS DumpsterCount FROM dfireweb.dumpsters WHERE DriverID = ?',
+        'SELECT COUNT(DriverID) AS DumpsterCount FROM dumpsters WHERE DriverID = ?',
         [id]
     );
     var results = await pool.query(sql).catch(printErrors);
@@ -459,6 +459,7 @@ exports.addMessage = async (userID, message) => {
         'insert into driverMessages(userID,Message,Time,Status) values (?,?,current_timestamp,"unread")',
         [userID, message]
     );
+    console.log(sql);
     await pool.execute(sql).catch(printErrors);
 };
 exports.updateMessageStatus = async (driverId, status) => {
@@ -466,11 +467,12 @@ exports.updateMessageStatus = async (driverId, status) => {
         'Update driverMessages SET Status = ? where userID = ?',
         [status, driverId]
     );
+    console.log(sql);
     await pool.execute(sql).catch(printErrors);
 };
 exports.setDriver = async (dumpsterId, driverId) => {
     let sql =
-        'UPDATE Dumpsters SET' + ' DriverID = ? ' + ' WHERE DumpsterID=?;';
+        'UPDATE Dumpsters SET DriverID = ? WHERE DumpsterID=?;';
 
     await pool.execute(sql, [driverId, dumpsterId]).catch(printErrors);
 };
@@ -534,10 +536,10 @@ exports.getNumberOfDriverMessages = async () => {
 };
 
 exports.getDriverMessageByID = async (messageID) => {
-    let sql = 'SELECT * FROM dfireweb.drivermessages WHERE MessageID = ?';
+    let sql = 'SELECT * FROM drivermessages WHERE MessageID = ?';
     console.log(sql);
     var results = await pool.query(sql, [messageID]).catch(printErrors);
-    console.log(results[0][0]);
+    console.log(results);
     return results[0][0];
 };
 
@@ -545,5 +547,13 @@ exports.getNumberOfUsers = async () => {
     let sql = 'SELECT COUNT(UserID) AS Count FROM users';
     console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
+    return results[0][0];
+};
+
+exports.getDriverFromDriversWithUserID = async (UserID) => {
+    let sql = 'SELECT * FROM drivers WHERE UserID=?';
+    console.log(sql);
+    var results = await pool.query(sql, [UserID]).catch(printErrors);
+    console.log(results);
     return results[0][0];
 };

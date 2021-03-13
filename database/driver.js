@@ -10,10 +10,10 @@ function printErrors(error) {
 
 exports.setLocation = async (userId, lat, lng) => {
     let sql =
-        'INSERT INTO Drivers(UserID, Latitude, Longitude)' +
+        'INSERT INTO drivers(UserID, Latitude, Longitude)' +
         ' VALUES(?,?,?) ON DUPLICATE KEY' +
         ' UPDATE Latitude=Values(Latitude), Longitude=Values(Longitude) ';
-
+    console.log(sql);
     await pool.execute(sql, [userId, lat, lng]).catch(printErrors);
 };
 
