@@ -65,7 +65,7 @@ afterEach(async () => {
 });
 
 test('test setLocation', async () => {
-    await db.setLocation(1, 1, 1);
+    await driverController.setLocation(1, 1, 1);
     var results = await db.getDriverLongitudeFromDriversWithUserID(1);
     expect(results.Longitude).toBe(1);
 });
