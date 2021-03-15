@@ -69,12 +69,12 @@ test('test getNumberOfAssignedDumpsterForUserId with existing user', async () =>
     expect(result.DumpsterCount).toBe(0);
 });
 
-test('test updateProfile with valid data', async () => {
+test('test updateProfile as admin', async () => {
     let user = {
         Role: 'Admin',
     };
     let profile = {
-        FirstName: 'John',
+        FirstName: 'Doe',
         LastName: 'Doe',
         Address: 'Calgary,AB',
         Email: 'admin@abc.com',
@@ -88,6 +88,91 @@ test('test updateProfile with valid data', async () => {
     };
     var result = await profileController.updateProfile(user, profile);
     expect(result).toBe(7);
+});
+
+test('test updateProfile as manager for admin account', async () => {
+    let user = {
+        Role: 'Manager',
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(0);
+});
+
+test('test updateProfile as driver for admin account', async () => {
+    let user = {
+        Role: 'Driver',
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(0);
+});
+
+test('test updateProfile as driver for manager account', async () => {
+    let user = {
+        Role: 'Driver',
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Manager',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(0);
+});
+
+test('test updateProfile as driver for own account', async () => {
+    let user = {
+        Role: 'Driver',
+        UserID: 1,
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Driver',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(5);
 });
 
 test('test getImage for existing user', async () => {
