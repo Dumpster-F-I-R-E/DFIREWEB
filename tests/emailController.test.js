@@ -11,7 +11,7 @@ beforeEach(async () => {});
 afterEach(async () => {});
 
 test('test sendMail with valid data', async () => {
-    email = 'dfirecapstone@gmail.com';
+    email = 'dfirecapstone+1@gmail.com';
     subj = 'test';
     text = 'test';
     var result = await emailController.sendMail(email, subj, text);

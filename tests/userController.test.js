@@ -88,57 +88,31 @@ test('test createUser with valid data', async () => {
     expect(results).toBeDefined();
 });
 
-test('test createUser with invalid data', async () => {
-    let user = {
-        Role: 1,
-    };
-    let profile = {
-        FirstName: 'John',
-        LastName: 'Doe',
-        Address: 'Calgary,AB',
-        Email: 'admin@abc.com',
-        Phone: '403-233-3333',
-        StaffID: '1',
-        UserID: '234',
-        Username: 'u234',
-        Password: '12324sd',
-        Role: 'Admin',
-        CompanyID: 1,
-    };
-    var results = await userController.createUser(user, profile);
-    expect(results).toBeUndefined();
-});
-
-test('test deleteUser as Admin of an existing user', async () => {
+test('test deleteUser as Admin for an existing user', async () => {
     let user = {
         Role: 'Admin',
     };
     await userController.deleteUser(user, 1);
-    var results = db.getNumberOfUsers();
+    var results = await db.getNumberOfUsers();
     expect(results.Count).toBe(0);
 });
 
-test('test deleteUser with invalid data', async () => {
+test('test deleteUser as Manager for an existing user', async () => {
+    let user = {
+        Role: 'Manager',
+    };
+    await userController.deleteUser(user, 1);
+    var results = await db.getNumberOfUsers();
+    expect(results.Count).toBe(1);
+});
+
+test('test deleteUser Admin for an nonexisting user', async () => {
     let user = {
         Role: 'Admin',
     };
-    let profile = {
-        FirstName: 'John',
-        LastName: 'Doe',
-        Address: 'Calgary,AB',
-        Email: 'admin@abc.com',
-        Phone: '403-233-3333',
-        StaffID: '1',
-        UserID: '234',
-        Username: 'u234',
-        Password: '12324sd',
-        Role: 'Admin',
-        CompanyID: 1,
-    };
-    await db.addUser(profile);
-    await userController.deleteUser(user, 3);
-    var results = db.getNumberOfUsers();
-    expect(results.Count).toBe(0);
+    await userController.deleteUser(user, 2);
+    var results = await db.getNumberOfUsers();
+    expect(results.Count).toBe(1);
 });
 
 test('test getUser with valid data', async () => {
@@ -156,7 +130,7 @@ test('test getUser with valid data', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUser('u234');
+    var result = await userController.getUser('u234');
     expect(result).toBeDefined();
 });
 test('test getUser with invalid data', async () => {
@@ -174,7 +148,7 @@ test('test getUser with invalid data', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUser(1);
+    var result = await userController.getUser(1);
     expect(result).toBeUndefined();
 });
 
@@ -193,7 +167,7 @@ test('test getUsers with valid name', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('u234', '');
+    var result = await userController.getUsers('u234', '');
     expect(result).toBeDefined();
 });
 
@@ -212,7 +186,7 @@ test('test getUsers with valid role', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('', 'Admin');
+    var result = await userController.getUsers('', 'Admin');
     expect(result).toBeDefined();
 });
 
@@ -231,25 +205,6 @@ test('test getUsers with valid name and role', async () => {
         CompanyID: 1,
     };
     await db.addUser(profile);
-    var result = userController.getUsers('u234', 'Admin');
-    expect(result).toBeDefined();
-});
-
-test('test getUsers with invalid data', async () => {
-    let profile = {
-        FirstName: 'John',
-        LastName: 'Doe',
-        Address: 'Calgary,AB',
-        Email: 'admin@abc.com',
-        Phone: '403-233-3333',
-        StaffID: '1',
-        UserID: '234',
-        Username: 'u234',
-        Password: '12324sd',
-        Role: 'Admin',
-        CompanyID: 1,
-    };
-    await db.addUser(profile);
-    var result = userController.getUsers(1, '');
+    var result = await userController.getUsers('u234', 'Admin');
     expect(result).toBeDefined();
 });

@@ -59,12 +59,12 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('test getUser with valid data', async () => {
+test('test getUser for a existing user', async () => {
     var results = await forgetPasswordController.getUser('admin@abc.com');
     expect(results).toBeDefined();
 });
 
-test('test getUser with valid data', async () => {
-    var results = await forgetPasswordController.getUser(3);
+test('test getUser for a non existing user', async () => {
+    var results = await forgetPasswordController.getUser('test@abc.com');
     expect(results).toBeUndefined();
 });

@@ -1,9 +1,7 @@
 const db = require('../database/db');
-const model = require('../database/driver');
-const message = require('../controllers/messageController');
 
 exports.getDrivers = async () => {
-    let drivers = await model.getDrivers();
+    let drivers = await db.getDrivers();
     return drivers;
 };
 
@@ -17,7 +15,7 @@ exports.setDumpsters = async (driverId, dumpsters) => {
 };
 
 exports.clearDumpsters = async (driverId) => {
-    await model.clearDumpsters(driverId);
+    await db.clearDumpsters(driverId);
 };
 
 exports.getDriver = async (dumpsterId) => {
@@ -95,13 +93,13 @@ exports.getRoute = async (driverId) => {
 };
 
 exports.setLocation = async (driverId, lat, lng) => {
-    await model.setLocation(driverId, lat, lng);
+    await db.setLocation(driverId, lat, lng);
 };
 
 exports.optimizeRoutes = async () => {
     const fullLevel = 70;
     let dumpsters = await db.getDumpsterData();
-    let drivers = await model.getDrivers();
+    let drivers = await db.getDrivers();
     let full = dumpsters.filter((d) => d.FullnessLevel > fullLevel);
     let l = full.length / drivers.length;
     let i = 0;
@@ -115,5 +113,5 @@ exports.optimizeRoutes = async () => {
 };
 
 exports.clearRoutes = async () => {
-    await model.clearRoutes();
+    await db.clearRoutes();
 };

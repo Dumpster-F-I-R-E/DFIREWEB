@@ -1,25 +1,36 @@
 /* eslint-disable no-undef */
 
-const depot = require('../controllers/depotController');
+const driverController = require('../controllers/driverController');
 const db = require('../database/db');
 
 const initializeDatabase = async () => {
-    let depot = {
-        Name: 'SW Dumpster',
-        Address: 'Calgary, AB',
-        Longitude: '-114.08529',
-        Latitude: '51.05011',
-        CompanyID: 1,
-    };
     let company = {
         CompanyID: 1,
         Name: 'General',
         Address: 'Calgary,AB',
         Phone: '345-343-3432',
     };
+    let dumpster1 = {
+        DumpsterSerialNumber: 0,
+        CompanyID: 1,
+    };
+    let user = {
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '234',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'driver',
+        CompanyID: 1,
+    };
     await db.createTables();
     await db.addCompany(company);
-    await db.addDepot(depot);
+    await db.addDumpster(dumpster1);
+    await db.addUser(user);
 };
 
 const clearDatabase = async () => {
@@ -53,4 +64,8 @@ afterEach(async () => {
     await clearDatabase();
 });
 
-test('test', async () => {});
+test('test setLocation', async () => {
+    await driverController.setLocation(1, 1, 1);
+    var results = await db.getDriverLongitudeFromDriversWithUserID(1);
+    expect(results.Longitude).toBe(1);
+});

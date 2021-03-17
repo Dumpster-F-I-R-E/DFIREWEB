@@ -39,13 +39,14 @@ const permissions = (user, profile) => {
 
 exports.updateProfile = async (user, profile) => {
     let p = await db.getProfile(profile.UserID);
+    console.log(p['Role']);
     let perm = permissions(user, p);
 
     for (var field in perm) {
         if (field == 'Role') {
             await db.changeRole(profile.UserID, profile.Role);
         } else {
-            p[field] = profile[field].length;
+            p[field] = profile[field];
         }
     }
     if (perm) await db.updateProfile(p);
@@ -71,6 +72,7 @@ exports.getImage = async (userid) => {
 };
 
 exports.changePassword = async (user, userid, password) => {
+    console.log(user);
     if (user.Role == 'Admin' || user.UserID == userid) {
         await db.changePassword(userid, password);
         return true;
