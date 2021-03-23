@@ -50,3 +50,12 @@ exports.pickup = async (driverId, dumpsterId) => {
 
     await pool.execute(sql, [driverId, dumpsterId]).catch(printErrors);
 };
+
+exports.getPickups = async (dumpsterId) => {
+    let sql =
+    'select DriverID, FirstName, LastName, Time From pickups JOIN Users where UserID=DriverID and DumpsterID=?;';
+    var results = await pool.query(sql,[dumpsterId]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};

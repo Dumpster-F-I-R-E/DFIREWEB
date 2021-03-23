@@ -120,4 +120,8 @@ exports.clearRoutes = async () => {
 
 exports.updatePickup = async (driverID, dumpsterId) => {
     await model.pickup(driverID, dumpsterId);
-};  
+}; 
+
+exports.getPickups = async (dumpsterId) => {
+    return await model.getPickups(dumpsterId);
+};

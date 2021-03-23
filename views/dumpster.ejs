@@ -4,14 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dumpster FIRE - Profile</title>
-    <link rel='stylesheet' href='/stylesheets/dumpster.css' />
-    <script src="/javascripts/jquery-3.x-git.min.js"></script>
-    <!-- <script src="/javascripts/chart/Chart.js"></script> -->
+    <title>Dumpster FIRE - Profile</title>    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
     <%- include('common.ejs') %>
-
+    <link rel='stylesheet' href='/stylesheets/dumpster.css' /> 
 
 </head>
 <!-- <script src="/javascripts/dumpsterInfo.js"></script> -->
@@ -272,7 +268,36 @@
                                 <div id="chart_div" style="width:400; height:300"></div>
 
                             </div>
+                            <% if(pickups && pickups.length > 0) { %>
+                                <h2>Pickups</h2>
+                            <table id="pickupReports">
+                                <tr class='headers'>
+                                    <th>Driver ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>                                   
+                                    <th>Time</th>
+                                </tr>
 
+                                <% var i=1; %>
+                                    <% pickups.forEach(function(data){ %>
+
+                                        <tr>
+                                            <td data-title="Driver ID">
+                                                <%= data.DriverID %>
+                                            </td>
+                                            <td data-title="First Name">
+                                                <%= data.FirstName%>
+                                            </td>
+                                            <td data-title="Last Name">
+                                                <%= data.LastName%>
+                                            </td>
+                                            <td data-title="Time">
+                                                <%= data.Time.toUTCString()%>
+                                            </td>
+                                        </tr>
+                                        <% i++; }) %>
+                            </table>
+                            <% } %>
                             <div class="background">
                                 <div class="input">
                                     <h2 class="title">Assign Driver</h2>
