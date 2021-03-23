@@ -95,8 +95,8 @@ function findLineByLeastSquares(values_x, values_y) {
 
 exports.forcast = (dumpsterData) => {
     let i = -1;
-    for (let j in dumpsterData) {
-        if (dumpsterData[j].FullnessLevel < 1.0) {
+    for (let j = 1; j < dumpsterData.length; j++) {
+        if (dumpsterData[j].FullnessLevel > dumpsterData[j-1].FullnessLevel) {
             i = j;
             break;
         }

@@ -267,16 +267,27 @@ exports.getDumpsterData = async () => {
 };
 
 exports.getDumpsterById = async (id) => {
+    let sql1 = 'select * from DumpsterReports WHERE DumpsterID=? ORDER BY ReportID DESC LIMIT 1;';
+    var results = await pool.query(sql1, id).catch(printErrors);
+    let report = {};
+    if (results && results.length > 0 && results[0].length > 0) {
+        report = results[0][0];
+    }else{
+        return;
+    }
+    // console.log(report);
     let sql =
         'SELECT * ' +
         ' FROM DumpsterReports' +
         ' WHERE DumpsterID=? ' +
+        ' AND Time >= ? + INTERVAL -6 DAY' +
         ' ORDER BY ReportID DESC;';
-
-    var results = await pool.query(sql, id).catch(printErrors);
+    results = await pool.query(sql, [id, report.Time]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
+
+    
 };
 
 exports.getDumpsterReports = async () => {
@@ -593,4 +604,20 @@ exports.clearDumpsters = async (driverId) => {
         'UPDATE Dumpsters ' + 'SET DriverID = NULL ' + 'WHERE DriverID=?; ';
 
     await pool.execute(sql, [driverId]).catch(printErrors);
+};
+
+exports.pickup = async (driverId, dumpsterId) => {
+    let sql =
+        'INSERT INTO Pickups(DriverID,DumpsterID) VALUES(?,?); ';
+
+    await pool.execute(sql, [driverId, dumpsterId]).catch(printErrors);
+};
+
+exports.getPickups = async (dumpsterId) => {
+    let sql =
+    'select DriverID, FirstName, LastName, Time From pickups JOIN Users where UserID=DriverID and DumpsterID=?;';
+    var results = await pool.query(sql,[dumpsterId]).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
 };

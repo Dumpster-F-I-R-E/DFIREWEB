@@ -14,6 +14,7 @@ function initMap() {
         document.getElementById('legend')
     );
 
+    setInterval(showDumpsters, 10000);
     showDumpsters();
     init();
 }
