@@ -4,7 +4,7 @@ const depotController = require('../controllers/depotController');
 const db = require('../database/db');
 
 const initializeDatabase = async () => {
-    let depot = {
+    var depot1 = {
         Name: 'SW Dumpster',
         Address: 'Calgary, AB',
         Longitude: '-114.08529',
@@ -19,7 +19,7 @@ const initializeDatabase = async () => {
     };
     await db.createTables();
     await db.addCompany(company);
-    await db.addDepot(depot);
+    await db.addDepot(depot1);
 };
 
 const clearDatabase = async () => {
@@ -54,19 +54,13 @@ afterEach(async () => {
 });
 
 test('test deleteDepot for existing depot', async () => {
-    await depotController.deleteDepot(1);
+    await depotController.deleteDepot(null, 1);
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(0);
 });
 
 test('test deleteDepot for non-existing depot', async () => {
-    await depotController.deleteDepot(2);
-    var results = await db.getNumberOfDepots();
-    expect(results.Count).toBe(1);
-});
-
-test('test deleteDepot not using a number', async () => {
-    await depotController.deleteDepot('a');
+    await depotController.deleteDepot(null, 4);
     var results = await db.getNumberOfDepots();
     expect(results.Count).toBe(1);
 });
@@ -82,24 +76,6 @@ test('test createDepot with valid input', async () => {
     let nothing = '';
     var results = await depotController.createDepot(nothing, depot);
     expect(results).toBeDefined();
-});
-
-test('test createDepot with invalid input', async () => {
-    try {
-        let depot = {
-            Name: 'SW Dumpster',
-            Address: 'Calgary, AB',
-            Longitude: '-114.08529',
-            Latitude: '51.05011',
-            CompanyID: 'a',
-        };
-        let nothing = '';
-        await depotController.createDepot(nothing, depot);
-    } catch (error) {
-        expect(error);
-    }
-
-    expect(results).toBeUndefined();
 });
 
 test('test getDepots input name only', async () => {

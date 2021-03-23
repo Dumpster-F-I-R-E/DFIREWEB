@@ -62,16 +62,6 @@ test('test getProfileById with existing user', async () => {
     expect(result).toBeDefined();
 });
 
-test('test getProfileById with non existing user', async () => {
-    var result = await profileController.getProfileById(2);
-    expect(result).toBeUndefined();
-});
-
-test('test getProfileById with invalid data', async () => {
-    var result = await profileController.getProfileById('a');
-    expect(result).toBeUndefined();
-});
-
 test('test getNumberOfAssignedDumpsterForUserId with existing user', async () => {
     var result = await profileController.getNumberOfAssignedDumpsterForUserId(
         1
@@ -79,26 +69,12 @@ test('test getNumberOfAssignedDumpsterForUserId with existing user', async () =>
     expect(result.DumpsterCount).toBe(0);
 });
 
-test('test getNumberOfAssignedDumpsterForUserId with non existing user', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
-        2
-    );
-    expect(result.DumpsterCount).toBe(0);
-});
-
-test('test getNumberOfAssignedDumpsterForUserId with invalid data', async () => {
-    var result = await profileController.getNumberOfAssignedDumpsterForUserId(
-        'a'
-    );
-    expect(result.DumpsterCount).toBe(0);
-});
-
-test('test updateProfile with valid data', async () => {
+test('test updateProfile as admin', async () => {
     let user = {
         Role: 'Admin',
     };
     let profile = {
-        FirstName: 'John',
+        FirstName: 'Doe',
         LastName: 'Doe',
         Address: 'Calgary,AB',
         Email: 'admin@abc.com',
@@ -114,24 +90,125 @@ test('test updateProfile with valid data', async () => {
     expect(result).toBe(7);
 });
 
+test('test updateProfile as manager for admin account', async () => {
+    let user = {
+        Role: 'Manager',
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(0);
+});
+
+test('test updateProfile as driver for admin account', async () => {
+    let user = {
+        Role: 'Driver',
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Admin',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(0);
+});
+
+test('test updateProfile as driver for manager account', async () => {
+    let user = {
+        Role: 'Driver',
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Manager',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(0);
+});
+
+test('test updateProfile as driver for own account', async () => {
+    let user = {
+        Role: 'Driver',
+        UserID: 1,
+    };
+    let profile = {
+        FirstName: 'Doe',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        UserID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Driver',
+        CompanyID: 1,
+    };
+    var result = await profileController.updateProfile(user, profile);
+    expect(result).toBe(5);
+});
+
 test('test getImage for existing user', async () => {
     var result = await profileController.getImage(1);
-    expect(result).toBeDefined();
-});
-
-test('test getImage for non existing user', async () => {
-    var result = await profileController.getImage(2);
-    expect(result).toBeDefined();
-});
-
-test('test getImage with invalid data', async () => {
-    var result = await profileController.getImage('a');
     expect(result).toBeDefined();
 });
 
 test('test changePassword as Admin', async () => {
     let user = {
         Role: 'Admin',
+    };
+    let profile = {
+        FirstName: 'John',
+        LastName: 'Doe',
+        Address: 'Calgary,AB',
+        Email: 'admin@abc.com',
+        Phone: '403-233-3333',
+        StaffID: '1',
+        Username: 'u234',
+        Password: '12324sd',
+        Role: 'Manager',
+        CompanyID: 1,
+    };
+    await db.addUser(profile);
+    var result = await profileController.changePassword(
+        user,
+        2,
+        'testpassword'
+    );
+    expect(result).toBeTruthy();
+});
+
+test('test changePassword as authorized driver', async () => {
+    let user = {
+        Role: 'Driver',
+        UserID: 2,
     };
     let profile = {
         FirstName: 'John',
@@ -176,7 +253,7 @@ test('test changePassword as Manager', async () => {
         2,
         'testpassword'
     );
-    expect(result).toBeTruthy();
+    expect(result).toBeFalsy();
 });
 
 test('test getUser for existing user', async () => {
@@ -184,27 +261,7 @@ test('test getUser for existing user', async () => {
     expect(result).toBeDefined();
 });
 
-test('test getUser for non existing user', async () => {
-    var result = await profileController.getUser(2);
-    expect(result).toBeUndefined();
-});
-
-test('test getUser with invalid data', async () => {
-    var result = await profileController.getUser('a');
-    expect(result).toBeUndefined();
-});
-
 test('test getRole for existing user', async () => {
     var result = await profileController.getRole(1);
     expect(result).toBe('Admin');
-});
-
-test('test getRole for non existing user', async () => {
-    var result = await profileController.getRole(2);
-    expect(result).toBeUndefined();
-});
-
-test('test getRole with invalid data', async () => {
-    var result = await profileController.getRole('a');
-    expect(result).toBeUndefined();
 });

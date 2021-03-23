@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `Dumpsters` (
 	`DumpsterSerialNumber` INT NOT NULL,
 	`CompanyID` INT NOT NULL,
 	`DriverID` INT NULL,
+	`dumpsterEPAddr` VARCHAR(255),
 	PRIMARY KEY (`DumpsterID`),
     FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`),
 	FOREIGN KEY (`DriverID`) REFERENCES Users(`UserID`) ON DELETE SET NULL
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `drivermessages` (
 	`Time` timestamp,
 	`Status` varchar(255) not null,
 	primary key (`MessageID`),
-	FOREIGN Key (`userID`) REFERENCES Users(`UserID`)
+	FOREIGN Key (`userID`) REFERENCES Users(`UserID`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `Pickups` (

@@ -125,7 +125,6 @@ test('logout', async () => {
 
 test('requireAuth with valid login', async () => {
     var token = '213342';
-    //let userID = 23434;
     var user = {
         Username: 'u234',
         Password: '12324sd',

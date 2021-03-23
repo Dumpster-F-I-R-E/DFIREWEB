@@ -42,6 +42,7 @@ router.post(
     async function (req, res) {
         const data = req.body;
         const errors = validationResult(req);
+        console.log(data);
         if (!errors.isEmpty()) {
             let extractedErrors = '';
             errors.array().map((err) => {
