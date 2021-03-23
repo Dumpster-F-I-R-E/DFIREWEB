@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `Users` (
+CREATE TABLE IF NOT EXISTS `users` (
 	`UserID` INT NOT NULL AUTO_INCREMENT,
 	`Username` TEXT NOT NULL,
 	`Password` TEXT NOT NULL,
@@ -13,16 +13,16 @@ CREATE TABLE IF NOT EXISTS `Users` (
 	PRIMARY KEY (`UserID`)
 );
 
-CREATE TABLE IF NOT EXISTS `ProfileImages` (
+CREATE TABLE IF NOT EXISTS `profileimages` (
 	`UserID` INT NOT NULL,
 	`Image` MEDIUMBLOB,
 	PRIMARY KEY (`UserID`),
-    FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
+    FOREIGN KEY (`UserID`) REFERENCES users(`UserID`)
 	ON DELETE CASCADE
 );
 
 
-CREATE TABLE IF NOT EXISTS `Companies` (
+CREATE TABLE IF NOT EXISTS `companies` (
 	`CompanyID` INT NOT NULL AUTO_INCREMENT,
 	`Name` TEXT NOT NULL,
 	`Address` TEXT NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Companies` (
 	PRIMARY KEY (`CompanyID`)
 );
 
-CREATE TABLE IF NOT EXISTS `Depots` (
+CREATE TABLE IF NOT EXISTS `depots` (
 	`DepotID` INT NOT NULL AUTO_INCREMENT,
 	`Name` TEXT NOT NULL,
 	`Address` TEXT NOT NULL,
@@ -38,23 +38,22 @@ CREATE TABLE IF NOT EXISTS `Depots` (
 	`Latitude` DOUBLE NOT NULL,
 	`CompanyID` INT NOT NULL,
 	PRIMARY KEY (`DepotID`),
-    FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`)
+    FOREIGN KEY (`CompanyID`) REFERENCES companies(`CompanyID`)
 	
 );
 
-CREATE TABLE IF NOT EXISTS `Dumpsters` (
+CREATE TABLE IF NOT EXISTS `dumpsters` (
 	`DumpsterID` INT NOT NULL AUTO_INCREMENT,
 	`DumpsterSerialNumber` INT NOT NULL,
 	`CompanyID` INT NOT NULL,
 	`DriverID` INT NULL,
-	`dumpsterEPAddr` VARCHAR(255),
 	PRIMARY KEY (`DumpsterID`),
-    FOREIGN KEY (`CompanyID`) REFERENCES Companies(`CompanyID`),
-	FOREIGN KEY (`DriverID`) REFERENCES Users(`UserID`) ON DELETE SET NULL
+    FOREIGN KEY (`CompanyID`) REFERENCES companies(`CompanyID`),
+	FOREIGN KEY (`DriverID`) REFERENCES users(`UserID`) ON DELETE SET NULL
 	
 );
 
-CREATE TABLE IF NOT EXISTS `DumpsterReports` (
+CREATE TABLE IF NOT EXISTS `dumpsterreports` (
 	`ReportID` INT NOT NULL AUTO_INCREMENT,
 	`DumpsterID` INT NOT NULL,
 	`Longitude` DOUBLE NOT NULL,
@@ -64,30 +63,30 @@ CREATE TABLE IF NOT EXISTS `DumpsterReports` (
 	`ErrorCode` INT NOT NULL,
 	`Time` DATETIME NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (`ReportID`),
-    FOREIGN KEY (`DumpsterID`) REFERENCES Dumpsters(`DumpsterID`)
+    FOREIGN KEY (`DumpsterID`) REFERENCES dumpsters(`DumpsterID`)
 	ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS `Sessions` (
+CREATE TABLE IF NOT EXISTS `sessions` (
 	`SessionID` INT NOT NULL AUTO_INCREMENT,
 	`UserID` INT NOT NULL,
 	`Token` VARCHAR(120) NOT NULL,
 	`ExpireDate` DATETIME NOT NULL,
 	PRIMARY KEY (`SessionID`),
-	FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
+	FOREIGN KEY (`UserID`) REFERENCES users(`UserID`)
 	ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS `resetPassword` (
+CREATE TABLE IF NOT EXISTS `resetpassword` (
 	`UserID` INT NOT NULL,
 	`username` VARCHAR(255) NOT NULL,
 	`resetToken` VARCHAR(255) NOT NULL,
 	`resetExpired` DATE NOT NULL,
-	FOREIGN KEY (`UserID`) REFERENCES Users(`UserID`)
+	FOREIGN KEY (`UserID`) REFERENCES users(`UserID`)
 	ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS `Drivers` (
+CREATE TABLE IF NOT EXISTS `drivers` (
 	`UserID` INT NOT NULL,
 	`Longitude` DOUBLE NOT NULL,
 	`Latitude` DOUBLE NOT NULL,
@@ -101,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `drivermessages` (
 	`Time` timestamp,
 	`Status` varchar(255) not null,
 	primary key (`MessageID`),
-	FOREIGN Key (`userID`) REFERENCES Users(`UserID`) ON DELETE CASCADE
+	FOREIGN Key (`userID`) REFERENCES users(`UserID`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `Pickups` (
@@ -110,8 +109,8 @@ CREATE TABLE IF NOT EXISTS `Pickups` (
 	`DumpsterID` INT NOT NULL,
 	`Time` DATETIME NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`DriverID`) REFERENCES Users(`UserID`)
+	FOREIGN KEY (`DriverID`) REFERENCES users(`UserID`)
 	ON DELETE CASCADE,
-	FOREIGN KEY (`DumpsterID`) REFERENCES Dumpsters(`DumpsterID`)
+	FOREIGN KEY (`DumpsterID`) REFERENCES dumpsters(`DumpsterID`)
 	ON DELETE CASCADE
 );
