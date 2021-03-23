@@ -115,3 +115,11 @@ exports.optimizeRoutes = async () => {
 exports.clearRoutes = async () => {
     await db.clearRoutes();
 };
+
+exports.updatePickup = async (driverID, dumpsterId) => {
+    await db.pickup(driverID, dumpsterId);
+}; 
+
+exports.getPickups = async (dumpsterId) => {
+    return await db.getPickups(dumpsterId);
+};

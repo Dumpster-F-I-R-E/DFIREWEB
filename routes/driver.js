@@ -21,6 +21,38 @@ router.get('/navigation', auth.requireAuth, function (req, res) {
 });
 
 router.post(
+    '/update-pickup',
+    auth.requireAuth,
+    [
+        body('DumpsterID').notEmpty().isNumeric(),
+
+    ],
+    async function (req, res) {
+        console.log(req.body);
+        let data = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let extractedErrors = '';
+            errors.array().map((err) => {
+                extractedErrors += err.param + ':' + err.msg + '<br>';
+            });
+            console.log(extractedErrors);
+            return res.json({
+                success: false,
+                error: extractedErrors,
+            });
+        }
+        await driver.updatePickup(
+            res.locals.User.UserID,
+            data.DumpsterID
+        );
+        res.json({
+            success: true,
+            error: 'Error Message',
+        });
+    });
+
+router.post(
     '/update-location',
     auth.requireAuth,
     [

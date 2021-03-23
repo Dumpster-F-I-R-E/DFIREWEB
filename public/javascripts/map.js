@@ -9,12 +9,18 @@ function initMap() {
     });
 
     google.maps.event.addListener(map, 'idle', showDumpsters);
+    setTimeout(function () {
+        markers.forEach((i) => i.setMap(null));
+        showDumpsters();
+    }, 10000);
 }
 
 let defaultIcon = '/icons/trash.png';
 let selectedIcon = '/icons/trash_blue.png';
 let fullIcon = '/icons/trash_red.png';
 let depoIcon = '/icons/depot.png';
+
+let markers = [];
 
 function drawDepot(depot) {
     let lat = depot.Latitude;
@@ -25,7 +31,7 @@ function drawDepot(depot) {
         icon: depoIcon,
     });
     depot.marker = marker;
-
+    markers.push(marker);
     const contentString =
         '<div id="body">' +
         '<p>' +
@@ -46,6 +52,9 @@ function drawDepot(depot) {
     marker.addListener('mouseout', () => {
         infowindow.close();
     });
+
+
+
 }
 
 function addMarker(dumpster, map) {
@@ -57,6 +66,7 @@ function addMarker(dumpster, map) {
         map: map,
         icon: defaultIcon,
     });
+    markers.push(marker);
 
     const contentString =
         '<div id="body">' +

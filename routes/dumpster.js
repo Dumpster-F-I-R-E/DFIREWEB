@@ -139,6 +139,7 @@ router.get(
         }
         var d = await dumpster.getDumpsterInfo(req.params.dumpsterId);
         let drv = await driverController.getDriver(req.params.dumpsterId);
+        let pickups = await driverController.getPickups(req.params.dumpsterId);
         if (!d) {
             return error.redirect(
                 res,
@@ -149,6 +150,7 @@ router.get(
             res.render('dumpster', {
                 dumpster: d[0],
                 driver: drv,
+                pickups: pickups
             });
         }
     }

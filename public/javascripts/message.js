@@ -11,9 +11,9 @@ function getUrlParameter(name) {
 }
 
 function showMessage(title, msg, type) {
-    $('.modal-title').text(title);
-    $('.modal-body').html(msg);
-    $('.modal').modal('toggle');
+    $('.modal.message .modal-title').text(title);
+    $('.modal.message .modal-body').html(msg);
+    $('.modal.message').modal('toggle');
     if (type == 'Error') {
         $('.modal-body').css('color', 'red');
     } else {
