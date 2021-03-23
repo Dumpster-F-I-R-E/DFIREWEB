@@ -21,20 +21,20 @@ exports.sendMail = async (email, subj, text) => {
             `,
     };
 
-    transporter.sendMail(mailOptions, function (err, data) {
-        if (err) {
-            console.log('error occured');
-            result = {
-                status: false,
-                message: 'An error occured',
-            };
-        } else {
-            console.log('Email sent');
-            result = {
-                status: true,
-                message: 'Email sent',
-            };
-        }
-    });
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent');
+        result = {
+            status: true,
+            message: 'Email sent',
+        };
+    } catch (e) {
+        console.log('error occured');
+        result = {
+            status: false,
+            message: 'An error occured',
+        };
+    }
+
     return result;
 };
