@@ -313,6 +313,7 @@ function addMarker(dumpster) {
 
 var dumpsters = {};
 var routes = {};
+var drivers = [];
 
 function showDumpsters() {
     clear();
@@ -367,6 +368,8 @@ function clear() {
     Object.values(markers).forEach((i) => i.setMap(null));
     Object.values(depots).forEach((i) => i.marker.setMap(null));
     Object.values(allLines).forEach((i) => i.setMap(null));
+    drivers.forEach(i => i.marker.setMap(null));
+   
 }
 
 function draw() {

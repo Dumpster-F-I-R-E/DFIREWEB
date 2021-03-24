@@ -12,15 +12,16 @@ router.get('/', auth.requireAuth, async function (req, res) {
         console.log('Main Menu Controller', report);
         report = report.Dumpsters;
     }
-    console.log(report);
-    // if(typeof(report) == "undefined") {
-    //     console.log("true");
-    //     report = "NULL";
-    // }
+    
+    let battery = await mainMenuController.getLowBattery();
+    let full = await mainMenuController.getFullDumpsters();
+        
     res.render('mainMenu', {
         user: res.locals.User.Username,
         role: res.locals.User.Role,
         dumpsterData: report,
+        battery: battery,
+        full: full,
     });
 });
 

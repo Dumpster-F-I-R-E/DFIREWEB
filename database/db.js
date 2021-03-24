@@ -272,7 +272,7 @@ exports.getDumpsterById = async (id) => {
     let report = {};
     if (results && results.length > 0 && results[0].length > 0) {
         report = results[0][0];
-    }else{
+    } else {
         return;
     }
     // console.log(report);
@@ -287,7 +287,7 @@ exports.getDumpsterById = async (id) => {
         return results[0];
     }
 
-    
+
 };
 
 exports.getDumpsterReports = async () => {
@@ -302,15 +302,50 @@ exports.getDumpsterReports = async () => {
 };
 exports.getLastHourReports = async () => {
     let sql =
-        'Select DumpsterID, Longitude, Latitude, BatteryLevel, FullnessLevel, Time' +
-        ' From dumpsterreports' +
-        ' where time>=date_sub((select max(time) from dumpsterreports),interval 6 hour) order by reportID desc;';
+        'SELECT  * ' +
+        'FROM DumpsterReports,' +
+        '(SELECT DumpsterID,max(ReportID) as ReportID ' +
+        'FROM DumpsterReports ' +
+        'GROUP BY DumpsterID) latest ' +
+        'WHERE DumpsterReports.ReportID=latest.ReportID;';
 
     var results = await pool.query(sql).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
 };
+
+exports.getLowBattery = async () => {
+    let sql =
+        'SELECT  * ' +
+        'FROM DumpsterReports,' +
+        '(SELECT DumpsterID,max(ReportID) as ReportID ' +
+        'FROM DumpsterReports ' +
+        'GROUP BY DumpsterID) latest ' +
+        'WHERE DumpsterReports.ReportID=latest.ReportID and BatteryLevel <=20 ;';
+
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+exports.getFullDumpsters = async () => {
+    let sql =
+        'SELECT  * ' +
+        'FROM DumpsterReports,' +
+        '(SELECT DumpsterID,max(ReportID) as ReportID ' +
+        'FROM DumpsterReports ' +
+        'GROUP BY DumpsterID) latest ' +
+        'WHERE DumpsterReports.ReportID=latest.ReportID and FullnessLevel >= 90 ;';
+
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
+
 exports.storeAuthToken = async (userId, token, expires) => {
     let sql =
         'INSERT INTO Sessions (`UserID`, `Token`, `ExpireDate`) VALUES(?, ?, ?)';
@@ -355,14 +390,14 @@ exports.getDepotsSearch = async (name, address) => {
     let sql = 'SELECT DepotID, Name, Address' + ' FROM Depots ';
     if (name && name != '*') {
         sql += 'WHERE Name LIKE ?';
-        sql = mysql.format(sql, [name]);
+        sql = mysql.format(sql, ['%' + name + '%']);
     }
 
     if (address && address != '*') {
         if (name && name != '*') {
             sql += ' AND Address Like ?';
         }
-        sql = mysql.format(sql, [address]);
+        sql = mysql.format(sql, ['%' + address + '%']);
     }
     console.log(sql);
     var results = await pool.query(sql).catch(printErrors);
@@ -379,7 +414,7 @@ exports.getUsersSearch = async (name, role) => {
         'ON Drivers.UserID = Dumpsters.DriverID ';
     if (name && name != '*') {
         sql += ' WHERE (FirstName LIKE ? OR LastName LIKE ?)';
-        sql = mysql.format(sql, [name, name]);
+        sql = mysql.format(sql, ['%' + name + '%', '%' + name + '%']);
     }
 
     if (role && role != '*') {
@@ -615,8 +650,8 @@ exports.pickup = async (driverId, dumpsterId) => {
 
 exports.getPickups = async (dumpsterId) => {
     let sql =
-    'select DriverID, FirstName, LastName, Time From pickups JOIN Users where UserID=DriverID and DumpsterID=?;';
-    var results = await pool.query(sql,[dumpsterId]).catch(printErrors);
+        'select DriverID, FirstName, LastName, Time From pickups JOIN Users where UserID=DriverID and DumpsterID=?;';
+    var results = await pool.query(sql, [dumpsterId]).catch(printErrors);
     if (results && results.length > 0 && results[0].length > 0) {
         return results[0];
     }
