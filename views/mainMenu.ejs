@@ -47,12 +47,15 @@
                         You have logged in as <%= role %>.
                             <% if (User.Role=="Admin" || User.Role=="Manager" ) { %>
                                 Below is the list of dumpster reports from last 6 hours.
+                                <% if(battery.length > 0) {%>
                                 <br>
                                 <img class='icon' src="images/fast-charge.png" alt="" width=50px >
-                                <span class='num'><%= battery.length %> </span> Low Battery                             
+                                <span class='num'><%= battery.length %> </span> Low Battery 
+                                <% }if (full.length > 0) {%>                            
                                 <br>
                                 <img class='icon' src="images/full-trash-container.png" alt="" width=50px >
                                 <span class='num'><%= full.length %></span> Full Dumpsters
+                                <% } %>
                                 <% } %>
                                     <% if (User.Role=="Driver" ) { %>
                                         Below is the list of dumpsters assigned to you.
