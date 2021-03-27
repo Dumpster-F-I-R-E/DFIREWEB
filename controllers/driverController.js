@@ -1,4 +1,5 @@
 const db = require('../database/db');
+const messageController = require('../controllers/messageController');
 
 exports.getDrivers = async () => {
     let drivers = await db.getDrivers();
@@ -117,8 +118,15 @@ exports.clearRoutes = async () => {
 };
 
 exports.updatePickup = async (driverID, dumpsterId) => {
-    await db.pickup(driverID, dumpsterId);
-}; 
+
+    let d = await db.getUserByUserID(driverID);
+    if (d) {
+        await db.pickup(driverID, dumpsterId);
+        let msg = `Driver ID:${d.UserID} ${d.FirstName} ${d.LastName} has picked up Dumpster ID:${dumpsterId}`;
+        await messageController.sendManagersMessage(msg);
+    }
+
+};
 
 exports.getPickups = async (dumpsterId) => {
     return await db.getPickups(dumpsterId);

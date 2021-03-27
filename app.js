@@ -16,6 +16,7 @@ var forgetPassRouter = require('./routes/forgetPassword');
 var depotRouter = require('./routes/depot');
 var driverRouter = require('./routes/driver');
 var apiRouter = require('./routes/api');
+var reportRouter = require('./routes/report');
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use('/api', apiRouter);
 app.use('/routes', routesRouter);
 app.use('/depot', depotRouter);
 app.use('/driver', driverRouter);
+app.use('/report', reportRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

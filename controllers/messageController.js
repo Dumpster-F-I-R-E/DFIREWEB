@@ -30,3 +30,10 @@ exports.updateMessage = async (userID) => {
 exports.sendAlerts = async (userID, message) => {
     await db.addMessage(userID, message);
 };
+
+exports.sendManagersMessage = async (message) => {
+    let managers = await db.getManagers();
+    managers.forEach(async (m) => {
+        await db.addMessage(m.UserID, message);
+    });
+};

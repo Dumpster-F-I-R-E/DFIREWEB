@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumpster FIRE - Profile</title>
+    <%- include('common.ejs') %>
+        <link rel='stylesheet' href='/stylesheets/mainMenu.css' />
+        <script src="/javascripts/radialProgress.js"></script>
+
+</head>
+
+<style>
+    .battery>svg.radial-progress circle {
+        stroke: #a2ed56;
+    }
+
+    .fullness>svg.radial-progress circle {
+        stroke: #e29a15;
+    }
+
+    .num{
+        font-size: 20px;
+        color: #421a21;
+    }
+
+    .icon {
+        border-radius: 50%;
+        background-color: #e29a15;
+        margin-top:10px;
+    }
+
+</style>
+
+
+
+<body>
+    <%- include('header.ejs') %>
+        <div class="wrapper">
+            <%- include('nav.ejs') %>
+                <div class="content">                   
+                    <div class="dumpsterMainMenu">
+
+                        <h1> <%= title %> </h1>
+                        <%- include('reportTable.ejs', dumpsterData) %>
+
+                    </div>
+                </div>
+
+
+
+
+        </div>
+</body>
+
+</html>

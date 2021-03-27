@@ -117,7 +117,7 @@ function showPopup(dumpsterId) {
     $('.modal.popup .modal-title').text("Pickup");
     $('.modal.popup .modal-body').html('Did you pick up Dumpster ID:' + dumpsterId + ' ?');
     $('.modal .btn-success').click(function () {
-        $('.modal.popup').modal('toggle');
+        $('.modal.popup').modal().hide();
         let req = {
             DumpsterID: dumpsterId
         };

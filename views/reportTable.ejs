@@ -1,0 +1,41 @@
+<% if(dumpsterData && dumpsterData.length !=0){ %>
+
+    <table id="dumpsterReport">
+        <tr class='headers'>
+            <th>Dumpster ID</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+            <th>Battery Level</th>
+            <th>Fullness Level</th>
+            <th>Time</th>
+        </tr>
+
+        <% var i=1; %>
+            <% dumpsterData.forEach(function(data){ %>
+
+                <tr onclick="window.location='/dumpster/<%= data.DumpsterID %>';">
+                    <td data-title="Dumpster ID" >
+                        <%= data.DumpsterID %>
+                    </td>
+                    <td data-title="Longitude">
+                        <%= (data.Longitude).toFixed(3) %>
+                    </td>
+                    <td data-title="Latitude">
+                        <%= (data.Latitude).toFixed(3) %>
+                    </td>
+                    <td class='battery' data-title="Battery">
+                        <%- include('radialProgress.ejs', {value:data.BatteryLevel}) %>
+                    </td>
+                    <td class='fullness' data-title="Fullness Level">
+                        <%- include('radialProgress.ejs', {value:data.FullnessLevel}) %>
+                    </td>
+                    <td data-title="Time">
+                        <%= data.Time.toUTCString() %>
+                    </td>
+                </tr>
+                <% i++; }) %>
+            <% } else{ %>
+                <p>No recent data is found.</p>
+            <% } %>
+
+    </table>

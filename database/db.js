@@ -378,6 +378,14 @@ exports.getUsers = async () => {
     }
 };
 
+exports.getManagers = async () => {
+    let sql = 'SELECT UserID, FirstName, LastName, Email FROM Users WHERE Role LIKE "Manager"';
+    var results = await pool.query(sql).catch(printErrors);
+    if (results && results.length > 0 && results[0].length > 0) {
+        return results[0];
+    }
+};
+
 exports.getDepots = async () => {
     let sql = 'SELECT * FROM Depots ';
     var results = await pool.query(sql).catch(printErrors);
