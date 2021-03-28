@@ -105,7 +105,7 @@ function storeLocation(position) {
     for (let d in dumpsters) {
         let k = findDistance(req.Latitude, req.Longitude, dumpsters[d].Latitude, dumpsters[d].Longitude);
         if (k < 300) {
-            showPopup(d);
+            showPopup(dumpsters[d].DumpsterID);
         }
     }
 
