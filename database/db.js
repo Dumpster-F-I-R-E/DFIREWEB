@@ -85,6 +85,9 @@ exports.updateProfile = async (profile) => {
         ' Phone = ? ,' +
         ' StaffID = ? ' +
         ' WHERE UserID=?;';
+        console.log("asd");
+        console.log(profile);
+        console.log("asd");
     await pool
         .execute(sql, [
             profile.FirstName,
@@ -113,6 +116,7 @@ exports.changeRole = async (userid, role) => {
         role,
         userid,
     ]);
+    console.log(sql);
     await pool.execute(sql).catch(printErrors);
 };
 

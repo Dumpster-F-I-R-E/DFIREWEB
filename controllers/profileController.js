@@ -40,6 +40,7 @@ const permissions = (user, profile) => {
 exports.updateProfile = async (user, profile) => {
     let p = await db.getProfile(profile.UserID);
     console.log(p['Role']);
+    console.log(user);
     let perm = permissions(user, p);
 
     for (var field in perm) {
@@ -49,7 +50,7 @@ exports.updateProfile = async (user, profile) => {
             p[field] = profile[field];
         }
     }
-    if (perm) await db.updateProfile(p);
+    if (perm) await db.updateProfile(profile);
 
     return perm.length;
 };
