@@ -368,7 +368,10 @@ function clear() {
     Object.values(markers).forEach((i) => i.setMap(null));
     Object.values(depots).forEach((i) => i.marker.setMap(null));
     Object.values(allLines).forEach((i) => i.setMap(null));
-    drivers.forEach(i => i.marker.setMap(null));
+    drivers.forEach(i => {
+        if(i.marker)
+            i.marker.setMap(null);
+    });
    
 }
 
